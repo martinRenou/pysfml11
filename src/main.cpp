@@ -293,6 +293,11 @@ PYBIND11_MODULE(pysfml, m)
         .def_property("point_count", &sf::ConvexShape::getPointCount, &sf::ConvexShape::setPointCount)
         .def("set_point", &sf::ConvexShape::setPoint);
 
+    py::class_<sf::RectangleShape, sf::Shape>(graphics, "RectangleShape")
+        .def(py::init<const sf::Vector2f&>(), py::arg("size") = sf::Vector2f(0, 0))
+        .def_property("size", &sf::RectangleShape::getSize, &sf::RectangleShape::setSize)
+        .def_property_readonly("point_count", &sf::RectangleShape::getPointCount);
+
     py::class_<sf::RenderWindow>(graphics, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>())
         .def("is_open", &sf::Window::isOpen)
