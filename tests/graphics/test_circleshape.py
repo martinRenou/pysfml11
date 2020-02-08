@@ -26,10 +26,90 @@ def test_get_point():
     assert isinstance(circle.get_point(3), Vector2f)
 
 
-def test_fill_color():
-    circle1 = CircleShape(3)
+def test_style():
+    circle = CircleShape(3)
 
-    assert isinstance(circle1.fill_color, Color)
+    assert isinstance(circle.fill_color, Color)
 
-    circle1.fill_color = Color.yellow
-    assert circle1.fill_color == Color.yellow
+    circle.fill_color = Color.yellow
+    assert circle.fill_color == Color.yellow
+
+    assert isinstance(circle.outline_color, Color)
+
+    circle.outline_color = Color.magenta
+    assert circle.outline_color == Color.magenta
+
+    assert circle.outline_thickness == 0
+
+    circle.outline_thickness = 3
+    assert circle.outline_thickness == 3
+
+
+def test_position():
+    circle = CircleShape(3)
+
+    assert isinstance(circle.position, Vector2f)
+    assert circle.position.x == 0
+    assert circle.position.y == 0
+
+    circle.position = Vector2f(2, 3)
+    assert circle.position.x == 2
+    assert circle.position.y == 3
+
+
+def test_rotation():
+    circle = CircleShape(3)
+
+    assert isinstance(circle.rotation, float)
+    assert circle.rotation == 0
+
+    circle.rotation = 2
+    assert circle.rotation == 2
+
+
+def test_scale():
+    circle = CircleShape(3)
+
+    assert isinstance(circle.scale, Vector2f)
+    assert circle.scale.x == 1
+    assert circle.scale.y == 1
+
+    circle.scale = Vector2f(2, 3)
+    assert circle.scale.x == 2
+    assert circle.scale.y == 3
+
+
+def test_origin():
+    circle = CircleShape(3)
+
+    assert isinstance(circle.origin, Vector2f)
+    assert circle.origin.x == 0
+    assert circle.origin.y == 0
+
+    circle.origin = Vector2f(2, 3)
+    assert circle.origin.x == 2
+    assert circle.origin.y == 3
+
+
+def test_move():
+    circle = CircleShape(3)
+
+    assert circle.position.x == 0
+    assert circle.position.y == 0
+
+    circle.move(2, 3)
+    assert circle.position.x == 2
+    assert circle.position.y == 3
+
+    circle.move(Vector2f(-2, -3))
+    assert circle.position.x == 0
+    assert circle.position.y == 0
+
+
+def test_rotate():
+    circle = CircleShape(3)
+
+    assert circle.rotation == 0
+
+    circle.rotate(2)
+    assert circle.rotation == 2

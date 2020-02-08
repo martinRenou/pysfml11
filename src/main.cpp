@@ -263,6 +263,28 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self -= py::self)
         .def(py::self *= py::self);
 
+    py::class_<sf::CircleShape>(graphics, "CircleShape")
+        .def(py::init<float, std::size_t>(), py::arg("radius"), py::arg("point_count") = 30)
+        .def_property("radius", &sf::CircleShape::getRadius, &sf::CircleShape::setRadius)
+        .def_property("point_count", &sf::CircleShape::getPointCount, &sf::CircleShape::setPointCount)
+        .def("get_point", &sf::CircleShape::getPoint)
+        // .def_property("texture", &sf::CircleShape::setTexture, &sf::CircleShape::getTexture)
+        // .def_property("textureRect", &sf::CircleShape::setTextureRect, &sf::CircleShape::getTextureRect)
+        .def_property("fill_color", &sf::CircleShape::getFillColor, &sf::CircleShape::setFillColor)
+        .def_property("outline_color", &sf::CircleShape::getOutlineColor, &sf::CircleShape::setOutlineColor)
+        .def_property("outline_thickness", &sf::CircleShape::getOutlineThickness, &sf::CircleShape::setOutlineThickness)
+        // .def("get_local_bounds", &sf::CircleShape::getLocalBounds)
+        // .def("get_global_bounds", &sf::CircleShape::getGlobalBounds)
+        .def_property("position", &sf::CircleShape::getPosition, [](sf::CircleShape& shape, const sf::Vector2f& position) { shape.setPosition(position); })
+        .def_property("rotation", &sf::CircleShape::getRotation, &sf::CircleShape::setRotation)
+        .def_property("scale", &sf::CircleShape::getScale, [](sf::CircleShape& shape, const sf::Vector2f& scale) { shape.setScale(scale); })
+        .def_property("origin", &sf::CircleShape::getOrigin, [](sf::CircleShape& shape, const sf::Vector2f& origin) { shape.setOrigin(origin); })
+        .def("move", [](sf::CircleShape& shape, float offsetx, float offsety) { shape.move(offsetx, offsety); })
+        .def("move", [](sf::CircleShape& shape, const sf::Vector2f& offset) { shape.move(offset); })
+        .def("rotate", &sf::CircleShape::rotate);
+        // .def("get_transform", &sf::CircleShape::getTransform)
+        // .def("get_inverse_transform", &sf::CircleShape::getInverseTransform);
+
     py::class_<sf::RenderWindow>(graphics, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>())
         .def("is_open", &sf::Window::isOpen)
