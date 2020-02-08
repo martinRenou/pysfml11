@@ -8,6 +8,12 @@
 
 namespace py = pybind11;
 
+#define PYSFML_CONCATENATE(A, B) PYSFML_CONCATENATE_IMPL(A, B)
+#define PYSFML_CONCATENATE_IMPL(A, B) A##B
+#define PYSFML_STRINGIFY(a) PYSFML_STRINGIFY_IMPL(a)
+#define PYSFML_STRINGIFY_IMPL(a) #a
+#define PYSFML_CONCAT_STRING(A, B) PYSFML_STRINGIFY(PYSFML_CONCATENATE(A, B))
+
 
 PYBIND11_MODULE(pysfml, m)
 {
@@ -57,7 +63,7 @@ PYBIND11_MODULE(pysfml, m)
         .def("as_seconds", &sf::Time::asSeconds)
         .def("as_milliseconds", &sf::Time::asMilliseconds)
         .def("as_microseconds", &sf::Time::asMicroseconds)
-        .def_readonly_static("zero", sf::Time::Zero)
+        .def_readonly_static("zero", &sf::Time::Zero)
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def(py::self < py::self)
@@ -88,23 +94,30 @@ PYBIND11_MODULE(pysfml, m)
         .def("get_elapsed_time", &sf::Clock::getElapsedTime)
         .def("restart", &sf::Clock::restart);
 
-    py::class_<sf::Vector2<float>>(system, "Vector2")
-        .def(py::init<float, float>(), py::arg("x") = 0, py::arg("y") = 0)
-        .def(py::init<sf::Vector2<float>>(), py::arg("vector"))
-        .def_readwrite("x", &sf::Vector2<float>::x)
-        .def_readwrite("y", &sf::Vector2<float>::y)
-        .def(-py::self)
-        .def(py::self += py::self)
-        .def(py::self -= py::self)
-        .def(py::self + py::self)
-        .def(py::self - py::self)
-        .def(float() * py::self)
-        .def(py::self * float())
-        .def(py::self *= float())
-        .def(py::self / float())
-        .def(py::self /= float())
-        .def(py::self == py::self)
+    #define PYSFML_IMPLEMENT_VECTOR2(VT, T, TS)                     \
+    py::class_<sf::VT<T>>(system, PYSFML_CONCAT_STRING(VT, TS))     \
+        .def(py::init<T, T>(), py::arg("x") = 0, py::arg("y") = 0)  \
+        .def(py::init<sf::VT<T>>(), py::arg("vector"))              \
+        .def_readwrite("x", &sf::VT<T>::x)                          \
+        .def_readwrite("y", &sf::VT<T>::y)                          \
+        .def(-py::self)                                             \
+        .def(py::self += py::self)                                  \
+        .def(py::self -= py::self)                                  \
+        .def(py::self + py::self)                                   \
+        .def(py::self - py::self)                                   \
+        .def(T() * py::self)                                        \
+        .def(py::self * T())                                        \
+        .def(py::self *= T())                                       \
+        .def(py::self / T())                                        \
+        .def(py::self /= T())                                       \
+        .def(py::self == py::self)                                  \
         .def(py::self != py::self);
+
+    PYSFML_IMPLEMENT_VECTOR2(Vector2, float, f);
+    PYSFML_IMPLEMENT_VECTOR2(Vector2, int, i);
+    PYSFML_IMPLEMENT_VECTOR2(Vector2, uint, u);
+
+    #undef PYSFML_IMPLEMENT_VECTOR2
 
     py::class_<sf::Vector3<float>>(system, "Vector3")
         .def(py::init<float, float, float>(), py::arg("x") = 0, py::arg("y") = 0, py::arg("z") = 0)
@@ -180,7 +193,6 @@ PYBIND11_MODULE(pysfml, m)
     // TODO
     // class   sf::BlendMode
     // class   sf::CircleShape
-    // class   sf::Color
     // class   sf::ConvexShape
     // class   sf::Drawable
     // class   sf::Font

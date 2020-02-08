@@ -1,31 +1,49 @@
-from pysfml.system import Vector2
+import pytest
+
+from pysfml.system import Vector2f, Vector2i, Vector2u
 
 
 def test_construction():
-    vec = Vector2()
+    vec = Vector2f()
 
     assert vec.x == 0
     assert vec.y == 0
 
-    vec1 = Vector2(2, 4)
+    vec1 = Vector2f(2, 4)
 
     assert vec1.x == 2
     assert vec1.y == 4
 
-    vec2 = Vector2(vec1)
+    vec2 = Vector2f(vec1)
 
     assert vec2.x == 2
     assert vec2.y == 4
 
+    vec3 = Vector2i(3, 4)
+
+    assert vec3.x == 3
+    assert vec3.y == 4
+
+    vec4 = Vector2u(3, 4)
+
+    assert vec4.x == 3
+    assert vec4.y == 4
+
+    with pytest.raises(TypeError):
+        Vector2i(3.4, 4)
+
+    with pytest.raises(TypeError):
+        Vector2u(-3, 4)
+
 
 def test_operators():
-    vec1 = Vector2(3, 4)
-    vec2 = Vector2(5, 6)
+    vec1 = Vector2f(3, 4)
+    vec2 = Vector2f(5, 6)
 
     assert (- vec1).x == -3
     assert (- vec1).y == -4
 
-    vec3 = Vector2()
+    vec3 = Vector2f()
     vec3 += vec1
     assert vec3.x == 3
     assert vec3.y == 4
