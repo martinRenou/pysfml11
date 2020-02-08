@@ -57,7 +57,7 @@ PYBIND11_MODULE(pysfml, m)
         .def("as_seconds", &sf::Time::asSeconds)
         .def("as_milliseconds", &sf::Time::asMilliseconds)
         .def("as_microseconds", &sf::Time::asMicroseconds)
-        .def_property_readonly_static("zero", []() { return sf::Time::Zero; })
+        .def_readonly_static("zero", sf::Time::Zero)
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def(py::self < py::self)
@@ -158,7 +158,7 @@ PYBIND11_MODULE(pysfml, m)
     )pbdoc";
 
     py::class_<sf::VideoMode>(window, "VideoMode")
-        .def(py::init<int, int, int>(), py::arg("width"), py::arg("height"), py::arg("bits_per_pixel") = 32)
+        .def(py::init<std::size_t, std::size_t, std::size_t>(), py::arg("width"), py::arg("height"), py::arg("bits_per_pixel") = 32)
         .def("is_valid", &sf::VideoMode::isValid)
         .def_static("get_desktop_mode", &sf::VideoMode::getDesktopMode)
         .def_static("get_fullscreen_modes", &sf::VideoMode::getFullscreenModes)
@@ -214,8 +214,35 @@ PYBIND11_MODULE(pysfml, m)
         .. autosummary::
            :toctree: _generate
 
+           Color
            RenderWindow
     )pbdoc";
+
+    py::class_<sf::Color>(graphics, "Color")
+        .def(py::init<uint8_t, uint8_t, uint8_t, uint8_t>(), py::arg("r") = 255, py::arg("g") = 255, py::arg("b") = 255, py::arg("a") = 255)
+        .def(py::init<uint32_t>(), py::arg("color"))
+        .def("to_integer", &sf::Color::toInteger)
+        .def_readwrite("r", &sf::Color::r)
+        .def_readwrite("g", &sf::Color::g)
+        .def_readwrite("b", &sf::Color::b)
+        .def_readwrite("a", &sf::Color::a)
+        .def_readonly_static("black", &sf::Color::Black)
+        .def_readonly_static("white", &sf::Color::White)
+        .def_readonly_static("red", &sf::Color::Red)
+        .def_readonly_static("green", &sf::Color::Green)
+        .def_readonly_static("blue", &sf::Color::Blue)
+        .def_readonly_static("yellow", &sf::Color::Yellow)
+        .def_readonly_static("magenta", &sf::Color::Magenta)
+        .def_readonly_static("cyan", &sf::Color::Cyan)
+        .def_readonly_static("transparent", &sf::Color::Transparent)
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def(py::self + py::self)
+        .def(py::self - py::self)
+        .def(py::self * py::self)
+        .def(py::self += py::self)
+        .def(py::self -= py::self)
+        .def(py::self *= py::self);
 
     py::class_<sf::RenderWindow>(graphics, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>())
