@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 
+#include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
 
 
@@ -23,6 +24,9 @@ PYBIND11_MODULE(pysfml, m)
 
     py::class_<sf::VideoMode>(m, "VideoMode")
         .def(py::init<int, int, int>(), py::arg("width"), py::arg("height"), py::arg("bits_per_pixel") = 32)
+        .def("is_valid", &sf::VideoMode::isValid)
+        .def_static("get_desktop_mode", &sf::VideoMode::getDesktopMode)
+        .def_static("get_fullscreen_modes", &sf::VideoMode::getFullscreenModes)
         .def_readwrite("width", &sf::VideoMode::width)
         .def_readwrite("height", &sf::VideoMode::height)
         .def_readwrite("bits_per_pixel", &sf::VideoMode::bitsPerPixel);

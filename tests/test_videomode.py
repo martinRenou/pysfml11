@@ -25,3 +25,15 @@ def test_attributes():
     assert mode.width == 1200
     assert mode.height == 1000
     assert mode.bits_per_pixel == 16
+
+
+def test_get_desktop_mode():
+    mode = VideoMode.get_desktop_mode()
+
+    assert mode.is_valid()
+
+
+def test_get_fullscreen_modes():
+    modes = VideoMode.get_fullscreen_modes()
+
+    assert isinstance(modes, list)
