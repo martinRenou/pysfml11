@@ -1,4 +1,4 @@
-from pysfml import VideoMode
+from pysfml.window import VideoMode
 
 
 def test_construction():
