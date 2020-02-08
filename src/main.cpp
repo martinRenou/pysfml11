@@ -22,7 +22,7 @@ PYBIND11_MODULE(pysfml, m)
     )pbdoc";
 
     py::class_<sf::VideoMode>(m, "VideoMode")
-        .def(py::init<int, int>())
+        .def(py::init<int, int, int>(), py::arg("width"), py::arg("height"), py::arg("bits_per_pixel") = 32)
         .def_readwrite("width", &sf::VideoMode::width)
         .def_readwrite("height", &sf::VideoMode::height)
         .def_readwrite("bits_per_pixel", &sf::VideoMode::bitsPerPixel);
