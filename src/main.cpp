@@ -199,14 +199,11 @@ PYBIND11_MODULE(pysfml, m)
 
     // TODO
     // class   sf::BlendMode
-    // class   sf::CircleShape
-    // class   sf::ConvexShape
     // class   sf::Drawable
     // class   sf::Font
     // class   sf::Glyph
     // class   sf::Image
     // class   sf::Rect< T >
-    // class   sf::RectangleShape
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
@@ -263,7 +260,9 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self -= py::self)
         .def(py::self *= py::self);
 
-    py::class_<sf::Shape>(graphics, "Shape")
+    py::class_<sf::Drawable>(graphics, "Drawable");
+
+    py::class_<sf::Shape, sf::Drawable>(graphics, "Shape")
         // .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
         // .def_property("textureRect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
         .def_property("fill_color", &sf::Shape::getFillColor, &sf::Shape::setFillColor)
