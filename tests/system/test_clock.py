@@ -1,6 +1,4 @@
-from time import sleep
-
-from pysfml.system import Clock, Time
+from pysfml.system import Clock, Time, sleep, seconds
 
 
 def test_construction():
@@ -13,6 +11,6 @@ def test_construction():
 def test_elapsed_time():
     clock = Clock()
 
-    sleep(1)
+    sleep(seconds(1))
 
     assert clock.get_elapsed_time().as_seconds() >= 1

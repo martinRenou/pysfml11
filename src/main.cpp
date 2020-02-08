@@ -83,6 +83,7 @@ PYBIND11_MODULE(pysfml, m)
     system.def("seconds", &sf::seconds);
     system.def("milliseconds", &sf::milliseconds);
     system.def("microseconds", &sf::microseconds);
+    system.def("sleep", &sf::sleep);
 
     py::class_<sf::Clock>(system, "Clock")
         .def(py::init<>())
