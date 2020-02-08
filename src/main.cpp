@@ -199,7 +199,6 @@ PYBIND11_MODULE(pysfml, m)
 
     // TODO
     // class   sf::BlendMode
-    // class   sf::Drawable
     // class   sf::Font
     // class   sf::Glyph
     // class   sf::Image
@@ -262,7 +261,18 @@ PYBIND11_MODULE(pysfml, m)
 
     py::class_<sf::Drawable>(graphics, "Drawable");
 
-    py::class_<sf::Shape, sf::Drawable>(graphics, "Shape")
+    py::class_<sf::Transformable>(graphics, "Transformable")
+        .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& shape, const sf::Vector2f& position) { shape.setPosition(position); })
+        .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
+        .def_property("scale", &sf::Transformable::getScale, [](sf::Transformable& shape, const sf::Vector2f& scale) { shape.setScale(scale); })
+        .def_property("origin", &sf::Transformable::getOrigin, [](sf::Transformable& shape, const sf::Vector2f& origin) { shape.setOrigin(origin); })
+        .def("move", [](sf::Transformable& shape, float offsetx, float offsety) { shape.move(offsetx, offsety); })
+        .def("move", [](sf::Transformable& shape, const sf::Vector2f& offset) { shape.move(offset); })
+        .def("rotate", &sf::Transformable::rotate);
+        // .def("get_transform", &sf::Shape::getTransform)
+        // .def("get_inverse_transform", &sf::Shape::getInverseTransform);
+
+    py::class_<sf::Shape, sf::Drawable, sf::Transformable>(graphics, "Shape")
         // .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
         // .def_property("textureRect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
         .def_property("fill_color", &sf::Shape::getFillColor, &sf::Shape::setFillColor)
@@ -271,16 +281,7 @@ PYBIND11_MODULE(pysfml, m)
         .def_property_readonly("point_count", &sf::Shape::getPointCount)
         // .def("get_local_bounds", &sf::Shape::getLocalBounds)
         // .def("get_global_bounds", &sf::Shape::getGlobalBounds)
-        .def("get_point", &sf::Shape::getPoint)
-        .def_property("position", &sf::Shape::getPosition, [](sf::Shape& shape, const sf::Vector2f& position) { shape.setPosition(position); })
-        .def_property("rotation", &sf::Shape::getRotation, &sf::Shape::setRotation)
-        .def_property("scale", &sf::Shape::getScale, [](sf::Shape& shape, const sf::Vector2f& scale) { shape.setScale(scale); })
-        .def_property("origin", &sf::Shape::getOrigin, [](sf::Shape& shape, const sf::Vector2f& origin) { shape.setOrigin(origin); })
-        .def("move", [](sf::Shape& shape, float offsetx, float offsety) { shape.move(offsetx, offsety); })
-        .def("move", [](sf::Shape& shape, const sf::Vector2f& offset) { shape.move(offset); })
-        .def("rotate", &sf::Shape::rotate);
-        // .def("get_transform", &sf::Shape::getTransform)
-        // .def("get_inverse_transform", &sf::Shape::getInverseTransform);
+        .def("get_point", &sf::Shape::getPoint);
 
     py::class_<sf::CircleShape, sf::Shape>(graphics, "CircleShape")
         .def(py::init<float, std::size_t>(), py::arg("radius"), py::arg("point_count") = 30)
