@@ -50,8 +50,6 @@ PYBIND11_MODULE(pysfml, m)
     // class   sf::ThreadLocal
     // class   sf::ThreadLocalPtr< T >
     // class   sf::Utf< N >
-    // ANativeActivity *   sf::getNativeActivity ()
-    // void    sf::sleep (Time duration)
     // std::ostream &  sf::err ()
 
     py::class_<sf::Time>(system, "Time")
@@ -153,7 +151,13 @@ PYBIND11_MODULE(pysfml, m)
         .def_static("get_fullscreen_modes", &sf::VideoMode::getFullscreenModes)
         .def_readwrite("width", &sf::VideoMode::width)
         .def_readwrite("height", &sf::VideoMode::height)
-        .def_readwrite("bits_per_pixel", &sf::VideoMode::bitsPerPixel);
+        .def_readwrite("bits_per_pixel", &sf::VideoMode::bitsPerPixel)
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def(py::self < py::self)
+        .def(py::self > py::self)
+        .def(py::self <= py::self)
+        .def(py::self >= py::self);
 
     py::class_<sf::RenderWindow>(window, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>());
