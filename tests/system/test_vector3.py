@@ -1,35 +1,53 @@
-from pysfml.system import Vector3
+import pytest
+
+from pysfml.system import Vector3f, Vector3i, Vector3u
 
 
 def test_construction():
-    vec = Vector3()
+    vec = Vector3f()
 
     assert vec.x == 0
     assert vec.y == 0
     assert vec.z == 0
 
-    vec1 = Vector3(2, 4)
+    vec1 = Vector3f(2, 4)
 
     assert vec1.x == 2
     assert vec1.y == 4
     assert vec1.z == 0
 
-    vec2 = Vector3(vec1)
+    vec2 = Vector3f(vec1)
 
     assert vec2.x == 2
     assert vec2.y == 4
     assert vec2.z == 0
 
+    vec3 = Vector3i(3, 4, 5)
+
+    assert vec3.x == 3
+    assert vec3.y == 4
+
+    vec4 = Vector3u(3, 4, 5)
+
+    assert vec4.x == 3
+    assert vec4.y == 4
+
+    with pytest.raises(TypeError):
+        Vector3i(3.4, 4, 5)
+
+    with pytest.raises(TypeError):
+        Vector3u(-3, 4, 5)
+
 
 def test_operators():
-    vec1 = Vector3(3, 4, 5)
-    vec2 = Vector3(5, 6, 7)
+    vec1 = Vector3f(3, 4, 5)
+    vec2 = Vector3f(5, 6, 7)
 
     assert (- vec1).x == -3
     assert (- vec1).y == -4
     assert (- vec1).z == -5
 
-    vec3 = Vector3()
+    vec3 = Vector3f()
     vec3 += vec1
     assert vec3.x == 3
     assert vec3.y == 4

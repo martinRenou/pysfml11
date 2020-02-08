@@ -94,49 +94,56 @@ PYBIND11_MODULE(pysfml, m)
         .def("get_elapsed_time", &sf::Clock::getElapsedTime)
         .def("restart", &sf::Clock::restart);
 
-    #define PYSFML_IMPLEMENT_VECTOR2(VT, T, TS)                     \
-    py::class_<sf::VT<T>>(system, PYSFML_CONCAT_STRING(VT, TS))     \
-        .def(py::init<T, T>(), py::arg("x") = 0, py::arg("y") = 0)  \
-        .def(py::init<sf::VT<T>>(), py::arg("vector"))              \
-        .def_readwrite("x", &sf::VT<T>::x)                          \
-        .def_readwrite("y", &sf::VT<T>::y)                          \
-        .def(-py::self)                                             \
-        .def(py::self += py::self)                                  \
-        .def(py::self -= py::self)                                  \
-        .def(py::self + py::self)                                   \
-        .def(py::self - py::self)                                   \
-        .def(T() * py::self)                                        \
-        .def(py::self * T())                                        \
-        .def(py::self *= T())                                       \
-        .def(py::self / T())                                        \
-        .def(py::self /= T())                                       \
-        .def(py::self == py::self)                                  \
+    #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                               \
+    py::class_<sf::Vector2<T>>(system, PYSFML_CONCAT_STRING(Vector2, TS)) \
+        .def(py::init<T, T>(), py::arg("x") = T(0), py::arg("y") = T(0))  \
+        .def(py::init<sf::Vector2<T>>(), py::arg("vector"))               \
+        .def_readwrite("x", &sf::Vector2<T>::x)                           \
+        .def_readwrite("y", &sf::Vector2<T>::y)                           \
+        .def(-py::self)                                                   \
+        .def(py::self += py::self)                                        \
+        .def(py::self -= py::self)                                        \
+        .def(py::self + py::self)                                         \
+        .def(py::self - py::self)                                         \
+        .def(T() * py::self)                                              \
+        .def(py::self * T())                                              \
+        .def(py::self *= T())                                             \
+        .def(py::self / T())                                              \
+        .def(py::self /= T())                                             \
+        .def(py::self == py::self)                                        \
         .def(py::self != py::self);
 
-    PYSFML_IMPLEMENT_VECTOR2(Vector2, float, f);
-    PYSFML_IMPLEMENT_VECTOR2(Vector2, int, i);
-    PYSFML_IMPLEMENT_VECTOR2(Vector2, uint, u);
+    PYSFML_IMPLEMENT_VECTOR2(float, f)
+    PYSFML_IMPLEMENT_VECTOR2(int, i)
+    PYSFML_IMPLEMENT_VECTOR2(uint, u)
 
     #undef PYSFML_IMPLEMENT_VECTOR2
 
-    py::class_<sf::Vector3<float>>(system, "Vector3")
-        .def(py::init<float, float, float>(), py::arg("x") = 0, py::arg("y") = 0, py::arg("z") = 0)
-        .def(py::init<sf::Vector3<float>>(), py::arg("vector"))
-        .def_readwrite("x", &sf::Vector3<float>::x)
-        .def_readwrite("y", &sf::Vector3<float>::y)
-        .def_readwrite("z", &sf::Vector3<float>::z)
-        .def(-py::self)
-        .def(py::self += py::self)
-        .def(py::self -= py::self)
-        .def(py::self + py::self)
-        .def(py::self - py::self)
-        .def(float() * py::self)
-        .def(py::self * float())
-        .def(py::self *= float())
-        .def(py::self / float())
-        .def(py::self /= float())
-        .def(py::self == py::self)
+    #define PYSFML_IMPLEMENT_VECTOR3(T, TS)                                                      \
+    py::class_<sf::Vector3<T>>(system, PYSFML_CONCAT_STRING(Vector3, TS))                        \
+        .def(py::init<T, T, T>(), py::arg("x") = T(0), py::arg("y") = T(0), py::arg("z") = T(0)) \
+        .def(py::init<sf::Vector3<T>>(), py::arg("vector"))                                      \
+        .def_readwrite("x", &sf::Vector3<T>::x)                                                  \
+        .def_readwrite("y", &sf::Vector3<T>::y)                                                  \
+        .def_readwrite("z", &sf::Vector3<T>::z)                                                  \
+        .def(-py::self)                                                                          \
+        .def(py::self += py::self)                                                               \
+        .def(py::self -= py::self)                                                               \
+        .def(py::self + py::self)                                                                \
+        .def(py::self - py::self)                                                                \
+        .def(T() * py::self)                                                                     \
+        .def(py::self * T())                                                                     \
+        .def(py::self *= T())                                                                    \
+        .def(py::self / T())                                                                     \
+        .def(py::self /= T())                                                                    \
+        .def(py::self == py::self)                                                               \
         .def(py::self != py::self);
+
+    PYSFML_IMPLEMENT_VECTOR3(float, f)
+    PYSFML_IMPLEMENT_VECTOR3(int, i)
+    PYSFML_IMPLEMENT_VECTOR3(uint, u)
+
+    #undef PYSFML_IMPLEMENT_VECTOR3
 
 
     /*****************
