@@ -32,12 +32,13 @@ PYBIND11_MODULE(pysfml, m)
         .. autosummary::
            :toctree: _generate
 
-           VideoMode
-           RenderWindow
+           Time
+           Clock
+           Vector2
+           Vector3
     )pbdoc";
 
     // TODO
-    // class   sf::Clock
     // class   sf::FileInputStream
     // class   sf::InputStream
     // class   sf::Lock
@@ -49,8 +50,6 @@ PYBIND11_MODULE(pysfml, m)
     // class   sf::ThreadLocal
     // class   sf::ThreadLocalPtr< T >
     // class   sf::Utf< N >
-    // class   sf::Vector2< T >
-    // class   sf::Vector3< T >
     // ANativeActivity *   sf::getNativeActivity ()
     // void    sf::sleep (Time duration)
     // std::ostream &  sf::err ()
@@ -89,6 +88,43 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::init<>())
         .def("get_elapsed_time", &sf::Clock::getElapsedTime)
         .def("restart", &sf::Clock::restart);
+
+    py::class_<sf::Vector2<float>>(system, "Vector2")
+        .def(py::init<float, float>(), py::arg("x") = 0, py::arg("y") = 0)
+        .def(py::init<sf::Vector2<float>>(), py::arg("vector"))
+        .def_readwrite("x", &sf::Vector2<float>::x)
+        .def_readwrite("y", &sf::Vector2<float>::y)
+        .def(-py::self)
+        .def(py::self += py::self)
+        .def(py::self -= py::self)
+        .def(py::self + py::self)
+        .def(py::self - py::self)
+        .def(float() * py::self)
+        .def(py::self * float())
+        .def(py::self *= float())
+        .def(py::self / float())
+        .def(py::self /= float())
+        .def(py::self == py::self)
+        .def(py::self != py::self);
+
+    py::class_<sf::Vector3<float>>(system, "Vector3")
+        .def(py::init<float, float, float>(), py::arg("x") = 0, py::arg("y") = 0, py::arg("z") = 0)
+        .def(py::init<sf::Vector3<float>>(), py::arg("vector"))
+        .def_readwrite("x", &sf::Vector3<float>::x)
+        .def_readwrite("y", &sf::Vector3<float>::y)
+        .def_readwrite("z", &sf::Vector3<float>::z)
+        .def(-py::self)
+        .def(py::self += py::self)
+        .def(py::self -= py::self)
+        .def(py::self + py::self)
+        .def(py::self - py::self)
+        .def(float() * py::self)
+        .def(py::self * float())
+        .def(py::self *= float())
+        .def(py::self / float())
+        .def(py::self /= float())
+        .def(py::self == py::self)
+        .def(py::self != py::self);
 
 
     /*****************
