@@ -34,3 +34,30 @@ def test_microseconds():
     assert time.as_seconds() == 5
     assert time.as_milliseconds() == 5000
     assert time.as_microseconds() == 5000000
+
+
+def test_operators():
+    time1 = seconds(3)
+    time2 = seconds(5)
+
+    assert not time1 == time2
+    assert time1 != time2
+    assert time1 < time2
+    assert not time1 > time2
+    assert time1 <= time2
+    assert not time1 >= time2
+    assert (- time1).as_seconds() == -3
+    assert (time1 + time2).as_seconds() == 8
+
+    time1 += time1
+    assert time1.as_seconds() == 6
+
+    assert (time2 - time2).as_seconds() == 0
+
+    time1 -= time1 / 2
+    assert time1.as_seconds() == 3
+
+    assert (time1 * 3).as_seconds() == 9
+    assert (3 * time1).as_seconds() == 9
+
+    assert (time1 / 3).as_seconds() == 1

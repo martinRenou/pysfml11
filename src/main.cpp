@@ -1,6 +1,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
+#include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
 
@@ -47,7 +48,6 @@ PYBIND11_MODULE(pysfml, m)
     // class   sf::Thread
     // class   sf::ThreadLocal
     // class   sf::ThreadLocalPtr< T >
-    // class   sf::Time
     // class   sf::Utf< N >
     // class   sf::Vector2< T >
     // class   sf::Vector3< T >
@@ -60,7 +60,26 @@ PYBIND11_MODULE(pysfml, m)
         .def("as_seconds", &sf::Time::asSeconds)
         .def("as_milliseconds", &sf::Time::asMilliseconds)
         .def("as_microseconds", &sf::Time::asMicroseconds)
-        .def_property_readonly_static("zero", []() { return sf::Time::Zero; });
+        .def_property_readonly_static("zero", []() { return sf::Time::Zero; })
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def(py::self < py::self)
+        .def(py::self > py::self)
+        .def(py::self <= py::self)
+        .def(py::self >= py::self)
+        .def(-py::self)
+        .def(py::self + py::self)
+        .def(py::self += py::self)
+        .def(py::self - py::self)
+        .def(py::self -= py::self)
+        .def(float() * py::self)
+        .def(py::self * float())
+        .def(py::self *= float())
+        .def(py::self / float())
+        .def(py::self /= float())
+        .def(py::self / py::self)
+        .def(py::self % py::self)
+        .def(py::self %= py::self);
 
     system.def("seconds", &sf::seconds);
     system.def("milliseconds", &sf::milliseconds);
