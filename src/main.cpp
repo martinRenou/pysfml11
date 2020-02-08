@@ -288,6 +288,11 @@ PYBIND11_MODULE(pysfml, m)
         .def_property("radius", &sf::CircleShape::getRadius, &sf::CircleShape::setRadius)
         .def_property("point_count", &sf::CircleShape::getPointCount, &sf::CircleShape::setPointCount);
 
+    py::class_<sf::ConvexShape, sf::Shape>(graphics, "ConvexShape")
+        .def(py::init<std::size_t>(), py::arg("point_count") = 0)
+        .def_property("point_count", &sf::ConvexShape::getPointCount, &sf::ConvexShape::setPointCount)
+        .def("set_point", &sf::ConvexShape::setPoint);
+
     py::class_<sf::RenderWindow>(graphics, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>())
         .def("is_open", &sf::Window::isOpen)
