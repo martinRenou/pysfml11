@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -208,12 +210,10 @@ PYBIND11_MODULE(pysfml, m)
     // class   sf::RenderTexture
     // class   sf::RenderWindow
     // class   sf::Shader
-    // class   sf::Shape
     // class   sf::Sprite
     // class   sf::Text
     // class   sf::Texture
     // class   sf::Transform
-    // class   sf::Transformable
     // class   sf::Vertex
     // class   sf::VertexArray
     // class   sf::VertexBuffer
@@ -261,16 +261,71 @@ PYBIND11_MODULE(pysfml, m)
 
     py::class_<sf::Drawable>(graphics, "Drawable");
 
+    py::class_<sf::Transform>(graphics, "Transform")
+        .def(py::init<>())
+        .def(py::init<float, float, float, float, float, float, float, float, float>())
+        .def("get_matrix", [](const sf::Transform& transform) {
+            const float* matrix = transform.getMatrix();
+
+            return std::vector<float>(matrix, matrix + 16);
+        })
+        .def("get_inverse", &sf::Transform::getInverse)
+        .def("transform_point", [](sf::Transform& transform, float x, float y) {
+            return transform.transformPoint(x, y);
+        })
+        .def("transform_point", [](sf::Transform& transform, const sf::Vector2f& point) {
+            return transform.transformPoint(point);
+        })
+        // .def("transform_rect", &sf::Transform::transformRect)
+        .def("combine", &sf::Transform::combine)
+        .def("translate", [](sf::Transform& transform, float x, float y) {
+            return transform.translate(x, y);
+        })
+        .def("translate", [](sf::Transform& transform, const sf::Vector2f& offset) {
+            return transform.translate(offset);
+        })
+        .def("rotate", [](sf::Transform& transform, float angle) {
+            return transform.rotate(angle);
+        })
+        .def("rotate", [](sf::Transform& transform, float angle, float centerx, float centery) {
+            return transform.rotate(angle, centerx, centery);
+        })
+        .def("rotate", [](sf::Transform& transform, float angle, const sf::Vector2f& center) {
+            return transform.rotate(angle, center);
+        })
+        .def("scale", [](sf::Transform& transform, float scalex, float scaley) {
+            return transform.scale(scalex, scaley);
+        })
+        .def("scale", [](sf::Transform& transform, float scalex, float scaley, float centerx, float centery) {
+            return transform.scale(scalex, scaley, centerx, centery);
+        })
+        .def("scale", [](sf::Transform& transform, const sf::Vector2f& factors) {
+            return transform.scale(factors);
+        })
+        .def("scale", [](sf::Transform& transform, const sf::Vector2f& factors, const sf::Vector2f& center) {
+            return transform.scale(factors, center);
+        })
+        .def_readonly_static("identity", &sf::Transform::Identity)
+        .def(py::self * py::self)
+        .def(py::self *= py::self)
+        .def(py::self * sf::Vector2f())
+        .def(py::self == py::self)
+        .def(py::self != py::self);
+
     py::class_<sf::Transformable>(graphics, "Transformable")
         .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& shape, const sf::Vector2f& position) { shape.setPosition(position); })
         .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
         .def_property("scale", &sf::Transformable::getScale, [](sf::Transformable& shape, const sf::Vector2f& scale) { shape.setScale(scale); })
         .def_property("origin", &sf::Transformable::getOrigin, [](sf::Transformable& shape, const sf::Vector2f& origin) { shape.setOrigin(origin); })
-        .def("move", [](sf::Transformable& shape, float offsetx, float offsety) { shape.move(offsetx, offsety); })
-        .def("move", [](sf::Transformable& shape, const sf::Vector2f& offset) { shape.move(offset); })
-        .def("rotate", &sf::Transformable::rotate);
-        // .def("get_transform", &sf::Shape::getTransform)
-        // .def("get_inverse_transform", &sf::Shape::getInverseTransform);
+        .def("move", [](sf::Transformable& shape, float offsetx, float offsety) {
+            return shape.move(offsetx, offsety);
+        })
+        .def("move", [](sf::Transformable& shape, const sf::Vector2f& offset) {
+            return shape.move(offset);
+        })
+        .def("rotate", &sf::Transformable::rotate)
+        .def("get_transform", &sf::Shape::getTransform)
+        .def("get_inverse_transform", &sf::Shape::getInverseTransform);
 
     py::class_<sf::Shape, sf::Drawable, sf::Transformable>(graphics, "Shape")
         // .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
