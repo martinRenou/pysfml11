@@ -130,6 +130,20 @@ PYBIND11_MODULE(pysfml, m)
      * WINDOW MODULE *
      *****************/
 
+    // TODO
+    // class   sf::Clipboard
+    // class   sf::Context
+    // class   sf::ContextSettings
+    // class   sf::Cursor
+    // class   sf::Event
+    // class   sf::GlResource
+    // class   sf::Joystick
+    // class   sf::Keyboard
+    // class   sf::Mouse
+    // class   sf::Sensor
+    // class   sf::Touch
+    // class   sf::Window
+
     py::module window = m.def_submodule("window");
     window.doc() = R"pbdoc(
         pysfml.window
@@ -141,7 +155,6 @@ PYBIND11_MODULE(pysfml, m)
            :toctree: _generate
 
            VideoMode
-           RenderWindow
     )pbdoc";
 
     py::class_<sf::VideoMode>(window, "VideoMode")
@@ -159,8 +172,56 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self <= py::self)
         .def(py::self >= py::self);
 
-    py::class_<sf::RenderWindow>(window, "RenderWindow")
-        .def(py::init<const sf::VideoMode&, const std::string&>());
+
+    /*******************
+     * GRAPHICS MODULE *
+     *******************/
+
+    // TODO
+    // class   sf::BlendMode
+    // class   sf::CircleShape
+    // class   sf::Color
+    // class   sf::ConvexShape
+    // class   sf::Drawable
+    // class   sf::Font
+    // class   sf::Glyph
+    // class   sf::Image
+    // class   sf::Rect< T >
+    // class   sf::RectangleShape
+    // class   sf::RenderStates
+    // class   sf::RenderTarget
+    // class   sf::RenderTexture
+    // class   sf::RenderWindow
+    // class   sf::Shader
+    // class   sf::Shape
+    // class   sf::Sprite
+    // class   sf::Text
+    // class   sf::Texture
+    // class   sf::Transform
+    // class   sf::Transformable
+    // class   sf::Vertex
+    // class   sf::VertexArray
+    // class   sf::VertexBuffer
+    // class   sf::View
+
+    py::module graphics = m.def_submodule("graphics");
+    graphics.doc() = R"pbdoc(
+        pysfml.graphics
+        ---------------
+
+        .. currentmodule:: pysfml.graphics
+
+        .. autosummary::
+           :toctree: _generate
+
+           RenderWindow
+    )pbdoc";
+
+    py::class_<sf::RenderWindow>(graphics, "RenderWindow")
+        .def(py::init<const sf::VideoMode&, const std::string&>())
+        .def("is_open", &sf::Window::isOpen)
+        .def("display", &sf::Window::display);
+
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
