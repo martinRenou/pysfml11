@@ -60,6 +60,7 @@ PYBIND11_MODULE(pysfml, m)
     // class   sf::Utf< N >
     // std::ostream &  sf::err ()
 
+    /* Time class */
     py::class_<sf::Time>(system, "Time")
         .def(py::init<>())
         .def("as_seconds", &sf::Time::asSeconds)
@@ -86,11 +87,13 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self % py::self)
         .def(py::self %= py::self);
 
+    /* Timing free functions */
     system.def("seconds", &sf::seconds);
     system.def("milliseconds", &sf::milliseconds);
     system.def("microseconds", &sf::microseconds);
     system.def("sleep", &sf::sleep);
 
+    /* Clock class */
     py::class_<sf::Clock>(system, "Clock")
         .def(py::init<>())
         .def("get_elapsed_time", &sf::Clock::getElapsedTime)
@@ -115,8 +118,11 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self == py::self)                                        \
         .def(py::self != py::self);
 
+    /* Vector2f class */
     PYSFML_IMPLEMENT_VECTOR2(float, f)
+    /* Vector2i class */
     PYSFML_IMPLEMENT_VECTOR2(int, i)
+    /* Vector2u class */
     PYSFML_IMPLEMENT_VECTOR2(uint, u)
 
     #undef PYSFML_IMPLEMENT_VECTOR2
@@ -141,8 +147,11 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self == py::self)                                                               \
         .def(py::self != py::self);
 
+    /* Vector3f class */
     PYSFML_IMPLEMENT_VECTOR3(float, f)
+    /* Vector3i class */
     PYSFML_IMPLEMENT_VECTOR3(int, i)
+    /* Vector3u class */
     PYSFML_IMPLEMENT_VECTOR3(uint, u)
 
     #undef PYSFML_IMPLEMENT_VECTOR3
@@ -179,6 +188,7 @@ PYBIND11_MODULE(pysfml, m)
            VideoMode
     )pbdoc";
 
+    /* VideoMode class */
     py::class_<sf::VideoMode>(window, "VideoMode")
         .def(py::init<std::size_t, std::size_t, std::size_t>(), py::arg("width"), py::arg("height"), py::arg("bits_per_pixel") = 32)
         .def("is_valid", &sf::VideoMode::isValid)
@@ -233,6 +243,7 @@ PYBIND11_MODULE(pysfml, m)
            RenderWindow
     )pbdoc";
 
+    /* Color class */
     py::class_<sf::Color>(graphics, "Color")
         .def(py::init<uint8_t, uint8_t, uint8_t, uint8_t>(), py::arg("r") = 255, py::arg("g") = 255, py::arg("b") = 255, py::arg("a") = 255)
         .def(py::init<uint32_t>(), py::arg("color"))
@@ -259,8 +270,10 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self -= py::self)
         .def(py::self *= py::self);
 
+    /* Drawable class */
     py::class_<sf::Drawable>(graphics, "Drawable");
 
+    /* Transform class */
     py::class_<sf::Transform>(graphics, "Transform")
         .def(py::init<>())
         .def(py::init<float, float, float, float, float, float, float, float, float>())
@@ -312,6 +325,7 @@ PYBIND11_MODULE(pysfml, m)
         .def(py::self == py::self)
         .def(py::self != py::self);
 
+    /* Transformable class */
     py::class_<sf::Transformable>(graphics, "Transformable")
         .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& shape, const sf::Vector2f& position) { shape.setPosition(position); })
         .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
@@ -327,6 +341,7 @@ PYBIND11_MODULE(pysfml, m)
         .def("get_transform", &sf::Shape::getTransform)
         .def("get_inverse_transform", &sf::Shape::getInverseTransform);
 
+    /* Shape class */
     py::class_<sf::Shape, sf::Drawable, sf::Transformable>(graphics, "Shape")
         // .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
         // .def_property("textureRect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
@@ -338,21 +353,25 @@ PYBIND11_MODULE(pysfml, m)
         // .def("get_global_bounds", &sf::Shape::getGlobalBounds)
         .def("get_point", &sf::Shape::getPoint);
 
+    /* CircleShape class */
     py::class_<sf::CircleShape, sf::Shape>(graphics, "CircleShape")
         .def(py::init<float, std::size_t>(), py::arg("radius"), py::arg("point_count") = 30)
         .def_property("radius", &sf::CircleShape::getRadius, &sf::CircleShape::setRadius)
         .def_property("point_count", &sf::CircleShape::getPointCount, &sf::CircleShape::setPointCount);
 
+    /* ConvexShape class */
     py::class_<sf::ConvexShape, sf::Shape>(graphics, "ConvexShape")
         .def(py::init<std::size_t>(), py::arg("point_count") = 0)
         .def_property("point_count", &sf::ConvexShape::getPointCount, &sf::ConvexShape::setPointCount)
         .def("set_point", &sf::ConvexShape::setPoint);
 
+    /* RectangleShape class */
     py::class_<sf::RectangleShape, sf::Shape>(graphics, "RectangleShape")
         .def(py::init<const sf::Vector2f&>(), py::arg("size") = sf::Vector2f(0, 0))
         .def_property("size", &sf::RectangleShape::getSize, &sf::RectangleShape::setSize)
         .def_property_readonly("point_count", &sf::RectangleShape::getPointCount);
 
+    /* RenderWindow class */
     py::class_<sf::RenderWindow>(graphics, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>())
         .def("is_open", &sf::Window::isOpen)
@@ -365,3 +384,9 @@ PYBIND11_MODULE(pysfml, m)
     m.attr("__version__") = "dev";
 #endif
 }
+
+#undef PYSFML_CONCAT_STRING
+#undef PYSFML_STRINGIFY_IMPL
+#undef PYSFML_STRINGIFY
+#undef PYSFML_CONCATENATE_IMPL
+#undef PYSFML_CONCATENATE
