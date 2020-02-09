@@ -163,8 +163,6 @@ PYBIND11_MODULE(pysfml11, m)
 
     // TODO
     // class   sf::Clipboard  (needs sf::String)
-    // class   sf::Context
-    // class   sf::ContextSettings
     // class   sf::Cursor
     // class   sf::Event
     // class   sf::GlResource
@@ -208,6 +206,18 @@ PYBIND11_MODULE(pysfml11, m)
         .def_readwrite("minor_version", &sf::ContextSettings::minorVersion)
         .def_readwrite("attribute_flags", &sf::ContextSettings::attributeFlags)
         .def_readwrite("s_rgb_capable", &sf::ContextSettings::sRgbCapable);
+
+    /* Context class */
+    py::class_<sf::Context>(window, "Context")
+        .def(py::init<>())
+        .def(py::init<const sf::ContextSettings&, std::size_t, std::size_t>())
+        .def("set_active", &sf::Context::setActive)
+        .def("get_settings", &sf::Context::getSettings)
+        .def_static("is_extension_available", &sf::Context::isExtensionAvailable)
+        // .def_static("get_function", &sf::Context::getFunction)
+        .def_static("get_active_context", &sf::Context::getActiveContext)
+        .def_static("get_active_context_id", &sf::Context::getActiveContextId)
+        ;
 
     /* VideoMode class */
     py::class_<sf::VideoMode>(window, "VideoMode")
