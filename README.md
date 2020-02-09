@@ -3,6 +3,11 @@ pysfml
 
 A Python binding for the [SFML](https://www.sfml-dev.org) library, based on [pybind11](https://github.com/pybind/pybind11).
 
+Status
+------
+
+`pysfml` is under development and not yet usable. Contributions are very welcome!
+
 License
 -------
 
