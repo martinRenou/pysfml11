@@ -1,6 +1,6 @@
-from pysfml.system import Vector2f
+from pysfml11.system import Vector2f
 
-from pysfml.graphics import ConvexShape, Color
+from pysfml11.graphics import ConvexShape, Color
 
 
 def test_construction():

@@ -1,6 +1,6 @@
 import pytest
 
-from pysfml.system import Vector2f, Vector2i, Vector2u
+from pysfml11.system import Vector2f, Vector2i, Vector2u
 
 
 def test_construction():

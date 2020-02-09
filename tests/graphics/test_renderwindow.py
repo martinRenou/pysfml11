@@ -1,6 +1,6 @@
-from pysfml.window import VideoMode
+from pysfml11.window import VideoMode
 
-from pysfml.graphics import RenderWindow
+from pysfml11.graphics import RenderWindow
 
 
 def test_construction():

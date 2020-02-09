@@ -23,7 +23,7 @@ class get_pybind_include(object):
 
 ext_modules = [
     Extension(
-        'pysfml',
+        'pysfml11',
         ['src/main.cpp'],
         include_dirs=[
             # Path to pybind11 headers
@@ -98,11 +98,11 @@ class BuildExt(build_ext):
         build_ext.build_extensions(self)
 
 setup(
-    name='pysfml',
+    name='pysfml11',
     version=__version__,
     author='Martin Renou',
     author_email='martin.renou@gmail.com',
-    url='https://github.com/martinRenou/pysfml',
+    url='https://github.com/martinRenou/pysfml11',
     description='Python binding for the SFML library, using pybind11',
     long_description='',
     ext_modules=ext_modules,

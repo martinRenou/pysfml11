@@ -1,6 +1,6 @@
-from pysfml.system import Vector2f
+from pysfml11.system import Vector2f
 
-from pysfml.graphics import Transform, CircleShape
+from pysfml11.graphics import Transform, CircleShape
 
 
 def test_construction():

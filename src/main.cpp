@@ -17,13 +17,13 @@ namespace py = pybind11;
 #define PYSFML_CONCAT_STRING(A, B) PYSFML_STRINGIFY(PYSFML_CONCATENATE(A, B))
 
 
-PYBIND11_MODULE(pysfml, m)
+PYBIND11_MODULE(pysfml11, m)
 {
     m.doc() = R"pbdoc(
-        pysfml
-        ------
+        pysfml11
+        --------
 
-        .. currentmodule:: pysfml
+        .. currentmodule:: pysfml11
     )pbdoc";
 
     /*****************
@@ -32,10 +32,10 @@ PYBIND11_MODULE(pysfml, m)
 
     py::module system = m.def_submodule("system");
     system.doc() = R"pbdoc(
-        pysfml.system
-        -------------
+        pysfml11.system
+        ---------------
 
-        .. currentmodule:: pysfml.system
+        .. currentmodule:: pysfml11.system
 
         .. autosummary::
            :toctree: _generate
@@ -177,10 +177,10 @@ PYBIND11_MODULE(pysfml, m)
 
     py::module window = m.def_submodule("window");
     window.doc() = R"pbdoc(
-        pysfml.window
-        -------------
+        pysfml11.window
+        ---------------
 
-        .. currentmodule:: pysfml.window
+        .. currentmodule:: pysfml11.window
 
         .. autosummary::
            :toctree: _generate
@@ -231,10 +231,10 @@ PYBIND11_MODULE(pysfml, m)
 
     py::module graphics = m.def_submodule("graphics");
     graphics.doc() = R"pbdoc(
-        pysfml.graphics
-        ---------------
+        pysfml11.graphics
+        -----------------
 
-        .. currentmodule:: pysfml.graphics
+        .. currentmodule:: pysfml11.graphics
 
         .. autosummary::
            :toctree: _generate
