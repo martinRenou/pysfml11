@@ -162,7 +162,7 @@ PYBIND11_MODULE(pysfml11, m)
      *****************/
 
     // TODO
-    // class   sf::Clipboard
+    // class   sf::Clipboard  (needs sf::String)
     // class   sf::Context
     // class   sf::ContextSettings
     // class   sf::Cursor
@@ -187,6 +187,27 @@ PYBIND11_MODULE(pysfml11, m)
 
            VideoMode
     )pbdoc";
+
+    /* ContextSettingsAttribute enum */
+    py::enum_<sf::ContextSettings::Attribute>(window, "ContextSettingsAttribute")
+        .value("default", sf::ContextSettings::Attribute::Default)
+        .value("core", sf::ContextSettings::Attribute::Core)
+        .value("debug", sf::ContextSettings::Attribute::Debug)
+        .export_values();
+
+    /* ContextSettings class */
+    py::class_<sf::ContextSettings>(window, "ContextSettings")
+        .def(
+            py::init<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, bool>(),
+            py::arg("depth_bits") = 0, py::arg("stencil_bits") = 0, py::arg("major_version") = 1, py::arg("minor_version") = 1, py::arg("attribute_flags") = sf::ContextSettings::Attribute::Default, py::arg("s_rgb_capable") = false
+        )
+        .def_readwrite("depth_bits", &sf::ContextSettings::depthBits)
+        .def_readwrite("stencil_bits", &sf::ContextSettings::stencilBits)
+        .def_readwrite("antialiasing_level", &sf::ContextSettings::antialiasingLevel)
+        .def_readwrite("major_version", &sf::ContextSettings::majorVersion)
+        .def_readwrite("minor_version", &sf::ContextSettings::minorVersion)
+        .def_readwrite("attribute_flags", &sf::ContextSettings::attributeFlags)
+        .def_readwrite("s_rgb_capable", &sf::ContextSettings::sRgbCapable);
 
     /* VideoMode class */
     py::class_<sf::VideoMode>(window, "VideoMode")
