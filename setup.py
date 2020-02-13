@@ -72,8 +72,8 @@ class BuildExt(build_ext):
         'unix': [],
     }
     l_opts = {
-        'msvc': ['-lsfml-graphics', '-lsfml-window', '-lsfml-system'],
-        'unix': ['-lsfml-graphics', '-lsfml-window', '-lsfml-system'],
+        'msvc': ['-lsfml-network', '-lsfml-audio', '-lsfml-graphics', '-lsfml-window', '-lsfml-system'],
+        'unix': ['-lsfml-network', '-lsfml-audio', '-lsfml-graphics', '-lsfml-window', '-lsfml-system'],
     }
 
     if sys.platform == 'darwin':

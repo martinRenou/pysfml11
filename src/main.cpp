@@ -2,6 +2,9 @@
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/Network.hpp>
 
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
@@ -186,17 +189,17 @@ PYBIND11_MODULE(pysfml11, m)
            VideoMode
     )pbdoc";
 
-    /* ContextSettingsAttribute enum */
-    py::enum_<sf::ContextSettings::Attribute>(window, "ContextSettingsAttribute")
+    /* ContextSettings class */
+    py::class_<sf::ContextSettings> context_settings(window, "ContextSettings");
+
+    py::enum_<sf::ContextSettings::Attribute>(context_settings, "Attribute", py::arithmetic())
         .value("default", sf::ContextSettings::Attribute::Default)
         .value("core", sf::ContextSettings::Attribute::Core)
         .value("debug", sf::ContextSettings::Attribute::Debug)
         .export_values();
 
-    /* ContextSettings class */
-    py::class_<sf::ContextSettings>(window, "ContextSettings")
-        .def(
-            py::init<std::size_t, std::size_t, std::size_t, std::size_t, std::size_t, bool>(),
+    context_settings.def(
+            py::init<std::size_t, std::size_t, std::size_t, std::size_t, sf::ContextSettings::Attribute, bool>(),
             py::arg("depth_bits") = 0, py::arg("stencil_bits") = 0, py::arg("major_version") = 1, py::arg("minor_version") = 1, py::arg("attribute_flags") = sf::ContextSettings::Attribute::Default, py::arg("s_rgb_capable") = false
         )
         .def_readwrite("depth_bits", &sf::ContextSettings::depthBits)
@@ -415,6 +418,130 @@ PYBIND11_MODULE(pysfml11, m)
         .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
             renderwindow.draw(drawable);
         });
+
+
+    /****************
+     * AUDIO MODULE *
+     ****************/
+
+    py::module audio = m.def_submodule("audio");
+    audio.doc() = R"pbdoc(
+        pysfml11.audio
+        ---------------
+
+        .. currentmodule:: pysfml11.audio
+
+        .. autosummary::
+           :toctree: _generate
+    )pbdoc";
+
+    /* InputSoundFile class */
+    py::class_<sf::InputSoundFile>(audio, "InputSoundFile")
+        .def(py::init<>())
+        .def("open_from_file", &sf::InputSoundFile::openFromFile)
+        .def("open_from_memory", &sf::InputSoundFile::openFromMemory)
+        .def("open_from_stream", &sf::InputSoundFile::openFromStream)
+        .def("get_sample_count", &sf::InputSoundFile::getSampleCount)
+        .def("get_channel_count", &sf::InputSoundFile::getChannelCount)
+        .def("get_sample_rate", &sf::InputSoundFile::getSampleRate)
+        .def("get_duration", &sf::InputSoundFile::getDuration)
+        .def("get_time_offset", &sf::InputSoundFile::getTimeOffset)
+        .def("get_sample_offset", &sf::InputSoundFile::getSampleOffset)
+        .def("seek", [](sf::InputSoundFile& input_sound_file, uint64_t sample_offset) {
+            input_sound_file.seek(sample_offset);
+        })
+        .def("seek", [](sf::InputSoundFile& input_sound_file, sf::Time time_offset) {
+            input_sound_file.seek(time_offset);
+        })
+        .def("read", &sf::InputSoundFile::read);
+
+    /* Listener class */
+    py::class_<sf::Listener>(audio, "Listener")
+        .def_property_static(
+            "global_volume",
+            [](py::object) { return sf::Listener::getGlobalVolume(); },
+            [](py::object, float volume) { sf::Listener::setGlobalVolume(volume); }
+        )
+        .def_property_static(
+            "position",
+            [](py::object) { return sf::Listener::getPosition(); },
+            [](py::object, const sf::Vector3f& position) { sf::Listener::setPosition(position); }
+        )
+        .def_property_static(
+            "direction",
+            [](py::object) { return sf::Listener::getDirection(); },
+            [](py::object, const sf::Vector3f& direction) { sf::Listener::setDirection(direction); }
+        )
+        .def_property_static(
+            "up_vector",
+            [](py::object) { return sf::Listener::getUpVector(); },
+            [](py::object, const sf::Vector3f& up_vector) { sf::Listener::setUpVector(up_vector); }
+        );
+
+    /* SoundBuffer class */
+    py::class_<sf::SoundBuffer>(audio, "SoundBuffer")
+        .def(py::init<>())
+        .def("load_from_file", &sf::SoundBuffer::loadFromFile)
+        .def("load_from_memory", &sf::SoundBuffer::loadFromMemory)
+        .def("load_from_stream", &sf::SoundBuffer::loadFromStream)
+        .def("load_from_samples", &sf::SoundBuffer::loadFromSamples)
+        .def("save_to_file", &sf::SoundBuffer::saveToFile)
+        .def("get_samples", [](const sf::SoundBuffer& soundbuffer) {
+            const int16_t* samples = soundbuffer.getSamples();
+
+            return std::vector<int16_t>(samples, samples + soundbuffer.getSampleCount());
+        })
+        .def("get_sample_count", &sf::SoundBuffer::getSampleCount)
+        .def("get_sample_rate", &sf::SoundBuffer::getSampleRate)
+        .def("get_channel_count", &sf::SoundBuffer::getChannelCount)
+        .def("get_duration", &sf::SoundBuffer::getDuration);
+
+    /* SoundSource class */
+    py::class_<sf::SoundSource> soundsource(audio, "SoundSource");
+
+    py::enum_<sf::SoundSource::Status>(soundsource, "Status")
+        .value("stopped", sf::SoundSource::Status::Stopped)
+        .value("paused", sf::SoundSource::Status::Paused)
+        .value("playing", sf::SoundSource::Status::Playing)
+        .export_values();
+
+    soundsource.def_property("pitch", &sf::SoundSource::getPitch, &sf::SoundSource::setPitch)
+        .def_property("volume", &sf::SoundSource::getVolume, &sf::SoundSource::setVolume)
+        .def_property("position", &sf::SoundSource::getPosition, [](sf::SoundSource& source, const sf::Vector3f& position) {
+            source.setPosition(position);
+        })
+        .def_property("relative_to_listener", &sf::SoundSource::isRelativeToListener, &sf::SoundSource::setRelativeToListener)
+        .def_property("min_distance", &sf::SoundSource::getMinDistance, &sf::SoundSource::setMinDistance)
+        .def_property("attenuation", &sf::SoundSource::getAttenuation, &sf::SoundSource::setAttenuation)
+        .def("get_status", &sf::SoundSource::getStatus);
+
+    /* Sound class */
+    py::class_<sf::Sound, sf::SoundSource>(audio, "Sound")
+        .def(py::init<>())
+        .def("play", &sf::Sound::play)
+        .def("pause", &sf::Sound::pause)
+        .def("stop", &sf::Sound::stop)
+        .def_property("buffer", &sf::Sound::getBuffer, &sf::Sound::setBuffer)
+        .def("reset_buffer", &sf::Sound::resetBuffer)
+        .def_property("loop", &sf::Sound::getLoop, &sf::Sound::setLoop)
+        .def_property("playing_offset", &sf::Sound::getPlayingOffset, &sf::Sound::setPlayingOffset);
+
+    /* SoundStream class */
+    py::class_<sf::SoundStream, sf::SoundSource>(audio, "SoundStream")
+        .def("play", &sf::SoundStream::play)
+        .def("pause", &sf::SoundStream::pause)
+        .def("stop", &sf::SoundStream::stop);
+
+    /* Music class */
+    py::class_<sf::Music, sf::SoundStream>(audio, "Music")
+        .def(py::init<>())
+        .def("open_from_file", &sf::Music::openFromFile)
+        .def("open_from_memory", &sf::Music::openFromMemory)
+        .def("open_from_stream", &sf::Music::openFromStream)
+        .def("get_duration", &sf::Music::getDuration)
+        // .def_property("loop_points", &sf::Sound::getLoopPoints, &sf::Sound::setLoopPoints)
+        // TODO + TESTS
+        ;
 
 
 #ifdef VERSION_INFO
