@@ -405,8 +405,16 @@ PYBIND11_MODULE(pysfml11, m)
     /* RenderWindow class */
     py::class_<sf::RenderWindow>(graphics, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>())
-        .def("is_open", &sf::Window::isOpen)
-        .def("display", &sf::Window::display);
+        .def("is_open", &sf::RenderWindow::isOpen)
+        .def("display", &sf::RenderWindow::display)
+        .def("poll_event", [](sf::RenderWindow& renderwindow) {
+            sf::Event event;
+            return renderwindow.pollEvent(event);
+        })
+        .def("clear", &sf::RenderWindow::clear)
+        .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
+            renderwindow.draw(drawable);
+        });
 
 
 #ifdef VERSION_INFO
