@@ -68,4 +68,4 @@ def test_attenuation():
 def test_status():
     sound = Sound()
 
-    assert sound.get_status() == SoundSource.Status.stopped
+    assert sound.status == SoundSource.Status.stopped

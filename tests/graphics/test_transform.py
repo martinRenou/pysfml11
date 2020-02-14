@@ -18,13 +18,13 @@ def test_construction():
 
     shape = CircleShape(3)
 
-    assert isinstance(shape.get_transform(), Transform)
+    assert isinstance(shape.transform, Transform)
 
 
 def test_methods():
     transform = Transform()
 
-    assert transform.get_matrix() == [
+    assert transform.matrix == [
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,

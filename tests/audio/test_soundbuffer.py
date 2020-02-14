@@ -28,9 +28,9 @@ def test_methods():
 
     sound_buffer.load_from_file(str(resources / 'canary.wav'))
 
-    assert sound_buffer.get_sample_count() == 63460
-    assert sound_buffer.get_channel_count() == 1
-    assert sound_buffer.get_sample_rate() == 11025
-    assert len(sound_buffer.get_samples()) == sound_buffer.get_sample_count()
-    assert isinstance(sound_buffer.get_duration(), Time)
-    assert math.isclose(sound_buffer.get_duration().as_seconds(), 5.75, rel_tol=0.01)
+    assert sound_buffer.sample_count == 63460
+    assert sound_buffer.channel_count == 1
+    assert sound_buffer.sample_rate == 11025
+    assert len(sound_buffer.samples) == sound_buffer.sample_count
+    assert isinstance(sound_buffer.duration, Time)
+    assert math.isclose(sound_buffer.duration.as_seconds(), 5.75, rel_tol=0.01)

@@ -99,7 +99,7 @@ PYBIND11_MODULE(pysfml11, m)
     /* Clock class */
     py::class_<sf::Clock>(system, "Clock")
         .def(py::init<>())
-        .def("get_elapsed_time", &sf::Clock::getElapsedTime)
+        .def_property_readonly("elapsed_time", &sf::Clock::getElapsedTime)
         .def("restart", &sf::Clock::restart);
 
     #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                               \
@@ -215,7 +215,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::init<>())
         .def(py::init<const sf::ContextSettings&, std::size_t, std::size_t>())
         .def("set_active", &sf::Context::setActive)
-        .def("get_settings", &sf::Context::getSettings)
+        .def_property_readonly("settings", &sf::Context::getSettings)
         .def_static("is_extension_available", &sf::Context::isExtensionAvailable)
         // .def_static("get_function", &sf::Context::getFunction)
         .def_static("get_active_context", &sf::Context::getActiveContext)
@@ -311,12 +311,12 @@ PYBIND11_MODULE(pysfml11, m)
     py::class_<sf::Transform>(graphics, "Transform")
         .def(py::init<>())
         .def(py::init<float, float, float, float, float, float, float, float, float>())
-        .def("get_matrix", [](const sf::Transform& transform) {
+        .def_property_readonly("matrix", [](const sf::Transform& transform) {
             const float* matrix = transform.getMatrix();
 
             return std::vector<float>(matrix, matrix + 16);
         })
-        .def("get_inverse", &sf::Transform::getInverse)
+        .def_property_readonly("inverse", &sf::Transform::getInverse)
         .def("transform_point", [](sf::Transform& transform, float x, float y) {
             return transform.transformPoint(x, y);
         })
@@ -372,8 +372,8 @@ PYBIND11_MODULE(pysfml11, m)
             return shape.move(offset);
         })
         .def("rotate", &sf::Transformable::rotate)
-        .def("get_transform", &sf::Shape::getTransform)
-        .def("get_inverse_transform", &sf::Shape::getInverseTransform);
+        .def_property_readonly("transform", &sf::Shape::getTransform)
+        .def_property_readonly("inverse_transform", &sf::Shape::getInverseTransform);
 
     /* Shape class */
     py::class_<sf::Shape, sf::Drawable, sf::Transformable>(graphics, "Shape")
@@ -383,8 +383,8 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property("outline_color", &sf::Shape::getOutlineColor, &sf::Shape::setOutlineColor)
         .def_property("outline_thickness", &sf::Shape::getOutlineThickness, &sf::Shape::setOutlineThickness)
         .def_property_readonly("point_count", &sf::Shape::getPointCount)
-        // .def("get_local_bounds", &sf::Shape::getLocalBounds)
-        // .def("get_global_bounds", &sf::Shape::getGlobalBounds)
+        // .def_property_readonly("local_bounds", &sf::Shape::getLocalBounds)
+        // .def_property_readonly("global_bounds", &sf::Shape::getGlobalBounds)
         .def("get_point", &sf::Shape::getPoint);
 
     /* CircleShape class */
@@ -439,21 +439,35 @@ PYBIND11_MODULE(pysfml11, m)
     py::class_<sf::InputSoundFile>(audio, "InputSoundFile")
         .def(py::init<>())
         .def("open_from_file", &sf::InputSoundFile::openFromFile)
-        .def("open_from_memory", &sf::InputSoundFile::openFromMemory)
+        // Should be tested with Python bytes
+        // .def("open_from_memory", &sf::InputSoundFile::openFromMemory)
         .def("open_from_stream", &sf::InputSoundFile::openFromStream)
-        .def("get_sample_count", &sf::InputSoundFile::getSampleCount)
-        .def("get_channel_count", &sf::InputSoundFile::getChannelCount)
-        .def("get_sample_rate", &sf::InputSoundFile::getSampleRate)
-        .def("get_duration", &sf::InputSoundFile::getDuration)
-        .def("get_time_offset", &sf::InputSoundFile::getTimeOffset)
-        .def("get_sample_offset", &sf::InputSoundFile::getSampleOffset)
+        .def_property_readonly("sample_count", &sf::InputSoundFile::getSampleCount)
+        .def_property_readonly("channel_count", &sf::InputSoundFile::getChannelCount)
+        .def_property_readonly("sample_rate", &sf::InputSoundFile::getSampleRate)
+        .def_property_readonly("duration", &sf::InputSoundFile::getDuration)
+        .def_property_readonly("time_offset", &sf::InputSoundFile::getTimeOffset)
+        .def_property_readonly("sample_offset", &sf::InputSoundFile::getSampleOffset)
         .def("seek", [](sf::InputSoundFile& input_sound_file, uint64_t sample_offset) {
             input_sound_file.seek(sample_offset);
         })
         .def("seek", [](sf::InputSoundFile& input_sound_file, sf::Time time_offset) {
             input_sound_file.seek(time_offset);
         })
-        .def("read", &sf::InputSoundFile::read);
+        .def("read", [](sf::InputSoundFile& inputfile, uint64_t count) {
+            sf::Int16 samples[count];
+
+            sf::Uint64 readcount = inputfile.read(samples, count);
+            return std::vector<int16_t>(samples, samples + readcount);
+        });
+
+    /* OutputSoundFile class */
+    py::class_<sf::OutputSoundFile>(audio, "OutputSoundFile")
+        .def(py::init<>())
+        .def("open_from_file", &sf::OutputSoundFile::openFromFile)
+        .def("write", [](sf::OutputSoundFile& outputfile, const std::vector<int16_t>& samples) {
+            outputfile.write(samples.data(), samples.size());
+        });
 
     /* Listener class */
     py::class_<sf::Listener>(audio, "Listener")
@@ -482,19 +496,22 @@ PYBIND11_MODULE(pysfml11, m)
     py::class_<sf::SoundBuffer>(audio, "SoundBuffer")
         .def(py::init<>())
         .def("load_from_file", &sf::SoundBuffer::loadFromFile)
-        .def("load_from_memory", &sf::SoundBuffer::loadFromMemory)
+        // Should be tested with Python bytes
+        // .def("load_from_memory", &sf::SoundBuffer::loadFromMemory)
         .def("load_from_stream", &sf::SoundBuffer::loadFromStream)
-        .def("load_from_samples", &sf::SoundBuffer::loadFromSamples)
+        .def("load_from_samples", [](sf::SoundBuffer& soundbuffer, const std::vector<int16_t>& samples, uint64_t channelcount, uint64_t samplerate) {
+            return soundbuffer.loadFromSamples(samples.data(), samples.size(), channelcount, samplerate);
+        })
         .def("save_to_file", &sf::SoundBuffer::saveToFile)
-        .def("get_samples", [](const sf::SoundBuffer& soundbuffer) {
+        .def_property_readonly("samples", [](const sf::SoundBuffer& soundbuffer) {
             const int16_t* samples = soundbuffer.getSamples();
 
             return std::vector<int16_t>(samples, samples + soundbuffer.getSampleCount());
         })
-        .def("get_sample_count", &sf::SoundBuffer::getSampleCount)
-        .def("get_sample_rate", &sf::SoundBuffer::getSampleRate)
-        .def("get_channel_count", &sf::SoundBuffer::getChannelCount)
-        .def("get_duration", &sf::SoundBuffer::getDuration);
+        .def_property_readonly("sample_count", &sf::SoundBuffer::getSampleCount)
+        .def_property_readonly("sample_rate", &sf::SoundBuffer::getSampleRate)
+        .def_property_readonly("channel_count", &sf::SoundBuffer::getChannelCount)
+        .def_property_readonly("duration", &sf::SoundBuffer::getDuration);
 
     /* SoundSource class */
     py::class_<sf::SoundSource> soundsource(audio, "SoundSource");
@@ -513,7 +530,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property("relative_to_listener", &sf::SoundSource::isRelativeToListener, &sf::SoundSource::setRelativeToListener)
         .def_property("min_distance", &sf::SoundSource::getMinDistance, &sf::SoundSource::setMinDistance)
         .def_property("attenuation", &sf::SoundSource::getAttenuation, &sf::SoundSource::setAttenuation)
-        .def("get_status", &sf::SoundSource::getStatus);
+        .def_property_readonly("status", &sf::SoundSource::getStatus);
 
     /* Sound class */
     py::class_<sf::Sound, sf::SoundSource>(audio, "Sound")
@@ -536,11 +553,24 @@ PYBIND11_MODULE(pysfml11, m)
     py::class_<sf::Music, sf::SoundStream>(audio, "Music")
         .def(py::init<>())
         .def("open_from_file", &sf::Music::openFromFile)
-        .def("open_from_memory", &sf::Music::openFromMemory)
+        // Should be tested with Python bytes
+        // .def("open_from_memory", &sf::Music::openFromMemory)
         .def("open_from_stream", &sf::Music::openFromStream)
-        .def("get_duration", &sf::Music::getDuration)
         // .def_property("loop_points", &sf::Sound::getLoopPoints, &sf::Sound::setLoopPoints)
-        // TODO + TESTS
+        .def_property_readonly("channel_count", &sf::Music::getChannelCount)
+        .def_property_readonly("sample_rate", &sf::Music::getSampleRate)
+        .def_property_readonly("duration", &sf::Music::getDuration)
+        .def_property("loop", &sf::Music::getLoop, &sf::Music::setLoop)
+        .def_property("playing_offset", &sf::Music::getPlayingOffset, &sf::Music::setPlayingOffset);
+
+    /* SoundRecorder class */
+    py::class_<sf::SoundRecorder>(audio, "SoundRecorder")
+        .def("start", &sf::SoundRecorder::start)
+        .def("stop", &sf::SoundRecorder::stop)
+        .def_property_readonly("sample_rate", &sf::SoundRecorder::getSampleRate)
+        .def_property("device", &sf::SoundRecorder::getDevice, &sf::SoundRecorder::setDevice)
+        .def_property("channel_count", &sf::SoundRecorder::getChannelCount, &sf::SoundRecorder::setChannelCount)
+        // TODO + tests
         ;
 
 

@@ -6,3 +6,4 @@ MANIFEST
 _build
 _generate
 build
+tests/resources/canary2.ogg
