@@ -50,7 +50,7 @@ All method/function names are renamed using snake_case.
 
 ### Setters/Getters
 
-Those are replaced by properties (read-only properties if there is not getter available). So for example with the RectangleShape:
+Those are replaced by properties (read-only properties if there is not getter available). So for example with the RectangleShape, this C++ code:
 
 ```cpp
 sf::RectangleShape rectangle;
@@ -59,7 +59,7 @@ rectangle.setPosition(10, 20);
 sf::Vector2f position = rectangle.getPosition();
 ```
 
-Becomes:
+Becomes the following in Python:
 ```python
 rectangle = RectangleShape()
 
@@ -69,8 +69,9 @@ position = rectangle.position
 
 ### C-like functions
 
-C-like functions are made simpler. For example with the InputSoundFile's read method, the samples buffer is the returned value (no need to allocate it before calling the method), and the samples counts actually read can be computed getting the length of the returned value:
+C-like functions are made simpler. For example with the InputSoundFile's read method, the samples buffer is the returned value (no need to allocate it before calling the method), and the samples counts actually read can be computed getting the length of the returned value.
 
+This C++ code:
 ```cpp
 sf::InputSoundFile file;
 file.openFromFile("music.ogg");
@@ -79,7 +80,7 @@ sf::Int16 samples[1024];
 sf::Uint64 count = file.read(samples, 1024);
 ```
 
-Becomes:
+Becomes the following in Python:
 ```python
 file = InputSoundFile()
 file.open_from_file("music.ogg")
