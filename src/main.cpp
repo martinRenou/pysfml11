@@ -49,20 +49,6 @@ PYBIND11_MODULE(pysfml11, m)
            Vector3
     )pbdoc";
 
-    // TODO
-    // class   sf::FileInputStream
-    // class   sf::InputStream
-    // class   sf::Lock
-    // class   sf::MemoryInputStream
-    // class   sf::Mutex
-    // class   sf::NonCopyable
-    // class   sf::String
-    // class   sf::Thread
-    // class   sf::ThreadLocal
-    // class   sf::ThreadLocalPtr< T >
-    // class   sf::Utf< N >
-    // std::ostream &  sf::err ()
-
     /* Time class */
     py::class_<sf::Time>(system, "Time")
         .def(py::init<>())
@@ -458,6 +444,7 @@ PYBIND11_MODULE(pysfml11, m)
             sf::Int16 samples[count];
 
             sf::Uint64 readcount = inputfile.read(samples, count);
+            // TODO: Raise if readcount is -1
             return std::vector<int16_t>(samples, samples + readcount);
         });
 
