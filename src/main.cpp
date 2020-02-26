@@ -233,6 +233,32 @@ PYBIND11_MODULE(pysfml11, m)
             sf::Clipboard::setString(str);
         });
 
+    /* Cursor class */
+    py::class_<sf::Cursor> cursor(window, "Cursor");
+
+    py::enum_<sf::Cursor::Type>(cursor, "Type")
+        .value("Arrow", sf::Cursor::Arrow)
+        .value("ArrowWait", sf::Cursor::ArrowWait)
+        .value("Wait", sf::Cursor::Wait)
+        .value("Text", sf::Cursor::Text)
+        .value("Hand", sf::Cursor::Hand)
+        .value("SizeHorizontal", sf::Cursor::SizeHorizontal)
+        .value("SizeVertical", sf::Cursor::SizeVertical)
+        .value("SizeTopLeftBottomRight", sf::Cursor::SizeTopLeftBottomRight)
+        .value("SizeBottomLeftTopRight", sf::Cursor::SizeBottomLeftTopRight)
+        .value("SizeAll", sf::Cursor::SizeAll)
+        .value("Cross", sf::Cursor::Cross)
+        .value("Help", sf::Cursor::Help)
+        .value("NotAllowed", sf::Cursor::NotAllowed)
+        .export_values();
+
+    cursor.def(py::init<>())
+        .def("load_from_pixels", [](sf::Cursor& cursor, const std::vector<uint8_t>& pixels, const sf::Vector2u& size, const sf::Vector2u& hotspot) {
+            return cursor.loadFromPixels(pixels.data(), size, hotspot);
+        })
+        // TODO for convenience?
+        // .def("load_from_file", &sf::Cursor::loadFromFile)
+        .def("load_from_system", &sf::Cursor::loadFromSystem);
 
     /*******************
      * GRAPHICS MODULE *
