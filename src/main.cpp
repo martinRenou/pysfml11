@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
@@ -151,7 +152,6 @@ PYBIND11_MODULE(pysfml11, m)
      *****************/
 
     // TODO
-    // class   sf::Clipboard  (needs sf::String)
     // class   sf::Cursor
     // class   sf::Event
     // class   sf::GlResource
@@ -223,6 +223,15 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::self > py::self)
         .def(py::self <= py::self)
         .def(py::self >= py::self);
+
+    /* Clipboard class */
+    py::class_<sf::Clipboard>(window, "Clipboard")
+        .def_property_static("string", [](py::object) {
+            std::string str = sf::Clipboard::getString();
+            return str;
+        }, [](py::object, const std::string& str) {
+            sf::Clipboard::setString(str);
+        });
 
 
     /*******************
