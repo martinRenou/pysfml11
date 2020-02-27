@@ -1,6 +1,6 @@
 """Simple example of a rotating Rectangle."""
 from pysfml11.system import Vector2f, Clock
-from pysfml11.window import VideoMode
+from pysfml11.window import VideoMode, Event
 from pysfml11.graphics import Color, RenderWindow, RectangleShape
 
 
@@ -19,12 +19,14 @@ rectangle.position = Vector2f(width / 2., height / 2.)
 
 
 while (window.is_open()):
-    while window.poll_event():
+    event = Event()
+
+    while window.poll_event(event):
         pass
 
     window.clear(Color.white)
 
-    elapsed = clock.get_elapsed_time().as_seconds() * 40
+    elapsed = clock.elapsed_time.as_seconds() * 40
     rectangle.rotation = elapsed
 
     window.draw(rectangle)

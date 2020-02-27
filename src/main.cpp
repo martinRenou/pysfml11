@@ -152,8 +152,6 @@ PYBIND11_MODULE(pysfml11, m)
      *****************/
 
     // TODO
-    // class   sf::Cursor
-    // class   sf::Event
     // class   sf::GlResource
     // class   sf::Joystick
     // class   sf::Keyboard
@@ -259,6 +257,108 @@ PYBIND11_MODULE(pysfml11, m)
         // TODO for convenience?
         // .def("load_from_file", &sf::Cursor::loadFromFile)
         .def("load_from_system", &sf::Cursor::loadFromSystem);
+
+    /* Event class */
+    py::class_<sf::Event> event(window, "Event");
+
+    py::class_<sf::Event::SizeEvent>(event, "SizeEvent")
+        .def_readonly("width", &sf::Event::SizeEvent::width)
+        .def_readonly("height", &sf::Event::SizeEvent::height);
+
+    py::class_<sf::Event::KeyEvent>(event, "KeyEvent")
+        .def_readonly("code", &sf::Event::KeyEvent::code)
+        .def_readonly("alt", &sf::Event::KeyEvent::alt)
+        .def_readonly("control", &sf::Event::KeyEvent::control)
+        .def_readonly("shift", &sf::Event::KeyEvent::shift)
+        .def_readonly("system", &sf::Event::KeyEvent::system);
+
+    py::class_<sf::Event::TextEvent>(event, "TextEvent")
+        .def_readonly("unicode", &sf::Event::TextEvent::unicode);
+
+    py::class_<sf::Event::MouseMoveEvent>(event, "MouseMoveEvent")
+        .def_readonly("x", &sf::Event::MouseMoveEvent::x)
+        .def_readonly("y", &sf::Event::MouseMoveEvent::y);
+
+    py::class_<sf::Event::MouseButtonEvent>(event, "MouseButtonEvent")
+        .def_readonly("button", &sf::Event::MouseButtonEvent::button)
+        .def_readonly("x", &sf::Event::MouseButtonEvent::x)
+        .def_readonly("y", &sf::Event::MouseButtonEvent::y);
+
+    py::class_<sf::Event::MouseWheelEvent>(event, "MouseWheelEvent")
+        .def_readonly("delta", &sf::Event::MouseWheelEvent::delta)
+        .def_readonly("x", &sf::Event::MouseWheelEvent::x)
+        .def_readonly("y", &sf::Event::MouseWheelEvent::y);
+
+    py::class_<sf::Event::MouseWheelScrollEvent>(event, "MouseWheelScrollEvent")
+        .def_readonly("wheel", &sf::Event::MouseWheelScrollEvent::wheel)
+        .def_readonly("delta", &sf::Event::MouseWheelScrollEvent::delta)
+        .def_readonly("x", &sf::Event::MouseWheelScrollEvent::x)
+        .def_readonly("y", &sf::Event::MouseWheelScrollEvent::y);
+
+    py::class_<sf::Event::JoystickConnectEvent>(event, "JoystickConnectEvent")
+        .def_readonly("joystick_id", &sf::Event::JoystickConnectEvent::joystickId);
+
+    py::class_<sf::Event::JoystickMoveEvent>(event, "JoystickMoveEvent")
+        .def_readonly("joystick_id", &sf::Event::JoystickMoveEvent::joystickId)
+        .def_readonly("axis", &sf::Event::JoystickMoveEvent::axis)
+        .def_readonly("position", &sf::Event::JoystickMoveEvent::position);
+
+    py::class_<sf::Event::JoystickButtonEvent>(event, "JoystickButtonEvent")
+        .def_readonly("joystick_id", &sf::Event::JoystickButtonEvent::joystickId)
+        .def_readonly("button", &sf::Event::JoystickButtonEvent::button);
+
+    py::class_<sf::Event::TouchEvent>(event, "TouchEvent")
+        .def_readonly("finger", &sf::Event::TouchEvent::finger)
+        .def_readonly("x", &sf::Event::TouchEvent::x)
+        .def_readonly("y", &sf::Event::TouchEvent::y);
+
+    py::class_<sf::Event::SensorEvent>(event, "SensorEvent")
+        .def_readonly("type", &sf::Event::SensorEvent::type)
+        .def_readonly("x", &sf::Event::SensorEvent::x)
+        .def_readonly("y", &sf::Event::SensorEvent::y)
+        .def_readonly("z", &sf::Event::SensorEvent::z);
+
+    py::enum_<sf::Event::EventType>(event, "EventType")
+        .value("Closed", sf::Event::Closed)
+        .value("Resized", sf::Event::Resized)
+        .value("LostFocus", sf::Event::LostFocus)
+        .value("GainedFocus", sf::Event::GainedFocus)
+        .value("TextEntered", sf::Event::TextEntered)
+        .value("KeyPressed", sf::Event::KeyPressed)
+        .value("KeyReleased", sf::Event::KeyReleased)
+        .value("MouseWheelMoved", sf::Event::MouseWheelMoved)
+        .value("MouseWheelScrolled", sf::Event::MouseWheelScrolled)
+        .value("MouseButtonPressed", sf::Event::MouseButtonPressed)
+        .value("MouseButtonReleased", sf::Event::MouseButtonReleased)
+        .value("MouseMoved", sf::Event::MouseMoved)
+        .value("MouseEntered", sf::Event::MouseEntered)
+        .value("MouseLeft", sf::Event::MouseLeft)
+        .value("JoystickButtonPressed", sf::Event::JoystickButtonPressed)
+        .value("JoystickButtonReleased", sf::Event::JoystickButtonReleased)
+        .value("JoystickMoved", sf::Event::JoystickMoved)
+        .value("JoystickConnected", sf::Event::JoystickConnected)
+        .value("JoystickDisconnected", sf::Event::JoystickDisconnected)
+        .value("TouchBegan", sf::Event::TouchBegan)
+        .value("TouchMoved", sf::Event::TouchMoved)
+        .value("TouchEnded", sf::Event::TouchEnded)
+        .value("SensorChanged", sf::Event::SensorChanged)
+        .value("Count", sf::Event::Count)
+        .export_values();
+
+    event.def(py::init<>())
+        .def_readonly("type", &sf::Event::type)
+        .def_readonly("size", &sf::Event::size)
+        .def_readonly("key", &sf::Event::key)
+        .def_readonly("text", &sf::Event::text)
+        .def_readonly("mouse_move", &sf::Event::mouseMove)
+        .def_readonly("mouse_button", &sf::Event::mouseButton)
+        .def_readonly("mouse_wheel", &sf::Event::mouseWheel)
+        .def_readonly("mouse_wheel_scroll", &sf::Event::mouseWheelScroll)
+        .def_readonly("joystick_move", &sf::Event::joystickMove)
+        .def_readonly("joystick_button", &sf::Event::joystickButton)
+        .def_readonly("joystick_connect", &sf::Event::joystickConnect)
+        .def_readonly("touch", &sf::Event::touch)
+        .def_readonly("sensor", &sf::Event::sensor);
 
     /*******************
      * GRAPHICS MODULE *
@@ -431,10 +531,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::init<const sf::VideoMode&, const std::string&>())
         .def("is_open", &sf::RenderWindow::isOpen)
         .def("display", &sf::RenderWindow::display)
-        .def("poll_event", [](sf::RenderWindow& renderwindow) {
-            sf::Event event;
-            return renderwindow.pollEvent(event);
-        })
+        .def("poll_event", &sf::RenderWindow::pollEvent)
         .def("clear", &sf::RenderWindow::clear)
         .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
             renderwindow.draw(drawable);
