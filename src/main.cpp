@@ -385,15 +385,20 @@ PYBIND11_MODULE(pysfml11, m)
             }
         )
         .def_static("get_position",
-            [](py::object self, const sf::Window& relative_to) {
+            [](const sf::Window& relative_to) {
                 return sf::Mouse::getPosition(relative_to);
             }
         )
         .def_static("set_position",
-            [](py::object self, const sf::Vector2i& position, const sf::Window& relative_to) {
+            [](const sf::Vector2i& position, const sf::Window& relative_to) {
                 return sf::Mouse::setPosition(position, relative_to);
             }
         );
+
+    /* Window class */
+    py::class_<sf::Window>(window, "Window")
+        .def(py::init<>());
+        // TODO
 
 
     /*******************
@@ -563,7 +568,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property_readonly("point_count", &sf::RectangleShape::getPointCount);
 
     /* RenderWindow class */
-    py::class_<sf::RenderWindow>(graphics, "RenderWindow")
+    py::class_<sf::RenderWindow, sf::Window>(graphics, "RenderWindow")
         .def(py::init<const sf::VideoMode&, const std::string&>())
         .def("is_open", &sf::RenderWindow::isOpen)
         .def("display", &sf::RenderWindow::display)
