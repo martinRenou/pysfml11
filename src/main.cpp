@@ -395,6 +395,27 @@ PYBIND11_MODULE(pysfml11, m)
             }
         );
 
+    // Workaround for sf::Style being a namespace instead of an enum
+    enum Style
+    {
+        None = sf::Style::None,
+        Titlebar = sf::Style::Titlebar,
+        Resize = sf::Style::Resize,
+        Close = sf::Style::Close,
+        Fullscreen = sf::Style::Fullscreen,
+        Default = sf::Style::Default
+    };
+
+    /* Style enum */
+    py::enum_<Style>(window, "Style", py::arithmetic())
+        .value("None", Style::None)
+        .value("Titlebar", Style::Titlebar)
+        .value("Resize", Style::Resize)
+        .value("Close", Style::Close)
+        .value("Fullscreen", Style::Fullscreen)
+        .value("Default", Style::Default)
+        .export_values();
+
     /* Window class */
     py::class_<sf::Window>(window, "Window")
         .def(py::init<>());
