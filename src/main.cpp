@@ -524,9 +524,12 @@ PYBIND11_MODULE(pysfml11, m)
     /* Transformable class */
     py::class_<sf::Transformable>(graphics, "Transformable")
         .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& shape, const sf::Vector2f& position) { shape.setPosition(position); })
+        .def("set_position", [](sf::Transformable& shape, float x, float y) { shape.setPosition(x, y); })
         .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
         .def_property("scale", &sf::Transformable::getScale, [](sf::Transformable& shape, const sf::Vector2f& scale) { shape.setScale(scale); })
+        .def("set_scale", [](sf::Transformable& shape, float x, float y) { shape.setScale(x, y); })
         .def_property("origin", &sf::Transformable::getOrigin, [](sf::Transformable& shape, const sf::Vector2f& origin) { shape.setOrigin(origin); })
+        .def("set_origin", [](sf::Transformable& shape, float x, float y) { shape.setOrigin(x, y); })
         .def("move", [](sf::Transformable& shape, float offsetx, float offsety) {
             return shape.move(offsetx, offsety);
         })
