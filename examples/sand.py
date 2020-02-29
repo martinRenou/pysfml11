@@ -8,7 +8,7 @@ from random import choice
 
 import numpy as np
 
-from pysfml11.system import Vector2f, Clock, sleep, milliseconds
+from pysfml11.system import Vector2f, Clock
 from pysfml11.window import VideoMode, Event, Mouse
 from pysfml11.graphics import Color, RenderWindow, RectangleShape
 
@@ -57,12 +57,12 @@ def simulate_physics(grid, grains_indices, delta_time):
 
                 if move_right:
                     # Is there an empty spot at the bottom right?
-                    if not grid[x + 1][y + 1]:
+                    if x != GRID_WIDTH - 1 and not grid[x + 1][y + 1]:
                         grid[x][y] = False
                         grid[x + 1][y] = True
                 else:
                     # Is there an empty spot at the bottom left?
-                    if not grid[x - 1][y + 1]:
+                    if x != 0 and not grid[x - 1][y + 1]:
                         grid[x][y] = False
                         grid[x - 1][y] = True
             else:
@@ -84,7 +84,7 @@ while (window.is_open()):
     delta_time = elapsed_time.as_seconds()
 
     # If the mouse left button is pressed, add a new sand grain in the world
-    if Mouse.is_button_pressed(Mouse.Button.Left) and grain_spawner_accumulator >= 0.02:
+    if Mouse.is_button_pressed(Mouse.Button.Left) and grain_spawner_accumulator >= 0.04:
         mouse_position = Mouse.get_position(window)
 
         grid[mouse_position.x // SAND_SIZE][mouse_position.y // SAND_SIZE] = True
@@ -108,5 +108,3 @@ while (window.is_open()):
     window.display()
 
     simulate_physics(grid, sand_indices, delta_time)
-
-    sleep(milliseconds(16))
