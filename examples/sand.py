@@ -6,7 +6,9 @@ itself inspired by the following talk: https://www.youtube.com/watch?v=prXuyMCgb
 
 from random import choice
 
-from pysfml11.system import Vector2f, Vector2i, Clock, sleep, milliseconds
+import numpy as np
+
+from pysfml11.system import Vector2f, Clock, sleep, milliseconds
 from pysfml11.window import VideoMode, Event, Mouse
 from pysfml11.graphics import Color, RenderWindow, RectangleShape
 
@@ -17,7 +19,14 @@ grain_spawner_accumulator = 0.
 WIDTH = 640
 HEIGHT = 640
 SAND_SIZE = 8
+
+GRID_WIDTH = WIDTH // SAND_SIZE
+GRID_HEIGHT = HEIGHT // SAND_SIZE
+
 PHYSICS_TIME_STEP = 1. / 30.
+
+grid = np.ndarray((GRID_WIDTH, GRID_HEIGHT), dtype=np.bool)
+grid.fill(False)
 
 window = RenderWindow(VideoMode(WIDTH, HEIGHT), 'Sand Simulation!')
 
@@ -26,37 +35,40 @@ clock = Clock()
 sand_shape = RectangleShape(Vector2f(SAND_SIZE, SAND_SIZE))
 sand_shape.fill_color = Color(255, 255, 153)
 
-sand_locations = []
 
-
-def get_cell_grid_position(pixel_coord):
-    """Get position in the sand grid, given the pixel coordinate."""
-    return Vector2i(pixel_coord.x - pixel_coord.x % SAND_SIZE, pixel_coord.y - pixel_coord.y % SAND_SIZE)
-
-
-def simulate_physics(sand_locations, delta_time):
+def simulate_physics(grid, grains_indices, delta_time):
     """Simulate the physics."""
     global physics_accumulator
 
     physics_accumulator += delta_time
 
     while physics_accumulator >= PHYSICS_TIME_STEP:
-        for location in sand_locations:
+        for location in grains_indices:
+            x = location[0]
+            y = location[1]
+
+            if y == GRID_HEIGHT - 1:
+                continue
+
             # Is there a grain under this location?
-            if Vector2i(location.x, location.y + SAND_SIZE) in sand_locations:
+            if grid[x][y + 1]:
                 # Move the grain either to the left or right
                 move_right = choice([True, False])
 
                 if move_right:
                     # Is there an empty spot at the bottom right?
-                    if Vector2i(location.x + SAND_SIZE, location.y + SAND_SIZE) not in sand_locations:
-                        location.x += SAND_SIZE
+                    if not grid[x + 1][y + 1]:
+                        grid[x][y] = False
+                        grid[x + 1][y] = True
                 else:
                     # Is there an empty spot at the bottom left?
-                    if Vector2i(location.x - SAND_SIZE, location.y + SAND_SIZE) not in sand_locations:
-                        location.x -= SAND_SIZE
+                    if not grid[x - 1][y + 1]:
+                        grid[x][y] = False
+                        grid[x - 1][y] = True
             else:
-                location.y = min(location.y + SAND_SIZE, int(HEIGHT * 0.75))
+                # Move down
+                grid[x][y] = False
+                grid[x][y + 1] = True
 
         physics_accumulator -= PHYSICS_TIME_STEP
 
@@ -74,7 +86,8 @@ while (window.is_open()):
     # If the mouse left button is pressed, add a new sand grain in the world
     if Mouse.is_button_pressed(Mouse.Button.Left) and grain_spawner_accumulator >= 0.02:
         mouse_position = Mouse.get_position(window)
-        sand_locations.append(get_cell_grid_position(mouse_position))
+
+        grid[mouse_position.x // SAND_SIZE][mouse_position.y // SAND_SIZE] = True
 
         grain_spawner_accumulator = 0.
 
@@ -82,13 +95,15 @@ while (window.is_open()):
 
     window.clear(Color.black)
 
+    grains_indices = np.argwhere(grid)
+
     # Draw sand grains
-    for location in sand_locations:
-        sand_shape.position = Vector2f(location.x, location.y)
+    for location in grains_indices:
+        sand_shape.set_position(location[0] * SAND_SIZE, location[1] * SAND_SIZE)
         window.draw(sand_shape)
 
     window.display()
 
-    simulate_physics(sand_locations, delta_time)
+    simulate_physics(grid, grains_indices, delta_time)
 
     sleep(milliseconds(16))
