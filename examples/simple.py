@@ -22,7 +22,8 @@ while (window.is_open()):
     event = Event()
 
     while window.poll_event(event):
-        pass
+        if event.type == Event.EventType.Closed:
+            window.close()
 
     window.clear(Color.white)
 

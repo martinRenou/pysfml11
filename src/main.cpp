@@ -533,6 +533,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def("display", &sf::RenderWindow::display)
         .def("poll_event", &sf::RenderWindow::pollEvent)
         .def("clear", &sf::RenderWindow::clear)
+        .def("close", &sf::RenderWindow::close)
         .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
             renderwindow.draw(drawable);
         });

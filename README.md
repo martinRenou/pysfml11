@@ -28,8 +28,9 @@ while (window.is_open()):
     event = Event()
 
     while window.poll_event(event):
-        # Do something with the event
-        pass
+        if event.type == Event.EventType.Closed:
+            window.close()
+        # Do something with the event (mouse event/keyboard event/resize event...)
 
     window.clear(Color.white)
 
