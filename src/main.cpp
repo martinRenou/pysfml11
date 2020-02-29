@@ -360,6 +360,42 @@ PYBIND11_MODULE(pysfml11, m)
         .def_readonly("touch", &sf::Event::touch)
         .def_readonly("sensor", &sf::Event::sensor);
 
+    /* Mouse class */
+    py::class_<sf::Mouse> mouse(window, "Mouse");
+
+    py::enum_<sf::Mouse::Button>(mouse, "Button")
+        .value("Left", sf::Mouse::Left)
+        .value("Right", sf::Mouse::Right)
+        .value("Middle", sf::Mouse::Middle)
+        .value("XButton1", sf::Mouse::XButton1)
+        .value("XButton2", sf::Mouse::XButton2)
+        .value("ButtonCount", sf::Mouse::ButtonCount);
+
+    py::enum_<sf::Mouse::Wheel>(mouse, "Wheel")
+        .value("VerticalWheel", sf::Mouse::VerticalWheel)
+        .value("HorizontalWheel", sf::Mouse::HorizontalWheel);
+
+    mouse.def_static("is_button_pressed", &sf::Mouse::isButtonPressed)
+        .def_property_static("position",
+            [](py::object) {
+                return sf::Mouse::getPosition();
+            },
+            [](py::object, const sf::Vector2i& position) {
+                sf::Mouse::setPosition(position);
+            }
+        )
+        .def_static("get_position",
+            [](py::object self, const sf::Window& relative_to) {
+                return sf::Mouse::getPosition(relative_to);
+            }
+        )
+        .def_static("set_position",
+            [](py::object self, const sf::Vector2i& position, const sf::Window& relative_to) {
+                return sf::Mouse::setPosition(position, relative_to);
+            }
+        );
+
+
     /*******************
      * GRAPHICS MODULE *
      *******************/
