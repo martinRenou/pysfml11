@@ -95,15 +95,18 @@ while (window.is_open()):
 
     window.clear(Color.black)
 
-    grains_indices = np.argwhere(grid)
+    sand_indices = np.argwhere(grid)
+
+    # Sort them from bottom to top (this improves the simulation slightly)
+    sand_indices = sand_indices[np.argsort(sand_indices[..., 1])[::-1]]
 
     # Draw sand grains
-    for location in grains_indices:
+    for location in sand_indices:
         sand_shape.set_position(location[0] * SAND_SIZE, location[1] * SAND_SIZE)
         window.draw(sand_shape)
 
     window.display()
 
-    simulate_physics(grid, grains_indices, delta_time)
+    simulate_physics(grid, sand_indices, delta_time)
 
     sleep(milliseconds(16))
