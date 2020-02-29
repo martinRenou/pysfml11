@@ -177,9 +177,9 @@ PYBIND11_MODULE(pysfml11, m)
     py::class_<sf::ContextSettings> context_settings(window, "ContextSettings");
 
     py::enum_<sf::ContextSettings::Attribute>(context_settings, "Attribute", py::arithmetic())
-        .value("default", sf::ContextSettings::Attribute::Default)
-        .value("core", sf::ContextSettings::Attribute::Core)
-        .value("debug", sf::ContextSettings::Attribute::Debug)
+        .value("Default", sf::ContextSettings::Attribute::Default)
+        .value("Core", sf::ContextSettings::Attribute::Core)
+        .value("Debug", sf::ContextSettings::Attribute::Debug)
         .export_values();
 
     context_settings.def(
@@ -203,8 +203,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_static("is_extension_available", &sf::Context::isExtensionAvailable)
         // .def_static("get_function", &sf::Context::getFunction)
         .def_static("get_active_context", &sf::Context::getActiveContext)
-        .def_static("get_active_context_id", &sf::Context::getActiveContextId)
-        ;
+        .def_static("get_active_context_id", &sf::Context::getActiveContextId);
 
     /* VideoMode class */
     py::class_<sf::VideoMode>(window, "VideoMode")
@@ -469,15 +468,15 @@ PYBIND11_MODULE(pysfml11, m)
         .def_readwrite("g", &sf::Color::g)
         .def_readwrite("b", &sf::Color::b)
         .def_readwrite("a", &sf::Color::a)
-        .def_readonly_static("black", &sf::Color::Black)
-        .def_readonly_static("white", &sf::Color::White)
-        .def_readonly_static("red", &sf::Color::Red)
-        .def_readonly_static("green", &sf::Color::Green)
-        .def_readonly_static("blue", &sf::Color::Blue)
-        .def_readonly_static("yellow", &sf::Color::Yellow)
-        .def_readonly_static("magenta", &sf::Color::Magenta)
-        .def_readonly_static("cyan", &sf::Color::Cyan)
-        .def_readonly_static("transparent", &sf::Color::Transparent)
+        .def_readonly_static("Black", &sf::Color::Black)
+        .def_readonly_static("White", &sf::Color::White)
+        .def_readonly_static("Red", &sf::Color::Red)
+        .def_readonly_static("Green", &sf::Color::Green)
+        .def_readonly_static("Blue", &sf::Color::Blue)
+        .def_readonly_static("Yellow", &sf::Color::Yellow)
+        .def_readonly_static("Magenta", &sf::Color::Magenta)
+        .def_readonly_static("Cyan", &sf::Color::Cyan)
+        .def_readonly_static("Transparent", &sf::Color::Transparent)
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def(py::self + py::self)
@@ -702,9 +701,9 @@ PYBIND11_MODULE(pysfml11, m)
     py::class_<sf::SoundSource> soundsource(audio, "SoundSource");
 
     py::enum_<sf::SoundSource::Status>(soundsource, "Status")
-        .value("stopped", sf::SoundSource::Status::Stopped)
-        .value("paused", sf::SoundSource::Status::Paused)
-        .value("playing", sf::SoundSource::Status::Playing)
+        .value("Stopped", sf::SoundSource::Status::Stopped)
+        .value("Paused", sf::SoundSource::Status::Paused)
+        .value("Playing", sf::SoundSource::Status::Playing)
         .export_values();
 
     soundsource.def_property("pitch", &sf::SoundSource::getPitch, &sf::SoundSource::setPitch)

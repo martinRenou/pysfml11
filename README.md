@@ -20,7 +20,7 @@ window = RenderWindow(VideoMode(width, height), 'My awesome SFML application!')
 clock = Clock()
 
 rectangle = RectangleShape(Vector2f(200, 300))
-rectangle.fill_color = Color.blue
+rectangle.fill_color = Color.Blue
 rectangle.position = Vector2f(width / 2., height / 2.)
 
 # Simple rendering loop: poll events/clear/draw/display
@@ -32,7 +32,7 @@ while (window.is_open()):
             window.close()
         # Do something with the event (mouse event/keyboard event/resize event...)
 
-    window.clear(Color.white)
+    window.clear(Color.White)
 
     elapsed = clock.elapsed_time.as_seconds() * 40
     rectangle.rotation = elapsed

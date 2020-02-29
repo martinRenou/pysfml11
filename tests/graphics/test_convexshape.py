@@ -29,13 +29,13 @@ def test_style():
 
     assert isinstance(shape.fill_color, Color)
 
-    shape.fill_color = Color.yellow
-    assert shape.fill_color == Color.yellow
+    shape.fill_color = Color.Yellow
+    assert shape.fill_color == Color.Yellow
 
     assert isinstance(shape.outline_color, Color)
 
-    shape.outline_color = Color.magenta
-    assert shape.outline_color == Color.magenta
+    shape.outline_color = Color.Magenta
+    assert shape.outline_color == Color.Magenta
 
     assert shape.outline_thickness == 0
 

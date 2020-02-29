@@ -93,7 +93,7 @@ while (window.is_open()):
 
     grain_spawner_accumulator += delta_time
 
-    window.clear(Color.black)
+    window.clear(Color.Black)
 
     sand_indices = np.argwhere(grid)
 

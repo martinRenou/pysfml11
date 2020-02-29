@@ -41,6 +41,6 @@ while (window.is_open()):
             # print(event.mouse_wheel_scroll.wheel, event.mouse_wheel_scroll.delta, event.mouse_wheel_scroll.x, event.mouse_wheel_scroll.y)
             print(event.mouse_wheel_scroll.delta, event.mouse_wheel_scroll.x, event.mouse_wheel_scroll.y)
 
-    window.clear(Color.white)
+    window.clear(Color.White)
 
     window.display()

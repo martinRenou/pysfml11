@@ -18,14 +18,14 @@ def test_construction():
 
 
 def test_colors():
-    black = Color.black
+    black = Color.Black
 
     assert black.r == 0
     assert black.g == 0
     assert black.b == 0
     assert black.a == 255
 
-    transparent = Color.transparent
+    transparent = Color.Transparent
 
     assert transparent.r == 0
     assert transparent.g == 0

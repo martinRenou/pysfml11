@@ -31,13 +31,13 @@ def test_style():
 
     assert isinstance(circle.fill_color, Color)
 
-    circle.fill_color = Color.yellow
-    assert circle.fill_color == Color.yellow
+    circle.fill_color = Color.Yellow
+    assert circle.fill_color == Color.Yellow
 
     assert isinstance(circle.outline_color, Color)
 
-    circle.outline_color = Color.magenta
-    assert circle.outline_color == Color.magenta
+    circle.outline_color = Color.Magenta
+    assert circle.outline_color == Color.Magenta
 
     assert circle.outline_thickness == 0
 

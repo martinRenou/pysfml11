@@ -14,7 +14,7 @@ window = RenderWindow(mode, 'My awesome SFML application!')
 clock = Clock()
 
 rectangle = RectangleShape(Vector2f(200, 300))
-rectangle.fill_color = Color.blue
+rectangle.fill_color = Color.Blue
 rectangle.position = Vector2f(width / 2., height / 2.)
 
 
@@ -25,7 +25,7 @@ while (window.is_open()):
         if event.type == Event.EventType.Closed:
             window.close()
 
-    window.clear(Color.white)
+    window.clear(Color.White)
 
     elapsed = clock.elapsed_time.as_seconds() * 40
     rectangle.rotation = elapsed
