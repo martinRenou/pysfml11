@@ -1,7 +1,6 @@
 import pathlib
 
-from pysfml11.system import Time, seconds
-from pysfml11.audio import Sound, SoundBuffer
+from pysfml11 import Time, seconds, Sound, SoundBuffer
 
 
 def test_construction():

@@ -1,8 +1,7 @@
 import math
 import pathlib
 
-from pysfml11.system import Time
-from pysfml11.audio import SoundBuffer
+from pysfml11 import Time, SoundBuffer
 
 
 def test_construction():

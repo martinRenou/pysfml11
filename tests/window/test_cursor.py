@@ -1,5 +1,4 @@
-from pysfml11.system import Vector2u
-from pysfml11.window import Cursor
+from pysfml11 import Vector2u, Cursor
 
 
 def test_construction_system():

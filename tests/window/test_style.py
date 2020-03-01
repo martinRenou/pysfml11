@@ -1,4 +1,4 @@
-from pysfml11.window import Style
+from pysfml11 import Style
 
 
 def test_style():

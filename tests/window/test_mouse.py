@@ -1,5 +1,4 @@
-from pysfml11.window import Mouse
-from pysfml11.system import Vector2i
+from pysfml11 import Mouse, Vector2i
 
 
 def test_mouse_pressed():

@@ -1,6 +1,4 @@
-from pysfml11.system import Vector2f
-
-from pysfml11.graphics import CircleShape, Color
+from pysfml11 import Vector2f, CircleShape, Color
 
 
 def test_construction():

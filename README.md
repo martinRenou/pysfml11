@@ -6,9 +6,11 @@ A Python binding for the [SFML](https://www.sfml-dev.org) library, based on [pyb
 ## Usage
 
 ```python
-from pysfml11.system import Vector2f, Clock
-from pysfml11.window import VideoMode, Event
-from pysfml11.graphics import Color, RenderWindow, RectangleShape
+from pysfml11 import (
+    Vector2f, Clock,
+    VideoMode, Event, Color, RenderWindow,
+    RectangleShape
+)
 
 
 width = 800

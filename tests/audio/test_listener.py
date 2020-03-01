@@ -1,7 +1,6 @@
 import math
 
-from pysfml11.system import Vector3f
-from pysfml11.audio import Listener
+from pysfml11 import Vector3f, Listener
 
 
 def test_global_volume():

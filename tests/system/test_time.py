@@ -1,4 +1,4 @@
-from pysfml11.system import Time, seconds, milliseconds, microseconds
+from pysfml11 import Time, seconds, milliseconds, microseconds
 
 
 def test_construction():

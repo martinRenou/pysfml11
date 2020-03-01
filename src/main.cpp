@@ -21,9 +21,9 @@ namespace py = pybind11;
 #define PYSFML_CONCAT_STRING(A, B) PYSFML_STRINGIFY(PYSFML_CONCATENATE(A, B))
 
 
-PYBIND11_MODULE(pysfml11, m)
+PYBIND11_MODULE(pysfml11, sfml)
 {
-    m.doc() = R"pbdoc(
+    sfml.doc() = R"pbdoc(
         pysfml11
         --------
 
@@ -34,24 +34,8 @@ PYBIND11_MODULE(pysfml11, m)
      * SYSTEM MODULE *
      *****************/
 
-    py::module system = m.def_submodule("system");
-    system.doc() = R"pbdoc(
-        pysfml11.system
-        ---------------
-
-        .. currentmodule:: pysfml11.system
-
-        .. autosummary::
-           :toctree: _generate
-
-           Time
-           Clock
-           Vector2
-           Vector3
-    )pbdoc";
-
     /* Time class */
-    py::class_<sf::Time>(system, "Time")
+    py::class_<sf::Time>(sfml, "Time")
         .def(py::init<>())
         .def("as_seconds", &sf::Time::asSeconds)
         .def("as_milliseconds", &sf::Time::asMilliseconds)
@@ -78,19 +62,19 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::self %= py::self);
 
     /* Timing free functions */
-    system.def("seconds", &sf::seconds);
-    system.def("milliseconds", &sf::milliseconds);
-    system.def("microseconds", &sf::microseconds);
-    system.def("sleep", &sf::sleep);
+    sfml.def("seconds", &sf::seconds);
+    sfml.def("milliseconds", &sf::milliseconds);
+    sfml.def("microseconds", &sf::microseconds);
+    sfml.def("sleep", &sf::sleep);
 
     /* Clock class */
-    py::class_<sf::Clock>(system, "Clock")
+    py::class_<sf::Clock>(sfml, "Clock")
         .def(py::init<>())
         .def_property_readonly("elapsed_time", &sf::Clock::getElapsedTime)
         .def("restart", &sf::Clock::restart);
 
     #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                               \
-    py::class_<sf::Vector2<T>>(system, PYSFML_CONCAT_STRING(Vector2, TS)) \
+    py::class_<sf::Vector2<T>>(sfml, PYSFML_CONCAT_STRING(Vector2, TS)) \
         .def(py::init<T, T>(), py::arg("x") = T(0), py::arg("y") = T(0))  \
         .def(py::init<sf::Vector2<T>>(), py::arg("vector"))               \
         .def_readwrite("x", &sf::Vector2<T>::x)                           \
@@ -118,7 +102,7 @@ PYBIND11_MODULE(pysfml11, m)
     #undef PYSFML_IMPLEMENT_VECTOR2
 
     #define PYSFML_IMPLEMENT_VECTOR3(T, TS)                                                      \
-    py::class_<sf::Vector3<T>>(system, PYSFML_CONCAT_STRING(Vector3, TS))                        \
+    py::class_<sf::Vector3<T>>(sfml, PYSFML_CONCAT_STRING(Vector3, TS))                        \
         .def(py::init<T, T, T>(), py::arg("x") = T(0), py::arg("y") = T(0), py::arg("z") = T(0)) \
         .def(py::init<sf::Vector3<T>>(), py::arg("vector"))                                      \
         .def_readwrite("x", &sf::Vector3<T>::x)                                                  \
@@ -160,21 +144,8 @@ PYBIND11_MODULE(pysfml11, m)
     // class   sf::Touch
     // class   sf::Window
 
-    py::module window = m.def_submodule("window");
-    window.doc() = R"pbdoc(
-        pysfml11.window
-        ---------------
-
-        .. currentmodule:: pysfml11.window
-
-        .. autosummary::
-           :toctree: _generate
-
-           VideoMode
-    )pbdoc";
-
     /* ContextSettings class */
-    py::class_<sf::ContextSettings> context_settings(window, "ContextSettings");
+    py::class_<sf::ContextSettings> context_settings(sfml, "ContextSettings");
 
     py::enum_<sf::ContextSettings::Attribute>(context_settings, "Attribute", py::arithmetic())
         .value("Default", sf::ContextSettings::Attribute::Default)
@@ -195,7 +166,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_readwrite("s_rgb_capable", &sf::ContextSettings::sRgbCapable);
 
     /* Context class */
-    py::class_<sf::Context>(window, "Context")
+    py::class_<sf::Context>(sfml, "Context")
         .def(py::init<>())
         .def(py::init<const sf::ContextSettings&, std::size_t, std::size_t>())
         .def("set_active", &sf::Context::setActive)
@@ -206,7 +177,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_static("get_active_context_id", &sf::Context::getActiveContextId);
 
     /* VideoMode class */
-    py::class_<sf::VideoMode>(window, "VideoMode")
+    py::class_<sf::VideoMode>(sfml, "VideoMode")
         .def(py::init<std::size_t, std::size_t, std::size_t>(), py::arg("width"), py::arg("height"), py::arg("bits_per_pixel") = 32)
         .def("is_valid", &sf::VideoMode::isValid)
         .def_static("get_desktop_mode", &sf::VideoMode::getDesktopMode)
@@ -222,7 +193,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::self >= py::self);
 
     /* Clipboard class */
-    py::class_<sf::Clipboard>(window, "Clipboard")
+    py::class_<sf::Clipboard>(sfml, "Clipboard")
         .def_property_static("string", [](py::object) {
             std::string str = sf::Clipboard::getString();
             return str;
@@ -231,7 +202,7 @@ PYBIND11_MODULE(pysfml11, m)
         });
 
     /* Cursor class */
-    py::class_<sf::Cursor> cursor(window, "Cursor");
+    py::class_<sf::Cursor> cursor(sfml, "Cursor");
 
     py::enum_<sf::Cursor::Type>(cursor, "Type")
         .value("Arrow", sf::Cursor::Arrow)
@@ -258,7 +229,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def("load_from_system", &sf::Cursor::loadFromSystem);
 
     /* Event class */
-    py::class_<sf::Event> event(window, "Event");
+    py::class_<sf::Event> event(sfml, "Event");
 
     py::class_<sf::Event::SizeEvent>(event, "SizeEvent")
         .def_readonly("width", &sf::Event::SizeEvent::width)
@@ -360,7 +331,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_readonly("sensor", &sf::Event::sensor);
 
     /* Mouse class */
-    py::class_<sf::Mouse> mouse(window, "Mouse");
+    py::class_<sf::Mouse> mouse(sfml, "Mouse");
 
     py::enum_<sf::Mouse::Button>(mouse, "Button")
         .value("Left", sf::Mouse::Left)
@@ -406,7 +377,7 @@ PYBIND11_MODULE(pysfml11, m)
     };
 
     /* Style enum */
-    py::enum_<Style>(window, "Style", py::arithmetic())
+    py::enum_<Style>(sfml, "Style", py::arithmetic())
         .value("None", Style::None)
         .value("Titlebar", Style::Titlebar)
         .value("Resize", Style::Resize)
@@ -416,7 +387,7 @@ PYBIND11_MODULE(pysfml11, m)
         .export_values();
 
     /* Window class */
-    py::class_<sf::Window>(window, "Window")
+    py::class_<sf::Window>(sfml, "Window")
         .def(py::init<>())
         .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
             py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
@@ -476,22 +447,8 @@ PYBIND11_MODULE(pysfml11, m)
     // class   sf::VertexBuffer
     // class   sf::View
 
-    py::module graphics = m.def_submodule("graphics");
-    graphics.doc() = R"pbdoc(
-        pysfml11.graphics
-        -----------------
-
-        .. currentmodule:: pysfml11.graphics
-
-        .. autosummary::
-           :toctree: _generate
-
-           Color
-           RenderWindow
-    )pbdoc";
-
     /* Color class */
-    py::class_<sf::Color>(graphics, "Color")
+    py::class_<sf::Color>(sfml, "Color")
         .def(py::init<uint8_t, uint8_t, uint8_t, uint8_t>(), py::arg("r") = 255, py::arg("g") = 255, py::arg("b") = 255, py::arg("a") = 255)
         .def(py::init<uint32_t>(), py::arg("color"))
         .def("to_integer", &sf::Color::toInteger)
@@ -518,10 +475,10 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::self *= py::self);
 
     /* Drawable class */
-    py::class_<sf::Drawable>(graphics, "Drawable");
+    py::class_<sf::Drawable>(sfml, "Drawable");
 
     /* Transform class */
-    py::class_<sf::Transform>(graphics, "Transform")
+    py::class_<sf::Transform>(sfml, "Transform")
         .def(py::init<>())
         .def(py::init<float, float, float, float, float, float, float, float, float>())
         .def_property_readonly("matrix", [](const sf::Transform& transform) {
@@ -573,7 +530,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::self != py::self);
 
     /* Transformable class */
-    py::class_<sf::Transformable>(graphics, "Transformable")
+    py::class_<sf::Transformable>(sfml, "Transformable")
         .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& shape, const sf::Vector2f& position) { shape.setPosition(position); })
         .def("set_position", [](sf::Transformable& shape, float x, float y) { shape.setPosition(x, y); })
         .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
@@ -592,7 +549,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property_readonly("inverse_transform", &sf::Shape::getInverseTransform);
 
     /* Shape class */
-    py::class_<sf::Shape, sf::Drawable, sf::Transformable>(graphics, "Shape")
+    py::class_<sf::Shape, sf::Drawable, sf::Transformable>(sfml, "Shape")
         // .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
         // .def_property("textureRect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
         .def_property("fill_color", &sf::Shape::getFillColor, &sf::Shape::setFillColor)
@@ -604,30 +561,30 @@ PYBIND11_MODULE(pysfml11, m)
         .def("get_point", &sf::Shape::getPoint);
 
     /* CircleShape class */
-    py::class_<sf::CircleShape, sf::Shape>(graphics, "CircleShape")
+    py::class_<sf::CircleShape, sf::Shape>(sfml, "CircleShape")
         .def(py::init<float, std::size_t>(), py::arg("radius"), py::arg("point_count") = 30)
         .def_property("radius", &sf::CircleShape::getRadius, &sf::CircleShape::setRadius)
         .def_property("point_count", &sf::CircleShape::getPointCount, &sf::CircleShape::setPointCount);
 
     /* ConvexShape class */
-    py::class_<sf::ConvexShape, sf::Shape>(graphics, "ConvexShape")
+    py::class_<sf::ConvexShape, sf::Shape>(sfml, "ConvexShape")
         .def(py::init<std::size_t>(), py::arg("point_count") = 0)
         .def_property("point_count", &sf::ConvexShape::getPointCount, &sf::ConvexShape::setPointCount)
         .def("set_point", &sf::ConvexShape::setPoint);
 
     /* RectangleShape class */
-    py::class_<sf::RectangleShape, sf::Shape>(graphics, "RectangleShape")
+    py::class_<sf::RectangleShape, sf::Shape>(sfml, "RectangleShape")
         .def(py::init<const sf::Vector2f&>(), py::arg("size") = sf::Vector2f(0, 0))
         .def_property("size", &sf::RectangleShape::getSize, &sf::RectangleShape::setSize)
         .def_property_readonly("point_count", &sf::RectangleShape::getPointCount);
 
     /* RenderWindow class */
-    py::class_<sf::RenderWindow, sf::Window>(graphics, "RenderWindow")
+    py::class_<sf::RenderWindow, sf::Window>(sfml, "RenderWindow")
         .def(py::init<>())
         .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
             py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
         )
-        .def("clear", &sf::RenderWindow::clear, py::arg("color") = sf::Color::White)
+        .def("clear", &sf::RenderWindow::clear, py::arg("color") = sf::Color::Black)
         .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
             renderwindow.draw(drawable);
         });
@@ -637,19 +594,8 @@ PYBIND11_MODULE(pysfml11, m)
      * AUDIO MODULE *
      ****************/
 
-    py::module audio = m.def_submodule("audio");
-    audio.doc() = R"pbdoc(
-        pysfml11.audio
-        ---------------
-
-        .. currentmodule:: pysfml11.audio
-
-        .. autosummary::
-           :toctree: _generate
-    )pbdoc";
-
     /* InputSoundFile class */
-    py::class_<sf::InputSoundFile>(audio, "InputSoundFile")
+    py::class_<sf::InputSoundFile>(sfml, "InputSoundFile")
         .def(py::init<>())
         .def("open_from_file", &sf::InputSoundFile::openFromFile)
         // Should be tested with Python bytes
@@ -676,7 +622,7 @@ PYBIND11_MODULE(pysfml11, m)
         });
 
     /* OutputSoundFile class */
-    py::class_<sf::OutputSoundFile>(audio, "OutputSoundFile")
+    py::class_<sf::OutputSoundFile>(sfml, "OutputSoundFile")
         .def(py::init<>())
         .def("open_from_file", &sf::OutputSoundFile::openFromFile)
         .def("write", [](sf::OutputSoundFile& outputfile, const std::vector<int16_t>& samples) {
@@ -684,7 +630,7 @@ PYBIND11_MODULE(pysfml11, m)
         });
 
     /* Listener class */
-    py::class_<sf::Listener>(audio, "Listener")
+    py::class_<sf::Listener>(sfml, "Listener")
         .def_property_static(
             "global_volume",
             [](py::object) { return sf::Listener::getGlobalVolume(); },
@@ -707,7 +653,7 @@ PYBIND11_MODULE(pysfml11, m)
         );
 
     /* SoundBuffer class */
-    py::class_<sf::SoundBuffer>(audio, "SoundBuffer")
+    py::class_<sf::SoundBuffer>(sfml, "SoundBuffer")
         .def(py::init<>())
         .def("load_from_file", &sf::SoundBuffer::loadFromFile)
         // Should be tested with Python bytes
@@ -728,7 +674,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property_readonly("duration", &sf::SoundBuffer::getDuration);
 
     /* SoundSource class */
-    py::class_<sf::SoundSource> soundsource(audio, "SoundSource");
+    py::class_<sf::SoundSource> soundsource(sfml, "SoundSource");
 
     py::enum_<sf::SoundSource::Status>(soundsource, "Status")
         .value("Stopped", sf::SoundSource::Status::Stopped)
@@ -747,7 +693,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property_readonly("status", &sf::SoundSource::getStatus);
 
     /* Sound class */
-    py::class_<sf::Sound, sf::SoundSource>(audio, "Sound")
+    py::class_<sf::Sound, sf::SoundSource>(sfml, "Sound")
         .def(py::init<>())
         .def("play", &sf::Sound::play)
         .def("pause", &sf::Sound::pause)
@@ -758,13 +704,13 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property("playing_offset", &sf::Sound::getPlayingOffset, &sf::Sound::setPlayingOffset);
 
     /* SoundStream class */
-    py::class_<sf::SoundStream, sf::SoundSource>(audio, "SoundStream")
+    py::class_<sf::SoundStream, sf::SoundSource>(sfml, "SoundStream")
         .def("play", &sf::SoundStream::play)
         .def("pause", &sf::SoundStream::pause)
         .def("stop", &sf::SoundStream::stop);
 
     /* Music class */
-    py::class_<sf::Music, sf::SoundStream>(audio, "Music")
+    py::class_<sf::Music, sf::SoundStream>(sfml, "Music")
         .def(py::init<>())
         .def("open_from_file", &sf::Music::openFromFile)
         // Should be tested with Python bytes
@@ -778,7 +724,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def_property("playing_offset", &sf::Music::getPlayingOffset, &sf::Music::setPlayingOffset);
 
     /* SoundRecorder class */
-    py::class_<sf::SoundRecorder>(audio, "SoundRecorder")
+    py::class_<sf::SoundRecorder>(sfml, "SoundRecorder")
         .def("start", &sf::SoundRecorder::start)
         .def("stop", &sf::SoundRecorder::stop)
         .def_property_readonly("sample_rate", &sf::SoundRecorder::getSampleRate)
@@ -789,9 +735,9 @@ PYBIND11_MODULE(pysfml11, m)
 
 
 #ifdef VERSION_INFO
-    m.attr("__version__") = VERSION_INFO;
+    sfml.attr("__version__") = VERSION_INFO;
 #else
-    m.attr("__version__") = "dev";
+    sfml.attr("__version__") = "dev";
 #endif
 }
 

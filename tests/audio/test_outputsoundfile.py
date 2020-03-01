@@ -1,6 +1,6 @@
 import pathlib
 
-from pysfml11.audio import OutputSoundFile, InputSoundFile
+from pysfml11 import OutputSoundFile, InputSoundFile
 
 
 def test_construction():

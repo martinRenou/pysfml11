@@ -1,4 +1,4 @@
-from pysfml11.window import ContextSettings
+from pysfml11 import ContextSettings
 
 
 def test_construction():

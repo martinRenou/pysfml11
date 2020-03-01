@@ -1,4 +1,4 @@
-from pysfml11.window import Clipboard
+from pysfml11 import Clipboard
 
 
 def test_clipboard():

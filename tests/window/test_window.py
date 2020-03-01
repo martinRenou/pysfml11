@@ -1,5 +1,4 @@
-from pysfml11.window import Window, VideoMode, ContextSettings, Style
-from pysfml11.system import Vector2i
+from pysfml11 import Window, VideoMode, ContextSettings, Style, Vector2i
 
 
 def test_open_close():

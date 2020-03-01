@@ -1,7 +1,6 @@
 import math
 
-from pysfml11.system import Vector3f
-from pysfml11.audio import Sound, SoundSource
+from pysfml11 import Vector3f, Sound, SoundSource
 
 
 def test_construction():

@@ -1,4 +1,4 @@
-from pysfml11.graphics import Color
+from pysfml11 import Color
 
 
 def test_construction():

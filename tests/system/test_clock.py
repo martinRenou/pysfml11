@@ -1,4 +1,4 @@
-from pysfml11.system import Clock, Time, sleep, seconds
+from pysfml11 import Clock, Time, sleep, seconds
 
 
 def test_construction():

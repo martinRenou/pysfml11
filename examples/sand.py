@@ -8,9 +8,7 @@ from random import choice
 
 import numpy as np
 
-from pysfml11.system import Vector2f, Clock
-from pysfml11.window import VideoMode, Event, Mouse, Style
-from pysfml11.graphics import Color, RenderWindow, RectangleShape
+import pysfml11 as sf
 
 
 physics_accumulator = 0.
@@ -28,12 +26,12 @@ PHYSICS_TIME_STEP = 1. / 30.
 grid = np.ndarray((GRID_WIDTH, GRID_HEIGHT), dtype=np.bool)
 grid.fill(False)
 
-window = RenderWindow(VideoMode(WIDTH, HEIGHT), 'Sand Simulation!', Style.Titlebar | Style.Close)
+window = sf.RenderWindow(sf.VideoMode(WIDTH, HEIGHT), 'Sand Simulation!', sf.Style.Titlebar | sf.Style.Close)
 
-clock = Clock()
+clock = sf.Clock()
 
-sand_shape = RectangleShape(Vector2f(SAND_SIZE, SAND_SIZE))
-sand_shape.fill_color = Color(255, 255, 153)
+sand_shape = sf.RectangleShape(sf.Vector2f(SAND_SIZE, SAND_SIZE))
+sand_shape.fill_color = sf.Color(255, 255, 153)
 
 
 def simulate_physics(grid, grains_indices, delta_time):
@@ -74,18 +72,18 @@ def simulate_physics(grid, grains_indices, delta_time):
 
 
 while (window.is_open()):
-    event = Event()
+    event = sf.Event()
 
     while window.poll_event(event):
-        if event.type == Event.EventType.Closed:
+        if event.type == sf.Event.EventType.Closed:
             window.close()
 
     elapsed_time = clock.restart()
     delta_time = elapsed_time.as_seconds()
 
     # If the mouse left button is pressed, add a new sand grain in the world
-    if Mouse.is_button_pressed(Mouse.Button.Left) and grain_spawner_accumulator >= 0.04:
-        mouse_position = Mouse.get_position(window)
+    if sf.Mouse.is_button_pressed(sf.Mouse.Button.Left) and grain_spawner_accumulator >= 0.04:
+        mouse_position = sf.Mouse.get_position(window)
 
         grid_x = mouse_position.x // SAND_SIZE
         grid_y = mouse_position.y // SAND_SIZE
@@ -97,7 +95,7 @@ while (window.is_open()):
 
     grain_spawner_accumulator += delta_time
 
-    window.clear(Color.Black)
+    window.clear()
 
     sand_indices = np.argwhere(grid)
 
