@@ -627,7 +627,7 @@ PYBIND11_MODULE(pysfml11, m)
         .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
             py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
         )
-        .def("clear", &sf::RenderWindow::clear)
+        .def("clear", &sf::RenderWindow::clear, py::arg("color") = sf::Color::White)
         .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
             renderwindow.draw(drawable);
         });
