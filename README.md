@@ -6,35 +6,31 @@ A Python binding for the [SFML](https://www.sfml-dev.org) library, based on [pyb
 ## Usage
 
 ```python
-from pysfml11 import (
-    Vector2f, Clock,
-    VideoMode, Event, Color, RenderWindow,
-    RectangleShape
-)
+import pysfml11 as sf
 
 
 width = 800
 height = 600
 
 # Create your window
-window = RenderWindow(VideoMode(width, height), 'My awesome SFML application!')
+window = sf.RenderWindow(sf.VideoMode(width, height), 'My awesome SFML application!')
 
-clock = Clock()
+clock = sf.Clock()
 
-rectangle = RectangleShape(Vector2f(200, 300))
-rectangle.fill_color = Color.Blue
-rectangle.position = Vector2f(width / 2., height / 2.)
+rectangle = sf.RectangleShape(sf.Vector2f(200, 300))
+rectangle.fill_color = sf.Color.Blue
+rectangle.position = sf.Vector2f(width / 2., height / 2.)
 
 # Simple rendering loop: poll events/clear/draw/display
 while (window.is_open()):
-    event = Event()
+    event = sf.Event()
 
     while window.poll_event(event):
-        if event.type == Event.EventType.Closed:
+        if event.type == sf.Event.EventType.Closed:
             window.close()
         # Do something with the event (mouse event/keyboard event/resize event...)
 
-    window.clear(Color.White)
+    window.clear(sf.Color.White)
 
     elapsed = clock.elapsed_time.as_seconds() * 40
     rectangle.rotation = elapsed
