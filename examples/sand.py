@@ -9,7 +9,7 @@ from random import choice
 import numpy as np
 
 from pysfml11.system import Vector2f, Clock
-from pysfml11.window import VideoMode, Event, Mouse
+from pysfml11.window import VideoMode, Event, Mouse, Style
 from pysfml11.graphics import Color, RenderWindow, RectangleShape
 
 
@@ -28,7 +28,7 @@ PHYSICS_TIME_STEP = 1. / 30.
 grid = np.ndarray((GRID_WIDTH, GRID_HEIGHT), dtype=np.bool)
 grid.fill(False)
 
-window = RenderWindow(VideoMode(WIDTH, HEIGHT), 'Sand Simulation!')
+window = RenderWindow(VideoMode(WIDTH, HEIGHT), 'Sand Simulation!', Style.Titlebar | Style.Close)
 
 clock = Clock()
 
@@ -87,7 +87,11 @@ while (window.is_open()):
     if Mouse.is_button_pressed(Mouse.Button.Left) and grain_spawner_accumulator >= 0.04:
         mouse_position = Mouse.get_position(window)
 
-        grid[mouse_position.x // SAND_SIZE][mouse_position.y // SAND_SIZE] = True
+        grid_x = mouse_position.x // SAND_SIZE
+        grid_y = mouse_position.y // SAND_SIZE
+
+        if 0 <= grid_x < GRID_WIDTH and 0 <= grid_y < GRID_HEIGHT:
+            grid[grid_x][grid_y] = True
 
         grain_spawner_accumulator = 0.
 
