@@ -417,8 +417,39 @@ PYBIND11_MODULE(pysfml11, m)
 
     /* Window class */
     py::class_<sf::Window>(window, "Window")
-        .def(py::init<>());
-        // TODO
+        .def(py::init<>())
+        .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
+            py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
+        )
+        .def("create", [](sf::Window& window, const sf::VideoMode& mode, const std::string& title, uint32_t style, const sf::ContextSettings& settings) {
+            return window.create(mode, title, style, settings);
+        }, py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings())
+        .def("close", &sf::Window::close)
+        .def("is_open", &sf::Window::isOpen)
+        .def_property_readonly("settings", &sf::Window::getSettings)
+        .def("poll_event", &sf::Window::pollEvent)
+        .def("wait_event", &sf::Window::waitEvent)
+        .def_property("position", &sf::Window::getPosition, &sf::Window::setPosition)
+        .def_property("size", &sf::Window::getSize, &sf::Window::setSize)
+        .def("set_title", [](sf::Window& window, const std::string& title) {
+            window.setTitle(title);
+        })
+        .def("set_icon", [](sf::Window& window, std::size_t width, std::size_t height, const std::vector<uint8_t>& pixels) {
+            window.setIcon(width, height, pixels.data());
+        })
+        .def("set_visible", &sf::Window::setVisible)
+        .def("set_vertical_sync_enabled", &sf::Window::setVerticalSyncEnabled)
+        .def("set_mouse_cursor_visible", &sf::Window::setMouseCursorVisible)
+        .def("set_mouse_cursor_grabbed", &sf::Window::setMouseCursorGrabbed)
+        .def("set_mouse_cursor", &sf::Window::setMouseCursor)
+        .def("set_key_repeat_enabled", &sf::Window::setKeyRepeatEnabled)
+        .def("set_framerate_limit", &sf::Window::setFramerateLimit)
+        .def("set_joystick_threshold", &sf::Window::setJoystickThreshold)
+        .def("set_active", &sf::Window::setActive, py::arg("active") = true)
+        .def("request_focus", &sf::Window::requestFocus)
+        .def("has_focus", &sf::Window::hasFocus)
+        .def("display", &sf::Window::display);
+        // .def_property_readonly("system_handle", &sf::Window::getSystemHandle);
 
 
     /*******************
@@ -592,12 +623,11 @@ PYBIND11_MODULE(pysfml11, m)
 
     /* RenderWindow class */
     py::class_<sf::RenderWindow, sf::Window>(graphics, "RenderWindow")
-        .def(py::init<const sf::VideoMode&, const std::string&>())
-        .def("is_open", &sf::RenderWindow::isOpen)
-        .def("display", &sf::RenderWindow::display)
-        .def("poll_event", &sf::RenderWindow::pollEvent)
+        .def(py::init<>())
+        .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
+            py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
+        )
         .def("clear", &sf::RenderWindow::clear)
-        .def("close", &sf::RenderWindow::close)
         .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
             renderwindow.draw(drawable);
         });
