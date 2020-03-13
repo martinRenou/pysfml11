@@ -136,7 +136,6 @@ PYBIND11_MODULE(pysfml11, sfml)
      *****************/
 
     // TODO
-    // class   sf::GlResource
     // class   sf::Joystick
     // class   sf::Keyboard
     // class   sf::Mouse
@@ -364,6 +363,40 @@ PYBIND11_MODULE(pysfml11, sfml)
                 return sf::Mouse::setPosition(position, relative_to);
             }
         );
+
+    /* Keyboard class */
+    py::class_<sf::Keyboard> keyboard(sfml, "Keyboard");
+
+    py::enum_<sf::Keyboard::Key>(keyboard, "Key")
+        .value("Unknown", sf::Keyboard::Unknown).value("A", sf::Keyboard::A).value("B", sf::Keyboard::B).value("C", sf::Keyboard::C)
+        .value("D", sf::Keyboard::D).value("E", sf::Keyboard::E).value("F", sf::Keyboard::F).value("G", sf::Keyboard::G)
+        .value("H", sf::Keyboard::H).value("I", sf::Keyboard::I).value("J", sf::Keyboard::J).value("K", sf::Keyboard::K)
+        .value("L", sf::Keyboard::L).value("M", sf::Keyboard::M).value("N", sf::Keyboard::N).value("O", sf::Keyboard::O)
+        .value("P", sf::Keyboard::P).value("Q", sf::Keyboard::Q).value("R", sf::Keyboard::R).value("S", sf::Keyboard::S)
+        .value("T", sf::Keyboard::T).value("U", sf::Keyboard::U).value("V", sf::Keyboard::V).value("W", sf::Keyboard::W)
+        .value("X", sf::Keyboard::X).value("Y", sf::Keyboard::Y).value("Z", sf::Keyboard::Z).value("Num0", sf::Keyboard::Num0)
+        .value("Num1", sf::Keyboard::Num1).value("Num2", sf::Keyboard::Num2).value("Num3", sf::Keyboard::Num3).value("Num4", sf::Keyboard::Num4)
+        .value("Num5", sf::Keyboard::Num5).value("Num6", sf::Keyboard::Num6).value("Num7", sf::Keyboard::Num7).value("Num8", sf::Keyboard::Num8)
+        .value("Num9", sf::Keyboard::Num9).value("Escape", sf::Keyboard::Escape).value("LControl", sf::Keyboard::LControl).value("LShift", sf::Keyboard::LShift)
+        .value("LAlt", sf::Keyboard::LAlt).value("LSystem", sf::Keyboard::LSystem).value("RControl", sf::Keyboard::RControl).value("RShift", sf::Keyboard::RShift)
+        .value("RAlt", sf::Keyboard::RAlt).value("RSystem", sf::Keyboard::RSystem).value("Menu", sf::Keyboard::Menu).value("LBracket", sf::Keyboard::LBracket)
+        .value("RBracket", sf::Keyboard::RBracket).value("Semicolon", sf::Keyboard::Semicolon).value("Comma", sf::Keyboard::Comma).value("Period", sf::Keyboard::Period)
+        .value("Quote", sf::Keyboard::Quote).value("Slash", sf::Keyboard::Slash).value("Backslash", sf::Keyboard::Backslash).value("Tilde", sf::Keyboard::Tilde)
+        .value("Equal", sf::Keyboard::Equal).value("Hyphen", sf::Keyboard::Hyphen).value("Space", sf::Keyboard::Space).value("Enter", sf::Keyboard::Enter)
+        .value("Backspace", sf::Keyboard::Backspace).value("Tab", sf::Keyboard::Tab).value("PageUp", sf::Keyboard::PageUp).value("PageDown", sf::Keyboard::PageDown)
+        .value("End", sf::Keyboard::End).value("Home", sf::Keyboard::Home).value("Insert", sf::Keyboard::Insert).value("Delete", sf::Keyboard::Delete)
+        .value("Add", sf::Keyboard::Add).value("Subtract", sf::Keyboard::Subtract).value("Multiply", sf::Keyboard::Multiply).value("Divide", sf::Keyboard::Divide)
+        .value("Left", sf::Keyboard::Left).value("Right", sf::Keyboard::Right).value("Up", sf::Keyboard::Up).value("Down", sf::Keyboard::Down)
+        .value("Numpad0", sf::Keyboard::Numpad0).value("Numpad1", sf::Keyboard::Numpad1).value("Numpad2", sf::Keyboard::Numpad2).value("Numpad3", sf::Keyboard::Numpad3)
+        .value("Numpad4", sf::Keyboard::Numpad4).value("Numpad5", sf::Keyboard::Numpad5).value("Numpad6", sf::Keyboard::Numpad6).value("Numpad7", sf::Keyboard::Numpad7)
+        .value("Numpad8", sf::Keyboard::Numpad8).value("Numpad9", sf::Keyboard::Numpad9).value("F1", sf::Keyboard::F1).value("F2", sf::Keyboard::F2)
+        .value("F3", sf::Keyboard::F3).value("F4", sf::Keyboard::F4).value("F5", sf::Keyboard::F5).value("F6", sf::Keyboard::F6)
+        .value("F7", sf::Keyboard::F7).value("F8", sf::Keyboard::F8).value("F9", sf::Keyboard::F9).value("F10", sf::Keyboard::F10)
+        .value("F11", sf::Keyboard::F11).value("F12", sf::Keyboard::F12).value("F13", sf::Keyboard::F13).value("F14", sf::Keyboard::F14)
+        .value("F15", sf::Keyboard::F15).value("Pause", sf::Keyboard::Pause).value("KeyCount", sf::Keyboard::KeyCount).value("Dash", sf::Keyboard::Dash)
+        .value("BackSpace", sf::Keyboard::BackSpace).value("BackSlash", sf::Keyboard::BackSlash).value("SemiColon", sf::Keyboard::SemiColon).value("Return", sf::Keyboard::Return);
+
+    keyboard.def_static("is_key_pressed", &sf::Keyboard::isKeyPressed);
 
     // Workaround for sf::Style being a namespace instead of an enum
     enum Style
