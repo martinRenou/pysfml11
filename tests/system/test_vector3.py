@@ -1,6 +1,6 @@
 import pytest
 
-from pysfml11 import Vector3f, Vector3i, Vector3u
+from pysfml11 import Vector3f, Vector3i, Vector3u, Vector3b
 
 
 def test_construction():
@@ -37,6 +37,12 @@ def test_construction():
 
     with pytest.raises(TypeError):
         Vector3u(-3, 4, 5)
+
+    vec5 = Vector3u(True, False, True)
+
+    assert vec5.x
+    assert not vec5.y
+    assert vec5.z
 
 
 def test_operators():

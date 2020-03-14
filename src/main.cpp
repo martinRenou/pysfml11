@@ -98,6 +98,8 @@ PYBIND11_MODULE(pysfml11, sfml)
     PYSFML_IMPLEMENT_VECTOR2(int, i)
     /* Vector2u class */
     PYSFML_IMPLEMENT_VECTOR2(uint, u)
+    /* Vector2b class */
+    PYSFML_IMPLEMENT_VECTOR2(bool, b)
 
     #undef PYSFML_IMPLEMENT_VECTOR2
 
@@ -127,6 +129,8 @@ PYBIND11_MODULE(pysfml11, sfml)
     PYSFML_IMPLEMENT_VECTOR3(int, i)
     /* Vector3u class */
     PYSFML_IMPLEMENT_VECTOR3(uint, u)
+    /* Vector3b class */
+    PYSFML_IMPLEMENT_VECTOR3(bool, b)
 
     #undef PYSFML_IMPLEMENT_VECTOR3
 
