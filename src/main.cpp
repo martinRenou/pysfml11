@@ -130,6 +130,23 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     #undef PYSFML_IMPLEMENT_VECTOR3
 
+    /* InputStream class */
+    py::class_<sf::InputStream>(sfml, "InputStream")
+        .def("read", [](sf::InputStream& self, std::size_t count) {
+            sf::Int64 samples[count];
+
+            sf::Uint64 readcount = self.read(samples, count);
+            // TODO: Raise if readcount is -1
+            return std::vector<int64_t>(samples, samples + readcount);
+        })
+        .def("seek", &sf::InputStream::seek)
+        .def("tell", &sf::InputStream::tell)
+        .def_property_readonly("size", &sf::InputStream::getSize);
+
+    /* FileInputStream class */
+    py::class_<sf::FileInputStream, sf::InputStream>(sfml, "FileInputStream")
+        .def(py::init<>())
+        .def("open", &sf::FileInputStream::open);
 
     /*****************
      * WINDOW MODULE *
@@ -463,7 +480,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::Font
     // class   sf::Glyph
     // class   sf::Image
-    // class   sf::Rect< T >
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
