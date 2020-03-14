@@ -74,7 +74,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("restart", &sf::Clock::restart);
 
     #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                               \
-    py::class_<sf::Vector2<T>>(sfml, PYSFML_CONCAT_STRING(Vector2, TS)) \
+    py::class_<sf::Vector2<T>>(sfml, PYSFML_CONCAT_STRING(Vector2, TS))   \
         .def(py::init<T, T>(), py::arg("x") = T(0), py::arg("y") = T(0))  \
         .def(py::init<sf::Vector2<T>>(), py::arg("vector"))               \
         .def_readwrite("x", &sf::Vector2<T>::x)                           \
@@ -137,8 +137,6 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     // TODO
     // class   sf::Joystick
-    // class   sf::Keyboard
-    // class   sf::Mouse
     // class   sf::Sensor
     // class   sf::Touch
     // class   sf::Window
@@ -479,6 +477,41 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::VertexArray
     // class   sf::VertexBuffer
     // class   sf::View
+
+    /* Rect class */
+    #define PYSFML_IMPLEMENT_RECT(T, TS)                                                                    \
+    py::class_<sf::Rect<T>>(sfml, PYSFML_CONCAT_STRING(TS, Rect))                                           \
+        .def(py::init<T, T, T, T>(),                                                                        \
+            py::arg("left") = T(0), py::arg("top") = T(0),                                                  \
+            py::arg("width") = T(0), py::arg("height") = T(0)                                               \
+        )                                                                                                   \
+        .def(py::init<const sf::Vector2<T>&, const sf::Vector2<T>&>(),                                      \
+            py::arg("position") = sf::Vector2<T>(),                                                         \
+            py::arg("size") = sf::Vector2<T>()                                                              \
+        )                                                                                                   \
+        .def_readwrite("left", &sf::Rect<T>::left)                                                          \
+        .def_readwrite("top", &sf::Rect<T>::top)                                                            \
+        .def_readwrite("width", &sf::Rect<T>::width)                                                        \
+        .def_readwrite("height", &sf::Rect<T>::height)                                                      \
+        .def("contains", [](sf::Rect<T>& self, T x, T y) {                                                  \
+            return self.contains(x, y);                                                                     \
+        })                                                                                                  \
+        .def("contains", [](sf::Rect<T>& self, const sf::Vector2<T>& point) {                               \
+            return self.contains(point);                                                                    \
+        })                                                                                                  \
+        .def("intersects", [](sf::Rect<T>& self, const sf::Rect<T>& rectangle) {                            \
+            return self.intersects(rectangle);                                                              \
+        })                                                                                                  \
+        .def("intersects", [](sf::Rect<T>& self, const sf::Rect<T>& rectangle, sf::Rect<T>& intersection) { \
+            return self.intersects(rectangle, intersection);                                                \
+        });
+
+    /* IntRect class */
+    PYSFML_IMPLEMENT_RECT(int, Int)
+    /* FloatRect class */
+    PYSFML_IMPLEMENT_RECT(float, Float)
+
+    #undef PYSFML_IMPLEMENT_RECT
 
     /* Color class */
     py::class_<sf::Color>(sfml, "Color")
