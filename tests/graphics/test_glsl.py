@@ -42,3 +42,28 @@ def test_vec4():
     assert not vec.y
     assert vec.z
     assert vec.w
+
+
+def test_mat():
+    data3 = [
+        0, 1, 2,
+        3, 4, 5,
+        6, 7, 8,
+    ]
+
+    data4 = [
+        0, 1, 2, 3,
+        4, 5, 6, 7,
+        8, 9, 0, 1,
+        2, 3, 4, 5,
+    ]
+
+    sf.Glsl.Mat3(data3)
+
+    with pytest.raises(TypeError):
+        sf.Glsl.Mat3(data4)
+
+    sf.Glsl.Mat4(data4)
+
+    with pytest.raises(TypeError):
+        sf.Glsl.Mat4(data3)

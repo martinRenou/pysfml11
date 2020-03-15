@@ -1,3 +1,4 @@
+#include <array>
 #include <vector>
 #include <string>
 
@@ -599,6 +600,22 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("z", &sf::Glsl::Bvec4::z)
         .def_readonly("w", &sf::Glsl::Bvec4::w);
 
+    py::class_<sf::Glsl::Mat3>(glsl, "Mat3")
+        .def(py::init([](const std::array<float, 9>& array) {
+            return sf::Glsl::Mat3(array.data());
+        }))
+        .def(py::init([](const sf::Transform& transform) {
+            return sf::Glsl::Mat3(transform);
+        }));
+
+    py::class_<sf::Glsl::Mat4>(glsl, "Mat4")
+        .def(py::init([](const std::array<float, 16>& array) {
+            return sf::Glsl::Mat4(array.data());
+        }))
+        .def(py::init([](const sf::Transform& transform) {
+            return sf::Glsl::Mat4(transform);
+        }));
+
     /* Drawable class */
     py::class_<sf::Drawable>(sfml, "Drawable");
 
@@ -618,7 +635,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("transform_point", [](sf::Transform& transform, const sf::Vector2f& point) {
             return transform.transformPoint(point);
         })
-        // .def("transform_rect", &sf::Transform::transformRect)
+        .def("transform_rect", &sf::Transform::transformRect)
         .def("combine", &sf::Transform::combine)
         .def("translate", [](sf::Transform& transform, float x, float y) {
             return transform.translate(x, y);
