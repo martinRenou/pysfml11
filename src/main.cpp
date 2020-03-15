@@ -488,7 +488,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::RenderTarget
     // class   sf::RenderTexture
     // class   sf::RenderWindow
-    // class   sf::Shader
     // class   sf::Sprite
     // class   sf::Text
     // class   sf::Texture
@@ -675,6 +674,47 @@ PYBIND11_MODULE(pysfml11, sfml)
             renderwindow.draw(drawable);
         });
 
+    /* Shader class */
+    py::class_<sf::Shader> shader(sfml, "Shader");
+
+    py::enum_<sf::Shader::Type>(shader, "Type")
+        .value("Vertex", sf::Shader::Vertex)
+        .value("Fragment", sf::Shader::Fragment)
+        .value("Geometry", sf::Shader::Geometry)
+        .export_values();
+
+    shader
+        .def(py::init<>())
+        .def("load_from_file", [](sf::Shader& self, const std::string& filename, sf::Shader::Type type) {
+            return self.loadFromFile(filename, type);
+        })
+        .def("load_from_file", [](sf::Shader& self, const std::string& vertexfilename, const std::string& fragmentfilename) {
+            return self.loadFromFile(vertexfilename, fragmentfilename);
+        })
+        .def("load_from_file", [](sf::Shader& self, const std::string& vertexfilename, const std::string& geometryfilename, const std::string& fragmentfilename) {
+            return self.loadFromFile(vertexfilename, geometryfilename, fragmentfilename);
+        })
+        .def("load_from_memory", [](sf::Shader& self, const std::string& shader, sf::Shader::Type type) {
+            return self.loadFromMemory(shader, type);
+        })
+        .def("load_from_memory", [](sf::Shader& self, const std::string& vertexshader, const std::string& fragmentshader) {
+            return self.loadFromMemory(vertexshader, fragmentshader);
+        })
+        .def("load_from_memory", [](sf::Shader& self, const std::string& vertexshader, const std::string& geometryshader, const std::string& fragmentshader) {
+            return self.loadFromMemory(vertexshader, geometryshader, fragmentshader);
+        })
+        .def("load_from_stream", [](sf::Shader& self, sf::InputStream& shader, sf::Shader::Type type) {
+            return self.loadFromStream(shader, type);
+        })
+        .def("load_from_stream", [](sf::Shader& self, sf::InputStream& vertexshader, sf::InputStream& fragmentshader) {
+            return self.loadFromStream(vertexshader, fragmentshader);
+        })
+        .def("load_from_stream", [](sf::Shader& self, sf::InputStream& vertexshader, sf::InputStream& geometryshader, sf::InputStream& fragmentshader) {
+            return self.loadFromStream(vertexshader, geometryshader, fragmentshader);
+        })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, float x) {
+            self.setUniform(name, x);
+        });
 
     /****************
      * AUDIO MODULE *
