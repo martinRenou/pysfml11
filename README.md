@@ -26,7 +26,7 @@ while (window.is_open()):
     event = sf.Event()
 
     while window.poll_event(event):
-        if event.type == sf.Event.EventType.Closed:
+        if event.type == sf.Event.Closed:
             window.close()
         # Do something with the event (mouse event/keyboard event/resize event...)
 

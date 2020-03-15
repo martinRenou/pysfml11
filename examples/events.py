@@ -16,25 +16,25 @@ while (window.is_open()):
     while window.poll_event(event):
         print('\n{}!'.format(event.type))
 
-        if event.type == sf.Event.EventType.Resized:
+        if event.type == sf.Event.Resized:
             print(event.size.width, event.size.height)
 
-        if event.type == sf.Event.EventType.TextEntered:
+        if event.type == sf.Event.TextEntered:
             print(event.text.unicode)
 
-        if event.type == sf.Event.EventType.KeyPressed or event.type == sf.Event.EventType.KeyReleased:
+        if event.type == sf.Event.KeyPressed or event.type == sf.Event.KeyReleased:
             print(event.key.code, event.key.alt, event.key.control, event.key.shift, event.key.system)
 
-        if event.type == sf.Event.EventType.MouseMoved:
+        if event.type == sf.Event.MouseMoved:
             print(event.mouse_move.x, event.mouse_move.y)
 
-        if event.type == sf.Event.EventType.MouseButtonPressed or event.type == sf.Event.EventType.MouseButtonReleased:
+        if event.type == sf.Event.MouseButtonPressed or event.type == sf.Event.MouseButtonReleased:
             print(event.mouse_button.button, event.mouse_button.x, event.mouse_button.y)
 
-        if event.type == sf.Event.EventType.MouseWheelMoved:
+        if event.type == sf.Event.MouseWheelMoved:
             print(event.mouse_wheel.delta, event.mouse_wheel.x, event.mouse_wheel.y)
 
-        if event.type == sf.Event.EventType.MouseWheelScrolled:
+        if event.type == sf.Event.MouseWheelScrolled:
             print(event.mouse_wheel_scroll.wheel, event.mouse_wheel_scroll.delta, event.mouse_wheel_scroll.x, event.mouse_wheel_scroll.y)
 
     window.clear(sf.Color.White)
