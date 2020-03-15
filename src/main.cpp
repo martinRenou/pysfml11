@@ -497,17 +497,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::VertexBuffer
     // class   sf::View
 
-    /* Glsl types */
-    py::module glsl = sfml.def_submodule("Glsl");
-
-    glsl.attr("Vec2") = sfml.attr("Vector2f");
-    glsl.attr("IVec2") = sfml.attr("Vector2i");
-    glsl.attr("BVec2") = sfml.attr("Vector2b");
-
-    glsl.attr("Vec3") = sfml.attr("Vector3f");
-    glsl.attr("IVec3") = sfml.attr("Vector3i");
-    glsl.attr("BVec3") = sfml.attr("Vector3b");
-
     /* Rect class */
     #define PYSFML_IMPLEMENT_RECT(T, TS)                                                                    \
     py::class_<sf::Rect<T>>(sfml, PYSFML_CONCAT_STRING(TS, Rect))                                           \
@@ -569,6 +558,46 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self += py::self)
         .def(py::self -= py::self)
         .def(py::self *= py::self);
+
+    /* Glsl types */
+    py::module glsl = sfml.def_submodule("Glsl");
+
+    glsl.attr("Vec2") = sfml.attr("Vector2f");
+    glsl.attr("IVec2") = sfml.attr("Vector2i");
+    glsl.attr("BVec2") = sfml.attr("Vector2b");
+
+    glsl.attr("Vec3") = sfml.attr("Vector3f");
+    glsl.attr("IVec3") = sfml.attr("Vector3i");
+    glsl.attr("BVec3") = sfml.attr("Vector3b");
+
+    #define PYSFML_IMPLEMENT_VEC4(T, TS)                                                       \
+    py::class_<sf::Glsl::TS>(glsl, PYSFML_STRINGIFY(TS))                                       \
+        .def(                                                                                  \
+            py::init<T, T, T, T>(),                                                            \
+            py::arg("x") = T(0), py::arg("y") = T(0), py::arg("z") = T(0), py::arg("w") = T(0) \
+        )                                                                                      \
+        .def(py::init<sf::Glsl::TS>(), py::arg("vector"))                                      \
+        .def(py::init<sf::Color>(), py::arg("color"))                                          \
+        .def_readonly("x", &sf::Glsl::TS::x)                                                   \
+        .def_readonly("y", &sf::Glsl::TS::y)                                                   \
+        .def_readonly("z", &sf::Glsl::TS::z)                                                   \
+        .def_readonly("w", &sf::Glsl::TS::w);
+
+    PYSFML_IMPLEMENT_VEC4(float, Vec4);
+    PYSFML_IMPLEMENT_VEC4(int, Ivec4);
+
+    #undef PYSFML_IMPLEMENT_VEC4
+
+    py::class_<sf::Glsl::Bvec4>(glsl, "Bvec4")
+        .def(
+            py::init<bool, bool, bool, bool>(),
+            py::arg("x") = false, py::arg("y") = false, py::arg("z") = false, py::arg("w") = false
+        )
+        .def(py::init<sf::Glsl::Bvec4>(), py::arg("vector"))
+        .def_readonly("x", &sf::Glsl::Bvec4::x)
+        .def_readonly("y", &sf::Glsl::Bvec4::y)
+        .def_readonly("z", &sf::Glsl::Bvec4::z)
+        .def_readonly("w", &sf::Glsl::Bvec4::w);
 
     /* Drawable class */
     py::class_<sf::Drawable>(sfml, "Drawable");
