@@ -497,6 +497,17 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::VertexBuffer
     // class   sf::View
 
+    /* Glsl types */
+    py::module glsl = sfml.def_submodule("Glsl");
+
+    glsl.attr("Vec2") = sfml.attr("Vector2f");
+    glsl.attr("IVec2") = sfml.attr("Vector2i");
+    glsl.attr("BVec2") = sfml.attr("Vector2b");
+
+    glsl.attr("Vec3") = sfml.attr("Vector3f");
+    glsl.attr("IVec3") = sfml.attr("Vector3i");
+    glsl.attr("BVec3") = sfml.attr("Vector3b");
+
     /* Rect class */
     #define PYSFML_IMPLEMENT_RECT(T, TS)                                                                    \
     py::class_<sf::Rect<T>>(sfml, PYSFML_CONCAT_STRING(TS, Rect))                                           \
