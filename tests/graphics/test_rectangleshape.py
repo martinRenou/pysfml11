@@ -1,4 +1,4 @@
-from pysfml11 import Vector2f, RectangleShape, Color
+from pysfml11 import Vector2f, RectangleShape, Color, FloatRect
 
 
 def test_construction():
@@ -35,3 +35,6 @@ def test_style():
 
     rectangle.outline_thickness = 3
     assert rectangle.outline_thickness == 3
+
+    assert isinstance(rectangle.local_bounds, FloatRect)
+    assert isinstance(rectangle.global_bounds, FloatRect)

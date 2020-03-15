@@ -693,13 +693,13 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Shape class */
     py::class_<sf::Shape, sf::Drawable, sf::Transformable>(sfml, "Shape")
         // .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
-        // .def_property("textureRect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
+        .def_property("texture_rect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
         .def_property("fill_color", &sf::Shape::getFillColor, &sf::Shape::setFillColor)
         .def_property("outline_color", &sf::Shape::getOutlineColor, &sf::Shape::setOutlineColor)
         .def_property("outline_thickness", &sf::Shape::getOutlineThickness, &sf::Shape::setOutlineThickness)
         .def_property_readonly("point_count", &sf::Shape::getPointCount)
-        // .def_property_readonly("local_bounds", &sf::Shape::getLocalBounds)
-        // .def_property_readonly("global_bounds", &sf::Shape::getGlobalBounds)
+        .def_property_readonly("local_bounds", &sf::Shape::getLocalBounds)
+        .def_property_readonly("global_bounds", &sf::Shape::getGlobalBounds)
         .def("get_point", &sf::Shape::getPoint);
 
     /* CircleShape class */
@@ -771,7 +771,9 @@ PYBIND11_MODULE(pysfml11, sfml)
         })
         .def("set_uniform", [](sf::Shader& self, const std::string& name, float x) {
             self.setUniform(name, x);
-        });
+        })
+        // TODO Finish + tests
+        ;
 
     /****************
      * AUDIO MODULE *
