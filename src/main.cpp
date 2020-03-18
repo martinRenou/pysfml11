@@ -564,12 +564,12 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::module glsl = sfml.def_submodule("Glsl");
 
     glsl.attr("Vec2") = sfml.attr("Vector2f");
-    glsl.attr("IVec2") = sfml.attr("Vector2i");
-    glsl.attr("BVec2") = sfml.attr("Vector2b");
+    glsl.attr("Ivec2") = sfml.attr("Vector2i");
+    glsl.attr("Bvec2") = sfml.attr("Vector2b");
 
     glsl.attr("Vec3") = sfml.attr("Vector3f");
-    glsl.attr("IVec3") = sfml.attr("Vector3i");
-    glsl.attr("BVec3") = sfml.attr("Vector3b");
+    glsl.attr("Ivec3") = sfml.attr("Vector3i");
+    glsl.attr("Bvec3") = sfml.attr("Vector3b");
 
     #define PYSFML_IMPLEMENT_VEC4(T, TS)                                                       \
     py::class_<sf::Glsl::TS>(glsl, PYSFML_STRINGIFY(TS))                                       \
@@ -769,9 +769,20 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("load_from_stream", [](sf::Shader& self, sf::InputStream& vertexshader, sf::InputStream& geometryshader, sf::InputStream& fragmentshader) {
             return self.loadFromStream(vertexshader, geometryshader, fragmentshader);
         })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, float x) {
-            self.setUniform(name, x);
-        })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, float x) { self.setUniform(name, x); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Vec2 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Vec3 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Vec4 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, int x) { self.setUniform(name, x); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Ivec2 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Ivec3 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Ivec4 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, bool x) { self.setUniform(name, x); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Bvec2 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Bvec3 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Bvec4 vector) { self.setUniform(name, vector); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Mat3 matrix) { self.setUniform(name, matrix); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::Glsl::Mat4 matrix) { self.setUniform(name, matrix); })
         // TODO Finish + tests
         ;
 
