@@ -241,8 +241,8 @@ PYBIND11_MODULE(pysfml11, sfml)
         .export_values();
 
     cursor.def(py::init<>())
-        .def("load_from_pixels", [](sf::Cursor& cursor, const std::vector<uint8_t>& pixels, const sf::Vector2u& size, const sf::Vector2u& hotspot) {
-            return cursor.loadFromPixels(pixels.data(), size, hotspot);
+        .def("load_from_pixels", [](sf::Cursor& self, const std::vector<uint8_t>& pixels, const sf::Vector2u& size, const sf::Vector2u& hotspot) {
+            return self.loadFromPixels(pixels.data(), size, hotspot);
         })
         // TODO for convenience?
         // .def("load_from_file", &sf::Cursor::loadFromFile)
@@ -446,8 +446,8 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
             py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
         )
-        .def("create", [](sf::Window& window, const sf::VideoMode& mode, const std::string& title, uint32_t style, const sf::ContextSettings& settings) {
-            return window.create(mode, title, style, settings);
+        .def("create", [](sf::Window& self, const sf::VideoMode& mode, const std::string& title, uint32_t style, const sf::ContextSettings& settings) {
+            return self.create(mode, title, style, settings);
         }, py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings())
         .def("close", &sf::Window::close)
         .def("is_open", &sf::Window::isOpen)
@@ -456,11 +456,11 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("wait_event", &sf::Window::waitEvent)
         .def_property("position", &sf::Window::getPosition, &sf::Window::setPosition)
         .def_property("size", &sf::Window::getSize, &sf::Window::setSize)
-        .def("set_title", [](sf::Window& window, const std::string& title) {
-            window.setTitle(title);
+        .def("set_title", [](sf::Window& self, const std::string& title) {
+            self.setTitle(title);
         })
-        .def("set_icon", [](sf::Window& window, std::size_t width, std::size_t height, const std::vector<uint8_t>& pixels) {
-            window.setIcon(width, height, pixels.data());
+        .def("set_icon", [](sf::Window& self, std::size_t width, std::size_t height, const std::vector<uint8_t>& pixels) {
+            self.setIcon(width, height, pixels.data());
         })
         .def("set_visible", &sf::Window::setVisible)
         .def("set_vertical_sync_enabled", &sf::Window::setVerticalSyncEnabled)
@@ -633,46 +633,46 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::Transform>(sfml, "Transform")
         .def(py::init<>())
         .def(py::init<float, float, float, float, float, float, float, float, float>())
-        .def_property_readonly("matrix", [](const sf::Transform& transform) {
-            const float* matrix = transform.getMatrix();
+        .def_property_readonly("matrix", [](const sf::Transform& self) {
+            const float* matrix = self.getMatrix();
 
             return std::vector<float>(matrix, matrix + 16);
         })
         .def_property_readonly("inverse", &sf::Transform::getInverse)
-        .def("transform_point", [](sf::Transform& transform, float x, float y) {
-            return transform.transformPoint(x, y);
+        .def("transform_point", [](sf::Transform& self, float x, float y) {
+            return self.transformPoint(x, y);
         })
-        .def("transform_point", [](sf::Transform& transform, const sf::Vector2f& point) {
-            return transform.transformPoint(point);
+        .def("transform_point", [](sf::Transform& self, const sf::Vector2f& point) {
+            return self.transformPoint(point);
         })
         .def("transform_rect", &sf::Transform::transformRect)
         .def("combine", &sf::Transform::combine)
-        .def("translate", [](sf::Transform& transform, float x, float y) {
-            return transform.translate(x, y);
+        .def("translate", [](sf::Transform& self, float x, float y) {
+            return self.translate(x, y);
         })
-        .def("translate", [](sf::Transform& transform, const sf::Vector2f& offset) {
-            return transform.translate(offset);
+        .def("translate", [](sf::Transform& self, const sf::Vector2f& offset) {
+            return self.translate(offset);
         })
-        .def("rotate", [](sf::Transform& transform, float angle) {
-            return transform.rotate(angle);
+        .def("rotate", [](sf::Transform& self, float angle) {
+            return self.rotate(angle);
         })
-        .def("rotate", [](sf::Transform& transform, float angle, float centerx, float centery) {
-            return transform.rotate(angle, centerx, centery);
+        .def("rotate", [](sf::Transform& self, float angle, float centerx, float centery) {
+            return self.rotate(angle, centerx, centery);
         })
-        .def("rotate", [](sf::Transform& transform, float angle, const sf::Vector2f& center) {
-            return transform.rotate(angle, center);
+        .def("rotate", [](sf::Transform& self, float angle, const sf::Vector2f& center) {
+            return self.rotate(angle, center);
         })
-        .def("scale", [](sf::Transform& transform, float scalex, float scaley) {
-            return transform.scale(scalex, scaley);
+        .def("scale", [](sf::Transform& self, float scalex, float scaley) {
+            return self.scale(scalex, scaley);
         })
-        .def("scale", [](sf::Transform& transform, float scalex, float scaley, float centerx, float centery) {
-            return transform.scale(scalex, scaley, centerx, centery);
+        .def("scale", [](sf::Transform& self, float scalex, float scaley, float centerx, float centery) {
+            return self.scale(scalex, scaley, centerx, centery);
         })
-        .def("scale", [](sf::Transform& transform, const sf::Vector2f& factors) {
-            return transform.scale(factors);
+        .def("scale", [](sf::Transform& self, const sf::Vector2f& factors) {
+            return self.scale(factors);
         })
-        .def("scale", [](sf::Transform& transform, const sf::Vector2f& factors, const sf::Vector2f& center) {
-            return transform.scale(factors, center);
+        .def("scale", [](sf::Transform& self, const sf::Vector2f& factors, const sf::Vector2f& center) {
+            return self.scale(factors, center);
         })
         .def_readonly_static("identity", &sf::Transform::Identity)
         .def(py::self * py::self)
@@ -683,18 +683,18 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     /* Transformable class */
     py::class_<sf::Transformable>(sfml, "Transformable")
-        .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& shape, const sf::Vector2f& position) { shape.setPosition(position); })
-        .def("set_position", [](sf::Transformable& shape, float x, float y) { shape.setPosition(x, y); })
+        .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& self, const sf::Vector2f& position) { self.setPosition(position); })
+        .def("set_position", [](sf::Transformable& self, float x, float y) { self.setPosition(x, y); })
         .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
-        .def_property("scale", &sf::Transformable::getScale, [](sf::Transformable& shape, const sf::Vector2f& scale) { shape.setScale(scale); })
-        .def("set_scale", [](sf::Transformable& shape, float x, float y) { shape.setScale(x, y); })
-        .def_property("origin", &sf::Transformable::getOrigin, [](sf::Transformable& shape, const sf::Vector2f& origin) { shape.setOrigin(origin); })
-        .def("set_origin", [](sf::Transformable& shape, float x, float y) { shape.setOrigin(x, y); })
-        .def("move", [](sf::Transformable& shape, float offsetx, float offsety) {
-            return shape.move(offsetx, offsety);
+        .def_property("scale", &sf::Transformable::getScale, [](sf::Transformable& self, const sf::Vector2f& scale) { self.setScale(scale); })
+        .def("set_scale", [](sf::Transformable& self, float x, float y) { self.setScale(x, y); })
+        .def_property("origin", &sf::Transformable::getOrigin, [](sf::Transformable& self, const sf::Vector2f& origin) { self.setOrigin(origin); })
+        .def("set_origin", [](sf::Transformable& self, float x, float y) { self.setOrigin(x, y); })
+        .def("move", [](sf::Transformable& self, float offsetx, float offsety) {
+            return self.move(offsetx, offsety);
         })
-        .def("move", [](sf::Transformable& shape, const sf::Vector2f& offset) {
-            return shape.move(offset);
+        .def("move", [](sf::Transformable& self, const sf::Vector2f& offset) {
+            return self.move(offset);
         })
         .def("rotate", &sf::Transformable::rotate)
         .def_property_readonly("transform", &sf::Shape::getTransform)
@@ -737,8 +737,8 @@ PYBIND11_MODULE(pysfml11, sfml)
             py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
         )
         .def("clear", &sf::RenderWindow::clear, py::arg("color") = sf::Color::Black)
-        .def("draw", [](sf::RenderWindow& renderwindow, const sf::Drawable& drawable) {
-            renderwindow.draw(drawable);
+        .def("draw", [](sf::RenderWindow& self, const sf::Drawable& drawable) {
+            self.draw(drawable);
         });
 
     /* View class */
@@ -850,16 +850,16 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("duration", &sf::InputSoundFile::getDuration)
         .def_property_readonly("time_offset", &sf::InputSoundFile::getTimeOffset)
         .def_property_readonly("sample_offset", &sf::InputSoundFile::getSampleOffset)
-        .def("seek", [](sf::InputSoundFile& input_sound_file, uint64_t sample_offset) {
-            input_sound_file.seek(sample_offset);
+        .def("seek", [](sf::InputSoundFile& self, uint64_t sample_offset) {
+            self.seek(sample_offset);
         })
-        .def("seek", [](sf::InputSoundFile& input_sound_file, sf::Time time_offset) {
-            input_sound_file.seek(time_offset);
+        .def("seek", [](sf::InputSoundFile& self, sf::Time time_offset) {
+            self.seek(time_offset);
         })
-        .def("read", [](sf::InputSoundFile& inputfile, uint64_t count) {
+        .def("read", [](sf::InputSoundFile& self, uint64_t count) {
             sf::Int16 samples[count];
 
-            sf::Uint64 readcount = inputfile.read(samples, count);
+            sf::Uint64 readcount = self.read(samples, count);
             // TODO: Raise if readcount is -1
             return std::vector<int16_t>(samples, samples + readcount);
         });
@@ -868,8 +868,8 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::OutputSoundFile>(sfml, "OutputSoundFile")
         .def(py::init<>())
         .def("open_from_file", &sf::OutputSoundFile::openFromFile)
-        .def("write", [](sf::OutputSoundFile& outputfile, const std::vector<int16_t>& samples) {
-            outputfile.write(samples.data(), samples.size());
+        .def("write", [](sf::OutputSoundFile& self, const std::vector<int16_t>& samples) {
+            self.write(samples.data(), samples.size());
         });
 
     /* Listener class */
@@ -902,14 +902,14 @@ PYBIND11_MODULE(pysfml11, sfml)
         // Should be tested with Python bytes
         // .def("load_from_memory", &sf::SoundBuffer::loadFromMemory)
         .def("load_from_stream", &sf::SoundBuffer::loadFromStream)
-        .def("load_from_samples", [](sf::SoundBuffer& soundbuffer, const std::vector<int16_t>& samples, uint64_t channelcount, uint64_t samplerate) {
-            return soundbuffer.loadFromSamples(samples.data(), samples.size(), channelcount, samplerate);
+        .def("load_from_samples", [](sf::SoundBuffer& self, const std::vector<int16_t>& samples, uint64_t channelcount, uint64_t samplerate) {
+            return self.loadFromSamples(samples.data(), samples.size(), channelcount, samplerate);
         })
         .def("save_to_file", &sf::SoundBuffer::saveToFile)
-        .def_property_readonly("samples", [](const sf::SoundBuffer& soundbuffer) {
-            const int16_t* samples = soundbuffer.getSamples();
+        .def_property_readonly("samples", [](const sf::SoundBuffer& self) {
+            const int16_t* samples = self.getSamples();
 
-            return std::vector<int16_t>(samples, samples + soundbuffer.getSampleCount());
+            return std::vector<int16_t>(samples, samples + self.getSampleCount());
         })
         .def_property_readonly("sample_count", &sf::SoundBuffer::getSampleCount)
         .def_property_readonly("sample_rate", &sf::SoundBuffer::getSampleRate)
@@ -927,8 +927,8 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     soundsource.def_property("pitch", &sf::SoundSource::getPitch, &sf::SoundSource::setPitch)
         .def_property("volume", &sf::SoundSource::getVolume, &sf::SoundSource::setVolume)
-        .def_property("position", &sf::SoundSource::getPosition, [](sf::SoundSource& source, const sf::Vector3f& position) {
-            source.setPosition(position);
+        .def_property("position", &sf::SoundSource::getPosition, [](sf::SoundSource& self, const sf::Vector3f& position) {
+            self.setPosition(position);
         })
         .def_property("relative_to_listener", &sf::SoundSource::isRelativeToListener, &sf::SoundSource::setRelativeToListener)
         .def_property("min_distance", &sf::SoundSource::getMinDistance, &sf::SoundSource::setMinDistance)
