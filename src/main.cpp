@@ -61,7 +61,12 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self /= float())
         .def(py::self / py::self)
         .def(py::self % py::self)
-        .def(py::self %= py::self);
+        .def(py::self %= py::self)
+        .def("__repr__", [](const sf::Time& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Time seconds=" << self.asSeconds() << ">";
+            return stream.str();
+        });
 
     /* Timing free functions */
     sfml.def("seconds", &sf::seconds);
@@ -92,7 +97,14 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self / T())                                              \
         .def(py::self /= T())                                             \
         .def(py::self == py::self)                                        \
-        .def(py::self != py::self);
+        .def(py::self != py::self)                                        \
+        .def("__repr__", [](const sf::Vector2<T>& self) {                 \
+            std::ostringstream stream;                                    \
+            stream << "<sfml." << PYSFML_CONCAT_STRING(Vector2, TS) <<    \
+                " x=" << self.x <<                                        \
+                " y=" << self.y << ">";                                   \
+            return stream.str();                                          \
+        });
 
     /* Vector2f class */
     PYSFML_IMPLEMENT_VECTOR2(float, f)
@@ -106,7 +118,7 @@ PYBIND11_MODULE(pysfml11, sfml)
     #undef PYSFML_IMPLEMENT_VECTOR2
 
     #define PYSFML_IMPLEMENT_VECTOR3(T, TS)                                                      \
-    py::class_<sf::Vector3<T>>(sfml, PYSFML_CONCAT_STRING(Vector3, TS))                        \
+    py::class_<sf::Vector3<T>>(sfml, PYSFML_CONCAT_STRING(Vector3, TS))                          \
         .def(py::init<T, T, T>(), py::arg("x") = T(0), py::arg("y") = T(0), py::arg("z") = T(0)) \
         .def(py::init<sf::Vector3<T>>(), py::arg("vector"))                                      \
         .def_readwrite("x", &sf::Vector3<T>::x)                                                  \
@@ -123,7 +135,15 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self / T())                                                                     \
         .def(py::self /= T())                                                                    \
         .def(py::self == py::self)                                                               \
-        .def(py::self != py::self);
+        .def(py::self != py::self)                                                               \
+        .def("__repr__", [](const sf::Vector3<T>& self) {                                        \
+            std::ostringstream stream;                                                           \
+            stream << "<sfml." << PYSFML_CONCAT_STRING(Vector3, TS) <<                           \
+                " x=" << self.x <<                                                               \
+                " y=" << self.y <<                                                               \
+                " z=" << self.z << ">";                                                          \
+            return stream.str();                                                                 \
+        });
 
     /* Vector3f class */
     PYSFML_IMPLEMENT_VECTOR3(float, f)

@@ -61,3 +61,9 @@ def test_operators():
     assert (3 * time1).as_seconds() == 9
 
     assert (time1 / 3).as_seconds() == 1
+
+
+def test_repr():
+    time = seconds(3)
+
+    assert str(time) == '<sfml.Time seconds=3>'

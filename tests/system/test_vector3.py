@@ -96,3 +96,21 @@ def test_operators():
 
     assert not vec1 == vec2
     assert vec1 != vec2
+
+
+def test_repr():
+    vec = Vector3f()
+
+    assert str(vec) == '<sfml.Vector3f x=0 y=0 z=0>'
+
+    vec1 = Vector3f(2, 4, 5)
+
+    assert str(vec1) == '<sfml.Vector3f x=2 y=4 z=5>'
+
+    vec3 = Vector3i(3, 4, 5)
+
+    assert str(vec3) == '<sfml.Vector3i x=3 y=4 z=5>'
+
+    vec4 = Vector3u(3, 4, 5)
+
+    assert str(vec4) == '<sfml.Vector3u x=3 y=4 z=5>'
