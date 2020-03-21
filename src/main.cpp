@@ -741,6 +741,35 @@ PYBIND11_MODULE(pysfml11, sfml)
             renderwindow.draw(drawable);
         });
 
+    /* View class */
+    py::class_<sf::View>(sfml, "View")
+        .def(py::init<>())
+        .def(py::init<const sf::FloatRect&>(), py::arg("rectangle"))
+        .def(py::init<const sf::Vector2f&, const sf::Vector2f&>(), py::arg("center"), py::arg("size"))
+        .def_property("center", &sf::View::getCenter, [](sf::View& self, const sf::Vector2f& center) {
+            self.setCenter(center);
+        })
+        .def_property("size", &sf::View::getSize, [](sf::View& self, const sf::Vector2f& size) {
+            self.setSize(size);
+        })
+        .def_property("rotation", &sf::View::getRotation, [](sf::View& self, float rotation) {
+            self.setRotation(rotation);
+        })
+        .def_property("viewport", &sf::View::getViewport, [](sf::View& self, const sf::FloatRect& viewport) {
+            self.setViewport(viewport);
+        })
+        .def("reset", &sf::View::reset)
+        .def("move", [](sf::View& self, float offsetx, float offsety) {
+            self.move(offsetx, offsety);
+        })
+        .def("move", [](sf::View& self, const sf::Vector2f offset) {
+            self.move(offset);
+        })
+        .def("rotate", &sf::View::rotate)
+        .def("zoom", &sf::View::zoom)
+        .def_property_readonly("transform", &sf::View::getTransform)
+        .def_property_readonly("inverse_transform", &sf::View::getInverseTransform);
+
     /* Shader class */
     py::class_<sf::Shader> shader(sfml, "Shader");
 
