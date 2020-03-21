@@ -785,7 +785,13 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat4& matrix) { self.setUniform(name, matrix); })
         // .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Texture& texture) { self.setUniform(name, texture); })
         // .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::CurrentTextureType) { self.setUniform(name, sf::CurrentTextureType); })
-        // TODO Finish + tests
+        // TODO set_uniform_array
+        // TODO set_parameter
+        // TODO get_native_handle
+        .def_static("bind", &sf::Shader::bind)
+        .def_static("is_available", &sf::Shader::isAvailable)
+        .def_static("is_geometry_available", &sf::Shader::isGeometryAvailable)
+        // .def_readonly_static("CurrentTexture", &sf::Shader::CurrentTexture)
         ;
 
     /****************
