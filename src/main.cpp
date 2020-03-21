@@ -524,7 +524,9 @@ PYBIND11_MODULE(pysfml11, sfml)
         })                                                                                                  \
         .def("intersects", [](sf::Rect<T>& self, const sf::Rect<T>& rectangle, sf::Rect<T>& intersection) { \
             return self.intersects(rectangle, intersection);                                                \
-        });
+        })                                                                                                  \
+        .def(py::self == py::self)                                                                          \
+        .def(py::self != py::self);
 
     /* IntRect class */
     PYSFML_IMPLEMENT_RECT(int, Int)

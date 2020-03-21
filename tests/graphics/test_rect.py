@@ -82,3 +82,14 @@ def test_intersects():
     assert intersection.top == 2
     assert intersection.width == 16
     assert intersection.height == 3
+
+
+def test_operator():
+    r1 = IntRect(0, 0, 20, 5)
+    r2 = IntRect(0, 0, 20, 5)
+
+    assert r1 == r2
+
+    r2.left = 3
+
+    assert r1 != r2
