@@ -1,4 +1,5 @@
 #include <array>
+#include <sstream>
 #include <vector>
 #include <string>
 
@@ -526,7 +527,14 @@ PYBIND11_MODULE(pysfml11, sfml)
             return self.intersects(rectangle, intersection);                                                \
         })                                                                                                  \
         .def(py::self == py::self)                                                                          \
-        .def(py::self != py::self);
+        .def(py::self != py::self)                                                                          \
+        .def("__repr__", [](const sf::Rect<T>& self) {                                                      \
+            std::ostringstream stream;                                                                      \
+            stream << "<sfml." << PYSFML_CONCAT_STRING(TS, Rect) <<                                         \
+                " left=" << self.left << " top=" << self.top <<                                             \
+                " width=" << self.width << " height=" << self.height << ">";                                \
+            return stream.str();                                                                            \
+        });
 
     /* IntRect class */
     PYSFML_IMPLEMENT_RECT(int, Int)
