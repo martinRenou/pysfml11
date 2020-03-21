@@ -67,3 +67,14 @@ def test_mat():
 
     with pytest.raises(TypeError):
         sf.Glsl.Mat4(data3)
+
+
+def test_repr():
+    vec = sf.Glsl.Vec4(sf.Color.Black)
+    assert str(vec) == '<pysfml11.Glsl.Vec4 x=0 y=0 z=0 w=1>'
+
+    vec = sf.Glsl.Ivec4(2, 4, 5, 6)
+    assert str(vec) == '<pysfml11.Glsl.Ivec4 x=2 y=4 z=5 w=6>'
+
+    vec = sf.Glsl.Bvec4(True, False, True, True)
+    assert str(vec) == '<pysfml11.Glsl.Bvec4 x=True y=False z=True w=True>'

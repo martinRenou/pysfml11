@@ -23,6 +23,13 @@ namespace py = pybind11;
 #define PYSFML_CONCAT_STRING(A, B) PYSFML_STRINGIFY(PYSFML_CONCATENATE(A, B))
 
 
+// Return the Python repr of a boolean value
+std::string bool_repr(bool value)
+{
+    return value ? "True" : "False";
+}
+
+
 PYBIND11_MODULE(pysfml11, sfml)
 {
     sfml.doc() = R"pbdoc(
@@ -679,7 +686,16 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("x", &sf::Glsl::TS::x)                                                   \
         .def_readonly("y", &sf::Glsl::TS::y)                                                   \
         .def_readonly("z", &sf::Glsl::TS::z)                                                   \
-        .def_readonly("w", &sf::Glsl::TS::w);
+        .def_readonly("w", &sf::Glsl::TS::w)                                                   \
+        .def("__repr__", [](const sf::Glsl::TS& self) {                                        \
+            std::ostringstream stream;                                                         \
+            stream << "<pysfml11.Glsl." << PYSFML_STRINGIFY(TS) <<                             \
+                " x=" << self.x <<                                                             \
+                " y=" << self.y <<                                                             \
+                " z=" << self.z <<                                                             \
+                " w=" << self.w << ">";                                                        \
+            return stream.str();                                                               \
+        });
 
     PYSFML_IMPLEMENT_VEC4(float, Vec4);
     PYSFML_IMPLEMENT_VEC4(int, Ivec4);
@@ -695,7 +711,16 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("x", &sf::Glsl::Bvec4::x)
         .def_readonly("y", &sf::Glsl::Bvec4::y)
         .def_readonly("z", &sf::Glsl::Bvec4::z)
-        .def_readonly("w", &sf::Glsl::Bvec4::w);
+        .def_readonly("w", &sf::Glsl::Bvec4::w)
+        .def("__repr__", [](const sf::Glsl::Bvec4& self) {
+            std::ostringstream stream;
+            stream << "<pysfml11.Glsl.Bvec4" <<
+                " x=" << bool_repr(self.x) <<
+                " y=" << bool_repr(self.y) <<
+                " z=" << bool_repr(self.z) <<
+                " w=" << bool_repr(self.w) << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Glsl::Mat3>(glsl, "Mat3")
         .def(py::init([](const std::array<float, 9>& array) {
