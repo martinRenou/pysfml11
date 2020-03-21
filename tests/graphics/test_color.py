@@ -51,3 +51,10 @@ def test_operators():
     assert color3.g == 50
     assert color3.b == 0
     assert color3.a == 0
+
+
+def test_repr():
+    color = Color(123, 200, 200, 255)
+
+    assert str(color) == '<sfml.Color r=123 g=200 b=200 a=255>'
+    assert str(Color.Black) == '<sfml.Color r=0 g=0 b=0 a=255>'

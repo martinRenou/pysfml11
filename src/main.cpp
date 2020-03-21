@@ -650,7 +650,12 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self * py::self)
         .def(py::self += py::self)
         .def(py::self -= py::self)
-        .def(py::self *= py::self);
+        .def(py::self *= py::self)
+        .def("__repr__", [](const sf::Color& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Color r=" << int(self.r) << " g=" << int(self.g) << " b=" << int(self.b) << " a=" << int(self.a) << ">";
+            return stream.str();
+        });
 
     /* Glsl types */
     py::module glsl = sfml.def_submodule("Glsl");
