@@ -273,60 +273,122 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     py::class_<sf::Event::SizeEvent>(event, "SizeEvent")
         .def_readonly("width", &sf::Event::SizeEvent::width)
-        .def_readonly("height", &sf::Event::SizeEvent::height);
+        .def_readonly("height", &sf::Event::SizeEvent::height)
+        .def("__repr__", [](const sf::Event::SizeEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.SizeEvent width=" << self.width << " height=" << self.height << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::KeyEvent>(event, "KeyEvent")
         .def_readonly("code", &sf::Event::KeyEvent::code)
         .def_readonly("alt", &sf::Event::KeyEvent::alt)
         .def_readonly("control", &sf::Event::KeyEvent::control)
         .def_readonly("shift", &sf::Event::KeyEvent::shift)
-        .def_readonly("system", &sf::Event::KeyEvent::system);
+        .def_readonly("system", &sf::Event::KeyEvent::system)
+        .def("__repr__", [](const sf::Event::KeyEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.KeyEvent code=" << self.code << " alt=" << self.alt <<
+                " control=" << self.control << " shift=" << self.shift <<
+                " system=" << self.system << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::TextEvent>(event, "TextEvent")
-        .def_readonly("unicode", &sf::Event::TextEvent::unicode);
+        .def_readonly("unicode", &sf::Event::TextEvent::unicode)
+        .def("__repr__", [](const sf::Event::TextEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.TextEvent unicode=" << self.unicode << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::MouseMoveEvent>(event, "MouseMoveEvent")
         .def_readonly("x", &sf::Event::MouseMoveEvent::x)
-        .def_readonly("y", &sf::Event::MouseMoveEvent::y);
+        .def_readonly("y", &sf::Event::MouseMoveEvent::y)
+        .def("__repr__", [](const sf::Event::MouseMoveEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.MouseMoveEvent x=" << self.x << " y=" << self.y << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::MouseButtonEvent>(event, "MouseButtonEvent")
         .def_readonly("button", &sf::Event::MouseButtonEvent::button)
         .def_readonly("x", &sf::Event::MouseButtonEvent::x)
-        .def_readonly("y", &sf::Event::MouseButtonEvent::y);
+        .def_readonly("y", &sf::Event::MouseButtonEvent::y)
+        .def("__repr__", [](const sf::Event::MouseButtonEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.MouseButtonEvent button=" << self.button << " x=" << self.x << " y=" << self.y << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::MouseWheelEvent>(event, "MouseWheelEvent")
         .def_readonly("delta", &sf::Event::MouseWheelEvent::delta)
         .def_readonly("x", &sf::Event::MouseWheelEvent::x)
-        .def_readonly("y", &sf::Event::MouseWheelEvent::y);
+        .def_readonly("y", &sf::Event::MouseWheelEvent::y)
+        .def("__repr__", [](const sf::Event::MouseWheelEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.MouseWheelEvent delta=" << self.delta << " x=" << self.x << " y=" << self.y << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::MouseWheelScrollEvent>(event, "MouseWheelScrollEvent")
         .def_readonly("wheel", &sf::Event::MouseWheelScrollEvent::wheel)
         .def_readonly("delta", &sf::Event::MouseWheelScrollEvent::delta)
         .def_readonly("x", &sf::Event::MouseWheelScrollEvent::x)
-        .def_readonly("y", &sf::Event::MouseWheelScrollEvent::y);
+        .def_readonly("y", &sf::Event::MouseWheelScrollEvent::y)
+        .def("__repr__", [](const sf::Event::MouseWheelScrollEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.MouseWheelScrollEvent wheel=" << self.wheel << " delta=" << self.delta << " x=" << self.x << " y=" << self.y << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::JoystickConnectEvent>(event, "JoystickConnectEvent")
-        .def_readonly("joystick_id", &sf::Event::JoystickConnectEvent::joystickId);
+        .def_readonly("joystick_id", &sf::Event::JoystickConnectEvent::joystickId)
+        .def("__repr__", [](const sf::Event::JoystickConnectEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.JoystickConnectEvent joystick_id=" << self.joystickId << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::JoystickMoveEvent>(event, "JoystickMoveEvent")
         .def_readonly("joystick_id", &sf::Event::JoystickMoveEvent::joystickId)
         .def_readonly("axis", &sf::Event::JoystickMoveEvent::axis)
-        .def_readonly("position", &sf::Event::JoystickMoveEvent::position);
+        .def_readonly("position", &sf::Event::JoystickMoveEvent::position)
+        .def("__repr__", [](const sf::Event::JoystickMoveEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.JoystickMoveEvent joystick_id=" << self.joystickId << " axis=" << self.axis << " position=" << self.position << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::JoystickButtonEvent>(event, "JoystickButtonEvent")
         .def_readonly("joystick_id", &sf::Event::JoystickButtonEvent::joystickId)
-        .def_readonly("button", &sf::Event::JoystickButtonEvent::button);
+        .def_readonly("button", &sf::Event::JoystickButtonEvent::button)
+        .def("__repr__", [](const sf::Event::JoystickButtonEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.JoystickButtonEvent joystick_id=" << self.joystickId << " button=" << self.button << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::TouchEvent>(event, "TouchEvent")
         .def_readonly("finger", &sf::Event::TouchEvent::finger)
         .def_readonly("x", &sf::Event::TouchEvent::x)
-        .def_readonly("y", &sf::Event::TouchEvent::y);
+        .def_readonly("y", &sf::Event::TouchEvent::y)
+        .def("__repr__", [](const sf::Event::TouchEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.TouchEvent finger=" << self.finger << " x=" << self.x << " y=" << self.y << ">";
+            return stream.str();
+        });
 
     py::class_<sf::Event::SensorEvent>(event, "SensorEvent")
         .def_readonly("type", &sf::Event::SensorEvent::type)
         .def_readonly("x", &sf::Event::SensorEvent::x)
         .def_readonly("y", &sf::Event::SensorEvent::y)
-        .def_readonly("z", &sf::Event::SensorEvent::z);
+        .def_readonly("z", &sf::Event::SensorEvent::z)
+        .def("__repr__", [](const sf::Event::SensorEvent& self) {
+            std::ostringstream stream;
+            stream << "<sfml.Event.SensorEvent type=" << self.type << " x=" << self.x << " y=" << self.y << " z=" << self.z << ">";
+            return stream.str();
+        });
 
     py::enum_<sf::Event::EventType>(event, "EventType")
         .value("Closed", sf::Event::Closed)

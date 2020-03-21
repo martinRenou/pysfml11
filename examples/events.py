@@ -17,25 +17,37 @@ while (window.is_open()):
         print('\n{}!'.format(event.type))
 
         if event.type == sf.Event.Resized:
-            print(event.size.width, event.size.height)
+            print(event.size)
 
         if event.type == sf.Event.TextEntered:
-            print(event.text.unicode)
+            print(event.text, 'which is:', chr(event.text.unicode))
 
         if event.type == sf.Event.KeyPressed or event.type == sf.Event.KeyReleased:
-            print(event.key.code, event.key.alt, event.key.control, event.key.shift, event.key.system)
+            print(event.key)
 
         if event.type == sf.Event.MouseMoved:
-            print(event.mouse_move.x, event.mouse_move.y)
+            print(event.mouse_move)
 
         if event.type == sf.Event.MouseButtonPressed or event.type == sf.Event.MouseButtonReleased:
-            print(event.mouse_button.button, event.mouse_button.x, event.mouse_button.y)
+            print(event.mouse_button)
 
         if event.type == sf.Event.MouseWheelMoved:
-            print(event.mouse_wheel.delta, event.mouse_wheel.x, event.mouse_wheel.y)
+            print(event.mouse_wheel)
 
         if event.type == sf.Event.MouseWheelScrolled:
-            print(event.mouse_wheel_scroll.wheel, event.mouse_wheel_scroll.delta, event.mouse_wheel_scroll.x, event.mouse_wheel_scroll.y)
+            print(event.mouse_wheel_scroll)
+
+        if event.type == sf.Event.JoystickButtonPressed or event.type == sf.Event.JoystickButtonReleased:
+            print(event.joystick_button)
+
+        if event.type == sf.Event.JoystickMoved:
+            print(event.joystick_move)
+
+        if event.type == sf.Event.JoystickConnected or event.type == sf.Event.JoystickDisconnected:
+            print(event.joystick_connect)
+
+        if event.type == sf.Event.SensorChanged:
+            print(event.sensor)
 
     window.clear(sf.Color.White)
 
