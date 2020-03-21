@@ -64,7 +64,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self %= py::self)
         .def("__repr__", [](const sf::Time& self) {
             std::ostringstream stream;
-            stream << "<sfml.Time seconds=" << self.asSeconds() << ">";
+            stream << "<pysfml11.Time seconds=" << self.asSeconds() << ">";
             return stream.str();
         });
 
@@ -80,30 +80,30 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("elapsed_time", &sf::Clock::getElapsedTime)
         .def("restart", &sf::Clock::restart);
 
-    #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                               \
-    py::class_<sf::Vector2<T>>(sfml, PYSFML_CONCAT_STRING(Vector2, TS))   \
-        .def(py::init<T, T>(), py::arg("x") = T(0), py::arg("y") = T(0))  \
-        .def(py::init<sf::Vector2<T>>(), py::arg("vector"))               \
-        .def_readwrite("x", &sf::Vector2<T>::x)                           \
-        .def_readwrite("y", &sf::Vector2<T>::y)                           \
-        .def(-py::self)                                                   \
-        .def(py::self += py::self)                                        \
-        .def(py::self -= py::self)                                        \
-        .def(py::self + py::self)                                         \
-        .def(py::self - py::self)                                         \
-        .def(T() * py::self)                                              \
-        .def(py::self * T())                                              \
-        .def(py::self *= T())                                             \
-        .def(py::self / T())                                              \
-        .def(py::self /= T())                                             \
-        .def(py::self == py::self)                                        \
-        .def(py::self != py::self)                                        \
-        .def("__repr__", [](const sf::Vector2<T>& self) {                 \
-            std::ostringstream stream;                                    \
-            stream << "<sfml." << PYSFML_CONCAT_STRING(Vector2, TS) <<    \
-                " x=" << self.x <<                                        \
-                " y=" << self.y << ">";                                   \
-            return stream.str();                                          \
+    #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                                \
+    py::class_<sf::Vector2<T>>(sfml, PYSFML_CONCAT_STRING(Vector2, TS))    \
+        .def(py::init<T, T>(), py::arg("x") = T(0), py::arg("y") = T(0))   \
+        .def(py::init<sf::Vector2<T>>(), py::arg("vector"))                \
+        .def_readwrite("x", &sf::Vector2<T>::x)                            \
+        .def_readwrite("y", &sf::Vector2<T>::y)                            \
+        .def(-py::self)                                                    \
+        .def(py::self += py::self)                                         \
+        .def(py::self -= py::self)                                         \
+        .def(py::self + py::self)                                          \
+        .def(py::self - py::self)                                          \
+        .def(T() * py::self)                                               \
+        .def(py::self * T())                                               \
+        .def(py::self *= T())                                              \
+        .def(py::self / T())                                               \
+        .def(py::self /= T())                                              \
+        .def(py::self == py::self)                                         \
+        .def(py::self != py::self)                                         \
+        .def("__repr__", [](const sf::Vector2<T>& self) {                  \
+            std::ostringstream stream;                                     \
+            stream << "<pysfml11." << PYSFML_CONCAT_STRING(Vector2, TS) << \
+                " x=" << self.x <<                                         \
+                " y=" << self.y << ">";                                    \
+            return stream.str();                                           \
         });
 
     /* Vector2f class */
@@ -138,7 +138,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self != py::self)                                                               \
         .def("__repr__", [](const sf::Vector3<T>& self) {                                        \
             std::ostringstream stream;                                                           \
-            stream << "<sfml." << PYSFML_CONCAT_STRING(Vector3, TS) <<                           \
+            stream << "<pysfml11." << PYSFML_CONCAT_STRING(Vector3, TS) <<                       \
                 " x=" << self.x <<                                                               \
                 " y=" << self.y <<                                                               \
                 " z=" << self.z << ">";                                                          \
@@ -276,7 +276,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("height", &sf::Event::SizeEvent::height)
         .def("__repr__", [](const sf::Event::SizeEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.SizeEvent width=" << self.width << " height=" << self.height << ">";
+            stream << "<pysfml11.Event.SizeEvent width=" << self.width << " height=" << self.height << ">";
             return stream.str();
         });
 
@@ -288,7 +288,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("system", &sf::Event::KeyEvent::system)
         .def("__repr__", [](const sf::Event::KeyEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.KeyEvent code=" << self.code << " alt=" << self.alt <<
+            stream << "<pysfml11.Event.KeyEvent code=" << self.code << " alt=" << self.alt <<
                 " control=" << self.control << " shift=" << self.shift <<
                 " system=" << self.system << ">";
             return stream.str();
@@ -298,7 +298,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("unicode", &sf::Event::TextEvent::unicode)
         .def("__repr__", [](const sf::Event::TextEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.TextEvent unicode=" << self.unicode << ">";
+            stream << "<pysfml11.Event.TextEvent unicode=" << self.unicode << ">";
             return stream.str();
         });
 
@@ -307,7 +307,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("y", &sf::Event::MouseMoveEvent::y)
         .def("__repr__", [](const sf::Event::MouseMoveEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.MouseMoveEvent x=" << self.x << " y=" << self.y << ">";
+            stream << "<pysfml11.Event.MouseMoveEvent x=" << self.x << " y=" << self.y << ">";
             return stream.str();
         });
 
@@ -317,7 +317,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("y", &sf::Event::MouseButtonEvent::y)
         .def("__repr__", [](const sf::Event::MouseButtonEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.MouseButtonEvent button=" << self.button << " x=" << self.x << " y=" << self.y << ">";
+            stream << "<pysfml11.Event.MouseButtonEvent button=" << self.button << " x=" << self.x << " y=" << self.y << ">";
             return stream.str();
         });
 
@@ -327,7 +327,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("y", &sf::Event::MouseWheelEvent::y)
         .def("__repr__", [](const sf::Event::MouseWheelEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.MouseWheelEvent delta=" << self.delta << " x=" << self.x << " y=" << self.y << ">";
+            stream << "<pysfml11.Event.MouseWheelEvent delta=" << self.delta << " x=" << self.x << " y=" << self.y << ">";
             return stream.str();
         });
 
@@ -338,7 +338,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("y", &sf::Event::MouseWheelScrollEvent::y)
         .def("__repr__", [](const sf::Event::MouseWheelScrollEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.MouseWheelScrollEvent wheel=" << self.wheel << " delta=" << self.delta << " x=" << self.x << " y=" << self.y << ">";
+            stream << "<pysfml11.Event.MouseWheelScrollEvent wheel=" << self.wheel << " delta=" << self.delta << " x=" << self.x << " y=" << self.y << ">";
             return stream.str();
         });
 
@@ -346,7 +346,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("joystick_id", &sf::Event::JoystickConnectEvent::joystickId)
         .def("__repr__", [](const sf::Event::JoystickConnectEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.JoystickConnectEvent joystick_id=" << self.joystickId << ">";
+            stream << "<pysfml11.Event.JoystickConnectEvent joystick_id=" << self.joystickId << ">";
             return stream.str();
         });
 
@@ -356,7 +356,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("position", &sf::Event::JoystickMoveEvent::position)
         .def("__repr__", [](const sf::Event::JoystickMoveEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.JoystickMoveEvent joystick_id=" << self.joystickId << " axis=" << self.axis << " position=" << self.position << ">";
+            stream << "<pysfml11.Event.JoystickMoveEvent joystick_id=" << self.joystickId << " axis=" << self.axis << " position=" << self.position << ">";
             return stream.str();
         });
 
@@ -365,7 +365,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("button", &sf::Event::JoystickButtonEvent::button)
         .def("__repr__", [](const sf::Event::JoystickButtonEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.JoystickButtonEvent joystick_id=" << self.joystickId << " button=" << self.button << ">";
+            stream << "<pysfml11.Event.JoystickButtonEvent joystick_id=" << self.joystickId << " button=" << self.button << ">";
             return stream.str();
         });
 
@@ -375,7 +375,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("y", &sf::Event::TouchEvent::y)
         .def("__repr__", [](const sf::Event::TouchEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.TouchEvent finger=" << self.finger << " x=" << self.x << " y=" << self.y << ">";
+            stream << "<pysfml11.Event.TouchEvent finger=" << self.finger << " x=" << self.x << " y=" << self.y << ">";
             return stream.str();
         });
 
@@ -386,7 +386,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("z", &sf::Event::SensorEvent::z)
         .def("__repr__", [](const sf::Event::SensorEvent& self) {
             std::ostringstream stream;
-            stream << "<sfml.Event.SensorEvent type=" << self.type << " x=" << self.x << " y=" << self.y << " z=" << self.z << ">";
+            stream << "<pysfml11.Event.SensorEvent type=" << self.type << " x=" << self.x << " y=" << self.y << " z=" << self.z << ">";
             return stream.str();
         });
 
@@ -612,7 +612,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self != py::self)                                                                          \
         .def("__repr__", [](const sf::Rect<T>& self) {                                                      \
             std::ostringstream stream;                                                                      \
-            stream << "<sfml." << PYSFML_CONCAT_STRING(TS, Rect) <<                                         \
+            stream << "<pysfml11." << PYSFML_CONCAT_STRING(TS, Rect) <<                                     \
                 " left=" << self.left << " top=" << self.top <<                                             \
                 " width=" << self.width << " height=" << self.height << ">";                                \
             return stream.str();                                                                            \
@@ -653,7 +653,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self *= py::self)
         .def("__repr__", [](const sf::Color& self) {
             std::ostringstream stream;
-            stream << "<sfml.Color r=" << int(self.r) << " g=" << int(self.g) << " b=" << int(self.b) << " a=" << int(self.a) << ">";
+            stream << "<pysfml11.Color r=" << int(self.r) << " g=" << int(self.g) << " b=" << int(self.b) << " a=" << int(self.a) << ">";
             return stream.str();
         });
 

@@ -56,5 +56,5 @@ def test_operators():
 def test_repr():
     color = Color(123, 200, 200, 255)
 
-    assert str(color) == '<sfml.Color r=123 g=200 b=200 a=255>'
-    assert str(Color.Black) == '<sfml.Color r=0 g=0 b=0 a=255>'
+    assert str(color) == '<pysfml11.Color r=123 g=200 b=200 a=255>'
+    assert str(Color.Black) == '<pysfml11.Color r=0 g=0 b=0 a=255>'

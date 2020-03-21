@@ -66,4 +66,4 @@ def test_operators():
 def test_repr():
     time = seconds(3)
 
-    assert str(time) == '<sfml.Time seconds=3>'
+    assert str(time) == '<pysfml11.Time seconds=3>'

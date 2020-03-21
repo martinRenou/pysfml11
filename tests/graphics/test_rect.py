@@ -98,8 +98,8 @@ def test_operator():
 def test_repr():
     r = IntRect(0, 0, 20, 5)
 
-    assert str(r) == '<sfml.IntRect left=0 top=0 width=20 height=5>'
+    assert str(r) == '<pysfml11.IntRect left=0 top=0 width=20 height=5>'
 
     r = FloatRect(0, 0, 20, 5)
 
-    assert str(r) == '<sfml.FloatRect left=0 top=0 width=20 height=5>'
+    assert str(r) == '<pysfml11.FloatRect left=0 top=0 width=20 height=5>'
