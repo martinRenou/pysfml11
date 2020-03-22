@@ -50,3 +50,42 @@ def test_create_mask_from_color():
 
     image.create_mask_from_color(sf.Color.Blue)
     image.create_mask_from_color(sf.Color.Blue, 125)
+
+
+def test_copy():
+    image = sf.Image()
+
+    resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
+
+    image.load_from_file(str(resources / 'saxo.jpg'))
+
+    source = sf.Image()
+    source.create(30, 30, sf.Color.Blue)
+
+    image.copy(source, 50, 50)
+    image.copy(source, 50, 50, sf.IntRect())
+    image.copy(source, 50, 50, sf.IntRect(), True)
+
+
+def test_pixel():
+    image = sf.Image()
+
+    resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
+
+    image.load_from_file(str(resources / 'saxo.jpg'))
+
+    color = image.get_pixel(30, 40)
+
+    assert color.r == 9
+    assert color.g == 9
+    assert color.b == 17
+    assert color.a == 255
+
+    image.set_pixel(30, 40, sf.Color.Black)
+
+    color = image.get_pixel(30, 40)
+
+    assert color.r == 0
+    assert color.g == 0
+    assert color.b == 0
+    assert color.a == 255

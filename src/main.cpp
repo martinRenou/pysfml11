@@ -860,12 +860,15 @@ PYBIND11_MODULE(pysfml11, sfml)
         }, py::arg("width"), py::arg("height"), py::arg("color") = sf::Color::Black)
         // TODO Create from bytes
         .def("load_from_file", &sf::Image::loadFromFile, py::arg("filename"))
-        // TODO Load from bytes
         .def("load_from_stream", &sf::Image::loadFromStream, py::arg("stream"))
         .def("save_to_file", &sf::Image::saveToFile, py::arg("filename"))
         .def_property_readonly("size", &sf::Image::getSize)
         .def("create_mask_from_color", &sf::Image::createMaskFromColor, py::arg("color"), py::arg("alpha") = 0)
-        ;
+        .def("copy", &sf::Image::copy, py::arg("source"), py::arg("dest_x"), py::arg("dest_y"), py::arg("source_rect") = sf::IntRect(0, 0, 0, 0), py::arg("apply_alpha") = false)
+        .def("set_pixel", &sf::Image::setPixel, py::arg("x"), py::arg("y"), py::arg("color"))
+        .def("get_pixel", &sf::Image::getPixel, py::arg("x"), py::arg("y"))
+        .def("flip_horizontally", &sf::Image::flipHorizontally)
+        .def("flip_vertically", &sf::Image::flipVertically);
 
     /* View class */
     py::class_<sf::View>(sfml, "View")
