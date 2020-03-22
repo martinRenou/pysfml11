@@ -573,7 +573,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // TODO
     // class   sf::BlendMode
     // class   sf::Font
-    // class   sf::Glyph
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
@@ -869,6 +868,13 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("get_pixel", &sf::Image::getPixel, py::arg("x"), py::arg("y"))
         .def("flip_horizontally", &sf::Image::flipHorizontally)
         .def("flip_vertically", &sf::Image::flipVertically);
+
+    /* Glyph class */
+    py::class_<sf::Glyph>(sfml, "Glyph")
+        .def(py::init<>())
+        .def_readonly("advance", &sf::Glyph::advance)
+        .def_readonly("bounds", &sf::Glyph::bounds)
+        .def_readonly("texture_rect", &sf::Glyph::textureRect);
 
     /* View class */
     py::class_<sf::View>(sfml, "View")
