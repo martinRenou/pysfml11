@@ -1,0 +1,33 @@
+language: generic
+dist: trusty
+matrix:
+  include:
+  - os: linux
+    env: PYTHON=3.5
+  - os: linux
+    env: PYTHON=3.6
+  - os: linux
+    env: PYTHON=3.7
+  - os: linux
+    env: PYTHON=3.8
+  - os: osx
+    env: PYTHON=3.8
+before_install:
+  - if [[ $TRAVIS_OS_NAME == linux ]];
+      then
+      # Workaround for libudev.so.0 not available
+      wget http://mirrors.kernel.org/ubuntu/pool/main/u/udev/libudev0_175-0ubuntu9_amd64.deb;
+      dpkg -i libudev0_175-0ubuntu9_amd64.deb;
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - if [[ $TRAVIS_OS_NAME == osx ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda create --quiet --name sfml -c conda-forge python=$PYTHON pip pytest pybind11 sfml
+  - source activate sfml
+install:
+  - pip install .
+script:
+  - pytest tests -v
