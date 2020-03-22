@@ -574,7 +574,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::BlendMode
     // class   sf::Font
     // class   sf::Glyph
-    // class   sf::Image
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
@@ -852,6 +851,21 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("draw", [](sf::RenderWindow& self, const sf::Drawable& drawable) {
             self.draw(drawable);
         });
+
+    /* Image class */
+    py::class_<sf::Image>(sfml, "Image")
+        .def(py::init<>())
+        .def("create", [](sf::Image& self, std::size_t width, std::size_t height, const sf::Color& color) {
+            self.create(width, height, color);
+        }, py::arg("width"), py::arg("height"), py::arg("color") = sf::Color::Black)
+        // TODO Create from bytes
+        .def("load_from_file", &sf::Image::loadFromFile, py::arg("filename"))
+        // TODO Load from bytes
+        .def("load_from_stream", &sf::Image::loadFromStream, py::arg("stream"))
+        .def("save_to_file", &sf::Image::saveToFile, py::arg("filename"))
+        .def_property_readonly("size", &sf::Image::getSize)
+        .def("create_mask_from_color", &sf::Image::createMaskFromColor, py::arg("color"), py::arg("alpha") = 0)
+        ;
 
     /* View class */
     py::class_<sf::View>(sfml, "View")
