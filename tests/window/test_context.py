@@ -1,7 +1,12 @@
+import pytest
+
 from pysfml11 import Context, ContextSettings
 
 
-def test_construction():
+def test_construction(ci):
+    if ci:
+        pytest.skip("skipping Context tests on CI (no display available)")
+
     context1 = Context()
 
     assert isinstance(context1.settings, ContextSettings)

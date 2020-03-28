@@ -26,7 +26,3 @@ def test_write():
 
     outputsound.open_from_file(str(resources / 'canary2.ogg'), sample_rate, channel_count)
     outputsound.write(samples)
-
-    # Read the output
-    writtensound = InputSoundFile()
-    assert writtensound.open_from_file(str(resources / 'canary2.ogg'))

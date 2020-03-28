@@ -1,7 +1,12 @@
+import pytest
+
 from pysfml11 import ContextSettings
 
 
-def test_construction():
+def test_construction(ci):
+    if ci:
+        pytest.skip("skipping Context tests on CI (no display available)")
+
     settings1 = ContextSettings()
 
     assert settings1.depth_bits == 0

@@ -89,7 +89,7 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                                \
     py::class_<sf::Vector2<T>>(sfml, PYSFML_CONCAT_STRING(Vector2, TS))    \
-        .def(py::init<T, T>(), py::arg("x") = T(0), py::arg("y") = T(0))   \
+        .def(py::init<T, T>(), py::arg("x") = (T)0, py::arg("y") = (T)0)   \
         .def(py::init<sf::Vector2<T>>(), py::arg("vector"))                \
         .def_readwrite("x", &sf::Vector2<T>::x)                            \
         .def_readwrite("y", &sf::Vector2<T>::y)                            \
@@ -98,11 +98,11 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self -= py::self)                                         \
         .def(py::self + py::self)                                          \
         .def(py::self - py::self)                                          \
-        .def(T() * py::self)                                               \
-        .def(py::self * T())                                               \
-        .def(py::self *= T())                                              \
-        .def(py::self / T())                                               \
-        .def(py::self /= T())                                              \
+        .def((T)0 * py::self)                                              \
+        .def(py::self * (T)0)                                              \
+        .def(py::self *= (T)0)                                             \
+        .def(py::self / (T)0)                                              \
+        .def(py::self /= (T)0)                                             \
         .def(py::self == py::self)                                         \
         .def(py::self != py::self)                                         \
         .def("__repr__", [](const sf::Vector2<T>& self) {                  \
@@ -118,7 +118,7 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Vector2i class */
     PYSFML_IMPLEMENT_VECTOR2(int, i)
     /* Vector2u class */
-    PYSFML_IMPLEMENT_VECTOR2(uint, u)
+    PYSFML_IMPLEMENT_VECTOR2(unsigned int, u)
     /* Vector2b class */
     PYSFML_IMPLEMENT_VECTOR2(bool, b)
 
@@ -126,7 +126,7 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     #define PYSFML_IMPLEMENT_VECTOR3(T, TS)                                                      \
     py::class_<sf::Vector3<T>>(sfml, PYSFML_CONCAT_STRING(Vector3, TS))                          \
-        .def(py::init<T, T, T>(), py::arg("x") = T(0), py::arg("y") = T(0), py::arg("z") = T(0)) \
+        .def(py::init<T, T, T>(), py::arg("x") = (T)0, py::arg("y") = (T)0, py::arg("z") = (T)0) \
         .def(py::init<sf::Vector3<T>>(), py::arg("vector"))                                      \
         .def_readwrite("x", &sf::Vector3<T>::x)                                                  \
         .def_readwrite("y", &sf::Vector3<T>::y)                                                  \
@@ -136,11 +136,11 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::self -= py::self)                                                               \
         .def(py::self + py::self)                                                                \
         .def(py::self - py::self)                                                                \
-        .def(T() * py::self)                                                                     \
-        .def(py::self * T())                                                                     \
-        .def(py::self *= T())                                                                    \
-        .def(py::self / T())                                                                     \
-        .def(py::self /= T())                                                                    \
+        .def((T)0 * py::self)                                                                    \
+        .def(py::self * (T)0)                                                                    \
+        .def(py::self *= (T)0)                                                                   \
+        .def(py::self / (T)0)                                                                    \
+        .def(py::self /= (T)0)                                                                   \
         .def(py::self == py::self)                                                               \
         .def(py::self != py::self)                                                               \
         .def("__repr__", [](const sf::Vector3<T>& self) {                                        \
@@ -157,7 +157,7 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Vector3i class */
     PYSFML_IMPLEMENT_VECTOR3(int, i)
     /* Vector3u class */
-    PYSFML_IMPLEMENT_VECTOR3(uint, u)
+    PYSFML_IMPLEMENT_VECTOR3(unsigned int, u)
     /* Vector3b class */
     PYSFML_IMPLEMENT_VECTOR3(bool, b)
 
@@ -166,7 +166,7 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* InputStream class */
     py::class_<sf::InputStream>(sfml, "InputStream")
         .def("read", [](sf::InputStream& self, std::size_t count) {
-            sf::Int64 samples[count];
+            sf::Int64* samples = new sf::Int64[count];
 
             sf::Uint64 readcount = self.read(samples, count);
             // TODO: Raise if readcount is -1
@@ -548,7 +548,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("set_title", [](sf::Window& self, const std::string& title) {
             self.setTitle(title);
         })
-        .def("set_icon", [](sf::Window& self, std::size_t width, std::size_t height, const std::vector<uint8_t>& pixels) {
+        .def("set_icon", [](sf::Window& self, unsigned int width, unsigned int height, const std::vector<uint8_t>& pixels) {
             self.setIcon(width, height, pixels.data());
         })
         .def("set_visible", &sf::Window::setVisible)
@@ -854,7 +854,7 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Image class */
     py::class_<sf::Image>(sfml, "Image")
         .def(py::init<>())
-        .def("create", [](sf::Image& self, std::size_t width, std::size_t height, const sf::Color& color) {
+        .def("create", [](sf::Image& self, unsigned int width, unsigned int height, const sf::Color& color) {
             self.create(width, height, color);
         }, py::arg("width"), py::arg("height"), py::arg("color") = sf::Color::Black)
         // TODO Create from bytes
@@ -991,8 +991,8 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("seek", [](sf::InputSoundFile& self, sf::Time time_offset) {
             self.seek(time_offset);
         })
-        .def("read", [](sf::InputSoundFile& self, uint64_t count) {
-            sf::Int16 samples[count];
+        .def("read", [](sf::InputSoundFile& self, std::size_t count) {
+            sf::Int16* samples = new sf::Int16[count];
 
             sf::Uint64 readcount = self.read(samples, count);
             // TODO: Raise if readcount is -1

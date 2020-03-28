@@ -1,3 +1,4 @@
+import os
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 import sys
@@ -20,16 +21,31 @@ class get_pybind_include(object):
         import pybind11
         return pybind11.get_include(self.user)
 
+include_dirs = [get_pybind_include(), get_pybind_include(user=True)]
+library_dirs = []
+
+conda_prefix = os.getenv('CONDA_PREFIX')
+if not conda_prefix:
+    conda_prefix = os.getenv('MINICONDAPATH')
+
+if conda_prefix:
+    if sys.platform.startswith('win'):
+        include_dirs.append(os.path.join(conda_prefix, 'Library', 'include'))
+        library_dirs.append(os.path.join(conda_prefix, 'Library', 'lib'))
+    else:
+        include_dirs.append(os.path.join(conda_prefix, 'include'))
+        library_dirs.append(os.path.join(conda_prefix, 'lib'))
+else:
+    include_dirs.append('/usr/local/include')
+    library_dirs.append('/usr/local/lib')
 
 ext_modules = [
     Extension(
         'pysfml11',
         ['src/main.cpp'],
-        include_dirs=[
-            # Path to pybind11 headers
-            get_pybind_include(),
-            get_pybind_include(user=True)
-        ],
+        include_dirs=include_dirs,
+        library_dirs=library_dirs,
+        libraries=['sfml-network', 'sfml-audio', 'sfml-graphics', 'sfml-window', 'sfml-system'],
         language='c++'
     ),
 ]
@@ -72,12 +88,12 @@ class BuildExt(build_ext):
         'unix': [],
     }
     l_opts = {
-        'msvc': ['-lsfml-network', '-lsfml-audio', '-lsfml-graphics', '-lsfml-window', '-lsfml-system'],
-        'unix': ['-lsfml-network', '-lsfml-audio', '-lsfml-graphics', '-lsfml-window', '-lsfml-system'],
+        'msvc': [],
+        'unix': [],
     }
 
     if sys.platform == 'darwin':
-        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']
+        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.14']
         c_opts['unix'] += darwin_opts
         l_opts['unix'] += darwin_opts
 
