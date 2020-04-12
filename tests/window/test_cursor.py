@@ -1,7 +1,12 @@
+import pytest
+
 from pysfml11 import Vector2u, Cursor
 
 
-def test_construction_system():
+def test_construction_system(ci):
+    if ci:
+        pytest.skip("skipping Cursor tests on CI (no display available)")
+
     cursor = Cursor()
     result = cursor.load_from_system(Cursor.Type.Hand)
 
@@ -9,7 +14,10 @@ def test_construction_system():
     assert result
 
 
-def test_construction_pixels():
+def test_construction_pixels(ci):
+    if ci:
+        pytest.skip("skipping Cursor tests on CI (no display available)")
+
     cursor = Cursor()
 
     pixels = [

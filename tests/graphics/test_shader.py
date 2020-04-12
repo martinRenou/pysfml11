@@ -1,9 +1,14 @@
 import pathlib
 
+import pytest
+
 import pysfml11 as sf
 
 
-def test_from_file():
+def test_from_file(ci):
+    if ci:
+        pytest.skip("skipping Shader tests on CI (no display available)")
+
     resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
 
     vertex = sf.Shader()
@@ -13,7 +18,10 @@ def test_from_file():
     assert shader.load_from_file(str(resources / 'vertex.glsl'), str(resources / 'fragment.glsl'))
 
 
-def test_from_memory():
+def test_from_memory(ci):
+    if ci:
+        pytest.skip("skipping Shader tests on CI (no display available)")
+
     resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
 
     vertex_str = ''
@@ -32,7 +40,10 @@ def test_from_memory():
     assert shader.load_from_memory(vertex_str, fragment_str)
 
 
-def test_from_stream():
+def test_from_stream(ci):
+    if ci:
+        pytest.skip("skipping Shader tests on CI (no display available)")
+
     resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
 
     vertex_stream = sf.FileInputStream()
@@ -48,7 +59,10 @@ def test_from_stream():
     assert shader.load_from_stream(vertex_stream, fragment_stream)
 
 
-def test_set_uniform():
+def test_set_uniform(ci):
+    if ci:
+        pytest.skip("skipping Shader tests on CI (no display available)")
+
     resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
 
     vertex = sf.Shader()
