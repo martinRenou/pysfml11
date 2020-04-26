@@ -24,10 +24,7 @@ class get_pybind_include(object):
 include_dirs = [get_pybind_include(), get_pybind_include(user=True)]
 library_dirs = []
 
-conda_prefix = os.getenv('CONDA_PREFIX')
-if not conda_prefix:
-    conda_prefix = os.getenv('MINICONDAPATH')
-
+conda_prefix = os.getenv('CONDA_PREFIX', os.getenv('MINICONDAPATH', os.getenv('CONDA')))
 if conda_prefix:
     if sys.platform.startswith('win'):
         include_dirs.append(os.path.join(conda_prefix, 'Library', 'include'))
