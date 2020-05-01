@@ -20,31 +20,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - uses: goanpeca/setup-miniconda@v1
+
+    - name: Setup conda
+      uses: s-weigand/setup-conda@v1
       with:
-        auto-update-conda: true
+        update-conda: true
+        conda-channels: conda-forge
 
     - name: Fix missing libudev.so.0 on Linux
-      shell: pwsh
       if: matrix.os == 'ubuntu-latest'
       run: |
         wget http://mirrors.kernel.org/ubuntu/pool/main/u/udev/libudev0_175-0ubuntu9_amd64.deb
         sudo dpkg -i libudev0_175-0ubuntu9_amd64.deb
 
     - name: Conda install dependencies
-      shell: pwsh
-      run: conda install -c conda-forge python=${{ matrix.python-version }} pip setuptools sfml pybind11 pytest
-
-    - name: Debug
-      shell: pwsh
-      run: python setup.py egg_info
+      run: conda install python=${{ matrix.python-version }} pip setuptools sfml pybind11 pytest
 
     - name: Install pysfml11
-      shell: pwsh
-      run: |
-        pip --version
-        pip -vvv install .
+      run: pip -vvv install .
 
     - name: Run tests
-      shell: pwsh
+      if: matrix.os != 'windows-latest' || matrix.python-version == 3.6
       run: pytest -vvv tests --ci True
