@@ -76,10 +76,10 @@ PYBIND11_MODULE(pysfml11, sfml)
         });
 
     /* Timing free functions */
-    sfml.def("seconds", &sf::seconds);
-    sfml.def("milliseconds", &sf::milliseconds);
-    sfml.def("microseconds", &sf::microseconds);
-    sfml.def("sleep", &sf::sleep);
+    sfml.def("seconds", &sf::seconds, py::arg("amount"));
+    sfml.def("milliseconds", &sf::milliseconds, py::arg("amount"));
+    sfml.def("microseconds", &sf::microseconds, py::arg("amount"));
+    sfml.def("sleep", &sf::sleep, py::arg("duration"));
 
     /* Clock class */
     py::class_<sf::Clock>(sfml, "Clock")
@@ -171,15 +171,15 @@ PYBIND11_MODULE(pysfml11, sfml)
             sf::Uint64 readcount = self.read(samples, count);
             // TODO: Raise if readcount is -1
             return std::vector<int64_t>(samples, samples + readcount);
-        })
-        .def("seek", &sf::InputStream::seek)
+        }, py::arg("size"))
+        .def("seek", &sf::InputStream::seek, py::arg("position"))
         .def("tell", &sf::InputStream::tell)
         .def_property_readonly("size", &sf::InputStream::getSize);
 
     /* FileInputStream class */
     py::class_<sf::FileInputStream, sf::InputStream>(sfml, "FileInputStream")
         .def(py::init<>())
-        .def("open", &sf::FileInputStream::open);
+        .def("open", &sf::FileInputStream::open, py::arg("filename"));
 
     /*****************
      * WINDOW MODULE *
@@ -215,10 +215,10 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Context class */
     py::class_<sf::Context>(sfml, "Context")
         .def(py::init<>())
-        .def(py::init<const sf::ContextSettings&, std::size_t, std::size_t>())
-        .def("set_active", &sf::Context::setActive)
+        .def(py::init<const sf::ContextSettings&, std::size_t, std::size_t>(), py::arg("settings"), py::arg("width"), py::arg("height"))
+        .def("set_active", &sf::Context::setActive, py::arg("active"))
         .def_property_readonly("settings", &sf::Context::getSettings)
-        .def_static("is_extension_available", &sf::Context::isExtensionAvailable)
+        .def_static("is_extension_available", &sf::Context::isExtensionAvailable, py::arg("name"))
         // .def_static("get_function", &sf::Context::getFunction)
         .def_static("get_active_context", &sf::Context::getActiveContext)
         .def_static("get_active_context_id", &sf::Context::getActiveContextId);
@@ -270,10 +270,10 @@ PYBIND11_MODULE(pysfml11, sfml)
     cursor.def(py::init<>())
         .def("load_from_pixels", [](sf::Cursor& self, const std::vector<uint8_t>& pixels, const sf::Vector2u& size, const sf::Vector2u& hotspot) {
             return self.loadFromPixels(pixels.data(), size, hotspot);
-        })
+        }, py::arg("pixels"), py::arg("size"), py::arg("hotspot"))
         // TODO for convenience?
         // .def("load_from_file", &sf::Cursor::loadFromFile)
-        .def("load_from_system", &sf::Cursor::loadFromSystem);
+        .def("load_from_system", &sf::Cursor::loadFromSystem, py::arg("type"));
 
     /* Event class */
     py::class_<sf::Event> event(sfml, "Event");
@@ -466,12 +466,12 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_static("get_position",
             [](const sf::Window& relative_to) {
                 return sf::Mouse::getPosition(relative_to);
-            }
+            }, py::arg("relative_to")
         )
         .def_static("set_position",
             [](const sf::Vector2i& position, const sf::Window& relative_to) {
                 return sf::Mouse::setPosition(position, relative_to);
-            }
+            }, py::arg("position"), py::arg("relative_to")
         );
 
     /* Keyboard class */
@@ -541,24 +541,24 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("close", &sf::Window::close)
         .def("is_open", &sf::Window::isOpen)
         .def_property_readonly("settings", &sf::Window::getSettings)
-        .def("poll_event", &sf::Window::pollEvent)
-        .def("wait_event", &sf::Window::waitEvent)
+        .def("poll_event", &sf::Window::pollEvent, py::arg("event"))
+        .def("wait_event", &sf::Window::waitEvent, py::arg("event"))
         .def_property("position", &sf::Window::getPosition, &sf::Window::setPosition)
         .def_property("size", &sf::Window::getSize, &sf::Window::setSize)
         .def("set_title", [](sf::Window& self, const std::string& title) {
             self.setTitle(title);
-        })
+        }, py::arg("title"))
         .def("set_icon", [](sf::Window& self, unsigned int width, unsigned int height, const std::vector<uint8_t>& pixels) {
             self.setIcon(width, height, pixels.data());
-        })
-        .def("set_visible", &sf::Window::setVisible)
-        .def("set_vertical_sync_enabled", &sf::Window::setVerticalSyncEnabled)
-        .def("set_mouse_cursor_visible", &sf::Window::setMouseCursorVisible)
-        .def("set_mouse_cursor_grabbed", &sf::Window::setMouseCursorGrabbed)
-        .def("set_mouse_cursor", &sf::Window::setMouseCursor)
-        .def("set_key_repeat_enabled", &sf::Window::setKeyRepeatEnabled)
-        .def("set_framerate_limit", &sf::Window::setFramerateLimit)
-        .def("set_joystick_threshold", &sf::Window::setJoystickThreshold)
+        }, py::arg("width"), py::arg("height"), py::arg("pixels"))
+        .def("set_visible", &sf::Window::setVisible, py::arg("visible"))
+        .def("set_vertical_sync_enabled", &sf::Window::setVerticalSyncEnabled, py::arg("enabled"))
+        .def("set_mouse_cursor_visible", &sf::Window::setMouseCursorVisible, py::arg("visible"))
+        .def("set_mouse_cursor_grabbed", &sf::Window::setMouseCursorGrabbed, py::arg("grabbed"))
+        .def("set_mouse_cursor", &sf::Window::setMouseCursor, py::arg("cursor"))
+        .def("set_key_repeat_enabled", &sf::Window::setKeyRepeatEnabled, py::arg("enabled"))
+        .def("set_framerate_limit", &sf::Window::setFramerateLimit, py::arg("limit"))
+        .def("set_joystick_threshold", &sf::Window::setJoystickThreshold, py::arg("threshold"))
         .def("set_active", &sf::Window::setActive, py::arg("active") = true)
         .def("request_focus", &sf::Window::requestFocus)
         .def("has_focus", &sf::Window::hasFocus)
@@ -606,13 +606,13 @@ PYBIND11_MODULE(pysfml11, sfml)
         })                                                                                                  \
         .def("contains", [](sf::Rect<T>& self, const sf::Vector2<T>& point) {                               \
             return self.contains(point);                                                                    \
-        })                                                                                                  \
+        }, py::arg("point"))                                                                                \
         .def("intersects", [](sf::Rect<T>& self, const sf::Rect<T>& rectangle) {                            \
             return self.intersects(rectangle);                                                              \
-        })                                                                                                  \
+        }, py::arg("rectangle"))                                                                            \
         .def("intersects", [](sf::Rect<T>& self, const sf::Rect<T>& rectangle, sf::Rect<T>& intersection) { \
             return self.intersects(rectangle, intersection);                                                \
-        })                                                                                                  \
+        }, py::arg("rectangle"), py::arg("intersection"))                                                   \
         .def(py::self == py::self)                                                                          \
         .def(py::self != py::self)                                                                          \
         .def("__repr__", [](const sf::Rect<T>& self) {                                                      \
@@ -723,18 +723,18 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::Glsl::Mat3>(glsl, "Mat3")
         .def(py::init([](const std::array<float, 9>& array) {
             return sf::Glsl::Mat3(array.data());
-        }))
+        }), py::arg("array"))
         .def(py::init([](const sf::Transform& transform) {
             return sf::Glsl::Mat3(transform);
-        }));
+        }), py::arg("transform"));
 
     py::class_<sf::Glsl::Mat4>(glsl, "Mat4")
         .def(py::init([](const std::array<float, 16>& array) {
             return sf::Glsl::Mat4(array.data());
-        }))
+        }), py::arg("array"))
         .def(py::init([](const sf::Transform& transform) {
             return sf::Glsl::Mat4(transform);
-        }));
+        }), py::arg("transform"));
 
     /* Drawable class */
     py::class_<sf::Drawable>(sfml, "Drawable");
@@ -751,39 +751,39 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("inverse", &sf::Transform::getInverse)
         .def("transform_point", [](sf::Transform& self, float x, float y) {
             return self.transformPoint(x, y);
-        })
+        }, py::arg("x"), py::arg("y"))
         .def("transform_point", [](sf::Transform& self, const sf::Vector2f& point) {
             return self.transformPoint(point);
-        })
-        .def("transform_rect", &sf::Transform::transformRect)
-        .def("combine", &sf::Transform::combine)
+        }, py::arg("point"))
+        .def("transform_rect", &sf::Transform::transformRect, py::arg("rectangle"))
+        .def("combine", &sf::Transform::combine, py::arg("transform"))
         .def("translate", [](sf::Transform& self, float x, float y) {
             return self.translate(x, y);
-        })
+        }, py::arg("x"), py::arg("y"))
         .def("translate", [](sf::Transform& self, const sf::Vector2f& offset) {
             return self.translate(offset);
-        })
+        }, py::arg("offset"))
         .def("rotate", [](sf::Transform& self, float angle) {
             return self.rotate(angle);
-        })
+        }, py::arg("angle"))
         .def("rotate", [](sf::Transform& self, float angle, float centerx, float centery) {
             return self.rotate(angle, centerx, centery);
-        })
+        }, py::arg("angle"), py::arg("center_x"), py::arg("center_y"))
         .def("rotate", [](sf::Transform& self, float angle, const sf::Vector2f& center) {
             return self.rotate(angle, center);
-        })
+        }, py::arg("angle"), py::arg("center"))
         .def("scale", [](sf::Transform& self, float scalex, float scaley) {
             return self.scale(scalex, scaley);
-        })
+        }, py::arg("scale_x"), py::arg("scale_y"))
         .def("scale", [](sf::Transform& self, float scalex, float scaley, float centerx, float centery) {
             return self.scale(scalex, scaley, centerx, centery);
-        })
+        }, py::arg("scale_x"), py::arg("scale_y"), py::arg("center_x"), py::arg("center_y"))
         .def("scale", [](sf::Transform& self, const sf::Vector2f& factors) {
             return self.scale(factors);
-        })
+        }, py::arg("factors"))
         .def("scale", [](sf::Transform& self, const sf::Vector2f& factors, const sf::Vector2f& center) {
             return self.scale(factors, center);
-        })
+        }, py::arg("factors"), py::arg("center"))
         .def_readonly_static("identity", &sf::Transform::Identity)
         .def(py::self * py::self)
         .def(py::self *= py::self)
@@ -794,19 +794,25 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Transformable class */
     py::class_<sf::Transformable>(sfml, "Transformable")
         .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& self, const sf::Vector2f& position) { self.setPosition(position); })
-        .def("set_position", [](sf::Transformable& self, float x, float y) { self.setPosition(x, y); })
+        .def("set_position", [](sf::Transformable& self, float x, float y) {
+            self.setPosition(x, y);
+        }, py::arg("x"), py::arg("y"))
         .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
         .def_property("scale", &sf::Transformable::getScale, [](sf::Transformable& self, const sf::Vector2f& scale) { self.setScale(scale); })
-        .def("set_scale", [](sf::Transformable& self, float x, float y) { self.setScale(x, y); })
+        .def("set_scale", [](sf::Transformable& self, float x, float y) {
+            self.setScale(x, y);
+        }, py::arg("x"), py::arg("y"))
         .def_property("origin", &sf::Transformable::getOrigin, [](sf::Transformable& self, const sf::Vector2f& origin) { self.setOrigin(origin); })
-        .def("set_origin", [](sf::Transformable& self, float x, float y) { self.setOrigin(x, y); })
+        .def("set_origin", [](sf::Transformable& self, float x, float y) {
+            self.setOrigin(x, y);
+        }, py::arg("x"), py::arg("y"))
         .def("move", [](sf::Transformable& self, float offsetx, float offsety) {
             return self.move(offsetx, offsety);
-        })
+        }, py::arg("offset_x"), py::arg("offset_y"))
         .def("move", [](sf::Transformable& self, const sf::Vector2f& offset) {
             return self.move(offset);
-        })
-        .def("rotate", &sf::Transformable::rotate)
+        }, py::arg("offset"))
+        .def("rotate", &sf::Transformable::rotate, py::arg("angle"))
         .def_property_readonly("transform", &sf::Shape::getTransform)
         .def_property_readonly("inverse_transform", &sf::Shape::getInverseTransform);
 
@@ -820,7 +826,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("point_count", &sf::Shape::getPointCount)
         .def_property_readonly("local_bounds", &sf::Shape::getLocalBounds)
         .def_property_readonly("global_bounds", &sf::Shape::getGlobalBounds)
-        .def("get_point", &sf::Shape::getPoint);
+        .def("get_point", &sf::Shape::getPoint, py::arg("index"));
 
     /* CircleShape class */
     py::class_<sf::CircleShape, sf::Shape>(sfml, "CircleShape")
@@ -832,7 +838,7 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::ConvexShape, sf::Shape>(sfml, "ConvexShape")
         .def(py::init<std::size_t>(), py::arg("point_count") = 0)
         .def_property("point_count", &sf::ConvexShape::getPointCount, &sf::ConvexShape::setPointCount)
-        .def("set_point", &sf::ConvexShape::setPoint);
+        .def("set_point", &sf::ConvexShape::setPoint, py::arg("index"), py::arg("point"));
 
     /* RectangleShape class */
     py::class_<sf::RectangleShape, sf::Shape>(sfml, "RectangleShape")
@@ -849,7 +855,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("clear", &sf::RenderWindow::clear, py::arg("color") = sf::Color::Black)
         .def("draw", [](sf::RenderWindow& self, const sf::Drawable& drawable) {
             self.draw(drawable);
-        });
+        }, py::arg("drawable"));
 
     /* Image class */
     py::class_<sf::Image>(sfml, "Image")
@@ -893,15 +899,15 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property("viewport", &sf::View::getViewport, [](sf::View& self, const sf::FloatRect& viewport) {
             self.setViewport(viewport);
         })
-        .def("reset", &sf::View::reset)
+        .def("reset", &sf::View::reset, py::arg("rectangle"))
         .def("move", [](sf::View& self, float offsetx, float offsety) {
             self.move(offsetx, offsety);
-        })
+        }, py::arg("offset_x"), py::arg("offset_y"))
         .def("move", [](sf::View& self, const sf::Vector2f offset) {
             self.move(offset);
-        })
-        .def("rotate", &sf::View::rotate)
-        .def("zoom", &sf::View::zoom)
+        }, py::arg("offset"))
+        .def("rotate", &sf::View::rotate, py::arg("angle"))
+        .def("zoom", &sf::View::zoom, py::arg("factor"))
         .def_property_readonly("transform", &sf::View::getTransform)
         .def_property_readonly("inverse_transform", &sf::View::getInverseTransform);
 
@@ -918,51 +924,79 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::init<>())
         .def("load_from_file", [](sf::Shader& self, const std::string& filename, sf::Shader::Type type) {
             return self.loadFromFile(filename, type);
-        })
+        }, py::arg("filename"), py::arg("type"))
         .def("load_from_file", [](sf::Shader& self, const std::string& vertexfilename, const std::string& fragmentfilename) {
             return self.loadFromFile(vertexfilename, fragmentfilename);
-        })
+        }, py::arg("vertex_filename"), py::arg("fragment_filename"))
         .def("load_from_file", [](sf::Shader& self, const std::string& vertexfilename, const std::string& geometryfilename, const std::string& fragmentfilename) {
             return self.loadFromFile(vertexfilename, geometryfilename, fragmentfilename);
-        })
+        }, py::arg("vertex_filename"), py::arg("geometry_filename"), py::arg("fragment_filename"))
         .def("load_from_memory", [](sf::Shader& self, const std::string& shader, sf::Shader::Type type) {
             return self.loadFromMemory(shader, type);
-        })
+        }, py::arg("shader"), py::arg("type"))
         .def("load_from_memory", [](sf::Shader& self, const std::string& vertexshader, const std::string& fragmentshader) {
             return self.loadFromMemory(vertexshader, fragmentshader);
-        })
+        }, py::arg("vertex_shader"), py::arg("fragment_shader"))
         .def("load_from_memory", [](sf::Shader& self, const std::string& vertexshader, const std::string& geometryshader, const std::string& fragmentshader) {
             return self.loadFromMemory(vertexshader, geometryshader, fragmentshader);
-        })
+        }, py::arg("vertex_shader"), py::arg("geometry_shader"), py::arg("fragment_shader"))
         .def("load_from_stream", [](sf::Shader& self, sf::InputStream& shader, sf::Shader::Type type) {
             return self.loadFromStream(shader, type);
-        })
+        }, py::arg("shader"), py::arg("type"))
         .def("load_from_stream", [](sf::Shader& self, sf::InputStream& vertexshader, sf::InputStream& fragmentshader) {
             return self.loadFromStream(vertexshader, fragmentshader);
-        })
+        }, py::arg("vertex_shader"), py::arg("fragment_shader"))
         .def("load_from_stream", [](sf::Shader& self, sf::InputStream& vertexshader, sf::InputStream& geometryshader, sf::InputStream& fragmentshader) {
             return self.loadFromStream(vertexshader, geometryshader, fragmentshader);
-        })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, float x) { self.setUniform(name, x); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec2& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec3& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec4& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, int x) { self.setUniform(name, x); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec2& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec3& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec4& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, bool x) { self.setUniform(name, x); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec2& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec3& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec4& vector) { self.setUniform(name, vector); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat3& matrix) { self.setUniform(name, matrix); })
-        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat4& matrix) { self.setUniform(name, matrix); })
+        }, py::arg("vertex_shader"), py::arg("geometry_shader"), py::arg("fragment_shader"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, float x) {
+            self.setUniform(name, x);
+        }, py::arg("name"), py::arg("x"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec2& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec3& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec4& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, int x) {
+            self.setUniform(name, x);
+        }, py::arg("name"), py::arg("x"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec2& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec3& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec4& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, bool x) {
+            self.setUniform(name, x);
+        }, py::arg("name"), py::arg("x"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec2& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec3& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec4& vector) {
+            self.setUniform(name, vector);
+        }, py::arg("name"), py::arg("vector"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat3& matrix) {
+            self.setUniform(name, matrix);
+        }, py::arg("name"), py::arg("matrix"))
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat4& matrix) {
+            self.setUniform(name, matrix);
+        }, py::arg("name"), py::arg("matrix"))
         // .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Texture& texture) { self.setUniform(name, texture); })
         // .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::CurrentTextureType) { self.setUniform(name, sf::CurrentTextureType); })
         // TODO set_uniform_array
         // TODO set_parameter
         // TODO get_native_handle
-        .def_static("bind", &sf::Shader::bind)
+        .def_static("bind", &sf::Shader::bind, py::arg("shader"))
         .def_static("is_available", &sf::Shader::isAvailable)
         .def_static("is_geometry_available", &sf::Shader::isGeometryAvailable)
         // .def_readonly_static("CurrentTexture", &sf::Shader::CurrentTexture)
@@ -975,10 +1009,10 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* InputSoundFile class */
     py::class_<sf::InputSoundFile>(sfml, "InputSoundFile")
         .def(py::init<>())
-        .def("open_from_file", &sf::InputSoundFile::openFromFile)
+        .def("open_from_file", &sf::InputSoundFile::openFromFile, py::arg("filename"))
         // Should be tested with Python bytes
         // .def("open_from_memory", &sf::InputSoundFile::openFromMemory)
-        .def("open_from_stream", &sf::InputSoundFile::openFromStream)
+        .def("open_from_stream", &sf::InputSoundFile::openFromStream, py::arg("stream"))
         .def_property_readonly("sample_count", &sf::InputSoundFile::getSampleCount)
         .def_property_readonly("channel_count", &sf::InputSoundFile::getChannelCount)
         .def_property_readonly("sample_rate", &sf::InputSoundFile::getSampleRate)
@@ -987,25 +1021,25 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("sample_offset", &sf::InputSoundFile::getSampleOffset)
         .def("seek", [](sf::InputSoundFile& self, uint64_t sample_offset) {
             self.seek(sample_offset);
-        })
+        }, py::arg("sample_offset"))
         .def("seek", [](sf::InputSoundFile& self, sf::Time time_offset) {
             self.seek(time_offset);
-        })
+        }, py::arg("time_offset"))
         .def("read", [](sf::InputSoundFile& self, std::size_t count) {
             sf::Int16* samples = new sf::Int16[count];
 
             sf::Uint64 readcount = self.read(samples, count);
             // TODO: Raise if readcount is -1
             return std::vector<int16_t>(samples, samples + readcount);
-        });
+        }, py::arg("count"));
 
     /* OutputSoundFile class */
     py::class_<sf::OutputSoundFile>(sfml, "OutputSoundFile")
         .def(py::init<>())
-        .def("open_from_file", &sf::OutputSoundFile::openFromFile)
+        .def("open_from_file", &sf::OutputSoundFile::openFromFile, py::arg("filename"), py::arg("sample_rate"), py::arg("channel_count"))
         .def("write", [](sf::OutputSoundFile& self, const std::vector<int16_t>& samples) {
             self.write(samples.data(), samples.size());
-        });
+        }, py::arg("samples"));
 
     /* Listener class */
     py::class_<sf::Listener>(sfml, "Listener")
@@ -1033,14 +1067,14 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* SoundBuffer class */
     py::class_<sf::SoundBuffer>(sfml, "SoundBuffer")
         .def(py::init<>())
-        .def("load_from_file", &sf::SoundBuffer::loadFromFile)
+        .def("load_from_file", &sf::SoundBuffer::loadFromFile, py::arg("filename"))
         // Should be tested with Python bytes
         // .def("load_from_memory", &sf::SoundBuffer::loadFromMemory)
-        .def("load_from_stream", &sf::SoundBuffer::loadFromStream)
+        .def("load_from_stream", &sf::SoundBuffer::loadFromStream, py::arg("stream"))
         .def("load_from_samples", [](sf::SoundBuffer& self, const std::vector<int16_t>& samples, uint64_t channelcount, uint64_t samplerate) {
             return self.loadFromSamples(samples.data(), samples.size(), channelcount, samplerate);
-        })
-        .def("save_to_file", &sf::SoundBuffer::saveToFile)
+        }, py::arg("samples"), py::arg("channel_count"), py::arg("sample_rate"))
+        .def("save_to_file", &sf::SoundBuffer::saveToFile, py::arg("filename"))
         .def_property_readonly("samples", [](const sf::SoundBuffer& self) {
             const int16_t* samples = self.getSamples();
 
@@ -1090,10 +1124,10 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Music class */
     py::class_<sf::Music, sf::SoundStream>(sfml, "Music")
         .def(py::init<>())
-        .def("open_from_file", &sf::Music::openFromFile)
+        .def("open_from_file", &sf::Music::openFromFile, py::arg("filename"))
         // Should be tested with Python bytes
         // .def("open_from_memory", &sf::Music::openFromMemory)
-        .def("open_from_stream", &sf::Music::openFromStream)
+        .def("open_from_stream", &sf::Music::openFromStream, py::arg("stream"))
         // .def_property("loop_points", &sf::Sound::getLoopPoints, &sf::Sound::setLoopPoints)
         .def_property_readonly("channel_count", &sf::Music::getChannelCount)
         .def_property_readonly("sample_rate", &sf::Music::getSampleRate)
