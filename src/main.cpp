@@ -882,6 +882,25 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_readonly("bounds", &sf::Glyph::bounds)
         .def_readonly("texture_rect", &sf::Glyph::textureRect);
 
+    /* Font class */
+    py::class_<sf::Font> font(sfml, "Font");
+
+    font.def(py::init<>())
+        .def(py::init<const sf::Font&>())
+        .def("load_from_file", &sf::Font::loadFromFile, py::arg("filename"))
+        // TODO Load from memory
+        .def("load_from_stream", &sf::Font::loadFromStream, py::arg("stream"))
+        .def("get_info", &sf::Font::getInfo)
+        .def("get_glyph", &sf::Font::getGlyph, py::arg("code_point"), py::arg("character_size"), py::arg("bold"), py::arg("outline_thickness") = 0)
+        .def("get_kerning", &sf::Font::getKerning, py::arg("first"), py::arg("second"), py::arg("character_size"))
+        .def("get_line_spacing", &sf::Font::getLineSpacing, py::arg("character_size"))
+        .def("get_underline_position", &sf::Font::getUnderlinePosition, py::arg("character_size"))
+        .def("get_underline_thickness", &sf::Font::getUnderlineThickness, py::arg("character_size"))
+        .def("get_texture", &sf::Font::getTexture, py::arg("character_size"));
+
+    py::class_<sf::Font::Info>(font, "Info")
+        .def_readonly("family", &sf::Font::Info::family);
+
     /* View class */
     py::class_<sf::View>(sfml, "View")
         .def(py::init<>())
