@@ -15,6 +15,7 @@
 
 
 namespace py = pybind11;
+using namespace pybind11::literals;
 
 #define PYSFML_CONCATENATE(A, B) PYSFML_CONCATENATE_IMPL(A, B)
 #define PYSFML_CONCATENATE_IMPL(A, B) A##B
@@ -76,10 +77,10 @@ PYBIND11_MODULE(pysfml11, sfml)
         });
 
     /* Timing free functions */
-    sfml.def("seconds", &sf::seconds, py::arg("amount"));
-    sfml.def("milliseconds", &sf::milliseconds, py::arg("amount"));
-    sfml.def("microseconds", &sf::microseconds, py::arg("amount"));
-    sfml.def("sleep", &sf::sleep, py::arg("duration"));
+    sfml.def("seconds", &sf::seconds, "amount"_a);
+    sfml.def("milliseconds", &sf::milliseconds, "amount"_a);
+    sfml.def("microseconds", &sf::microseconds, "amount"_a);
+    sfml.def("sleep", &sf::sleep, "duration"_a);
 
     /* Clock class */
     py::class_<sf::Clock>(sfml, "Clock")
@@ -89,8 +90,8 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     #define PYSFML_IMPLEMENT_VECTOR2(T, TS)                                \
     py::class_<sf::Vector2<T>>(sfml, PYSFML_CONCAT_STRING(Vector2, TS))    \
-        .def(py::init<T, T>(), py::arg("x") = (T)0, py::arg("y") = (T)0)   \
-        .def(py::init<sf::Vector2<T>>(), py::arg("vector"))                \
+        .def(py::init<T, T>(), "x"_a = (T)0, "y"_a = (T)0)                 \
+        .def(py::init<sf::Vector2<T>>(), "vector"_a)                       \
         .def_readwrite("x", &sf::Vector2<T>::x)                            \
         .def_readwrite("y", &sf::Vector2<T>::y)                            \
         .def(-py::self)                                                    \
@@ -126,8 +127,8 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     #define PYSFML_IMPLEMENT_VECTOR3(T, TS)                                                      \
     py::class_<sf::Vector3<T>>(sfml, PYSFML_CONCAT_STRING(Vector3, TS))                          \
-        .def(py::init<T, T, T>(), py::arg("x") = (T)0, py::arg("y") = (T)0, py::arg("z") = (T)0) \
-        .def(py::init<sf::Vector3<T>>(), py::arg("vector"))                                      \
+        .def(py::init<T, T, T>(), "x"_a = (T)0, "y"_a = (T)0, "z"_a = (T)0)                      \
+        .def(py::init<sf::Vector3<T>>(), "vector"_a)                                             \
         .def_readwrite("x", &sf::Vector3<T>::x)                                                  \
         .def_readwrite("y", &sf::Vector3<T>::y)                                                  \
         .def_readwrite("z", &sf::Vector3<T>::z)                                                  \
@@ -171,15 +172,15 @@ PYBIND11_MODULE(pysfml11, sfml)
             sf::Uint64 readcount = self.read(samples, count);
             // TODO: Raise if readcount is -1
             return std::vector<int64_t>(samples, samples + readcount);
-        }, py::arg("size"))
-        .def("seek", &sf::InputStream::seek, py::arg("position"))
+        }, "size"_a)
+        .def("seek", &sf::InputStream::seek, "position"_a)
         .def("tell", &sf::InputStream::tell)
         .def_property_readonly("size", &sf::InputStream::getSize);
 
     /* FileInputStream class */
     py::class_<sf::FileInputStream, sf::InputStream>(sfml, "FileInputStream")
         .def(py::init<>())
-        .def("open", &sf::FileInputStream::open, py::arg("filename"));
+        .def("open", &sf::FileInputStream::open, "filename"_a);
 
     /*****************
      * WINDOW MODULE *
@@ -202,7 +203,7 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     context_settings.def(
             py::init<std::size_t, std::size_t, std::size_t, std::size_t, sf::ContextSettings::Attribute, bool>(),
-            py::arg("depth_bits") = 0, py::arg("stencil_bits") = 0, py::arg("major_version") = 1, py::arg("minor_version") = 1, py::arg("attribute_flags") = sf::ContextSettings::Attribute::Default, py::arg("s_rgb_capable") = false
+            "depth_bits"_a = 0, "stencil_bits"_a = 0, "major_version"_a = 1, "minor_version"_a = 1, "attribute_flags"_a = sf::ContextSettings::Attribute::Default, "s_rgb_capable"_a = false
         )
         .def_readwrite("depth_bits", &sf::ContextSettings::depthBits)
         .def_readwrite("stencil_bits", &sf::ContextSettings::stencilBits)
@@ -215,17 +216,17 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Context class */
     py::class_<sf::Context>(sfml, "Context")
         .def(py::init<>())
-        .def(py::init<const sf::ContextSettings&, std::size_t, std::size_t>(), py::arg("settings"), py::arg("width"), py::arg("height"))
-        .def("set_active", &sf::Context::setActive, py::arg("active"))
+        .def(py::init<const sf::ContextSettings&, std::size_t, std::size_t>(), "settings"_a, "width"_a, "height"_a)
+        .def("set_active", &sf::Context::setActive, "active"_a)
         .def_property_readonly("settings", &sf::Context::getSettings)
-        .def_static("is_extension_available", &sf::Context::isExtensionAvailable, py::arg("name"))
+        .def_static("is_extension_available", &sf::Context::isExtensionAvailable, "name"_a)
         // .def_static("get_function", &sf::Context::getFunction)
         .def_static("get_active_context", &sf::Context::getActiveContext)
         .def_static("get_active_context_id", &sf::Context::getActiveContextId);
 
     /* VideoMode class */
     py::class_<sf::VideoMode>(sfml, "VideoMode")
-        .def(py::init<std::size_t, std::size_t, std::size_t>(), py::arg("width"), py::arg("height"), py::arg("bits_per_pixel") = 32)
+        .def(py::init<std::size_t, std::size_t, std::size_t>(), "width"_a, "height"_a, "bits_per_pixel"_a = 32)
         .def("is_valid", &sf::VideoMode::isValid)
         .def_static("get_desktop_mode", &sf::VideoMode::getDesktopMode)
         .def_static("get_fullscreen_modes", &sf::VideoMode::getFullscreenModes)
@@ -270,10 +271,10 @@ PYBIND11_MODULE(pysfml11, sfml)
     cursor.def(py::init<>())
         .def("load_from_pixels", [](sf::Cursor& self, const std::vector<uint8_t>& pixels, const sf::Vector2u& size, const sf::Vector2u& hotspot) {
             return self.loadFromPixels(pixels.data(), size, hotspot);
-        }, py::arg("pixels"), py::arg("size"), py::arg("hotspot"))
+        }, "pixels"_a, "size"_a, "hotspot"_a)
         // TODO for convenience?
         // .def("load_from_file", &sf::Cursor::loadFromFile)
-        .def("load_from_system", &sf::Cursor::loadFromSystem, py::arg("type"));
+        .def("load_from_system", &sf::Cursor::loadFromSystem, "type"_a);
 
     /* Event class */
     py::class_<sf::Event> event(sfml, "Event");
@@ -466,12 +467,12 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_static("get_position",
             [](const sf::Window& relative_to) {
                 return sf::Mouse::getPosition(relative_to);
-            }, py::arg("relative_to")
+            }, "relative_to"_a
         )
         .def_static("set_position",
             [](const sf::Vector2i& position, const sf::Window& relative_to) {
                 return sf::Mouse::setPosition(position, relative_to);
-            }, py::arg("position"), py::arg("relative_to")
+            }, "position"_a, "relative_to"_a
         );
 
     /* Keyboard class */
@@ -533,33 +534,33 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::Window>(sfml, "Window")
         .def(py::init<>())
         .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
-            py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
+            "mode"_a, "title"_a, "style"_a = Style::Default, "settings"_a = sf::ContextSettings()
         )
         .def("create", [](sf::Window& self, const sf::VideoMode& mode, const std::string& title, uint32_t style, const sf::ContextSettings& settings) {
             return self.create(mode, title, style, settings);
-        }, py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings())
+        }, "mode"_a, "title"_a, "style"_a = Style::Default, "settings"_a = sf::ContextSettings())
         .def("close", &sf::Window::close)
         .def("is_open", &sf::Window::isOpen)
         .def_property_readonly("settings", &sf::Window::getSettings)
-        .def("poll_event", &sf::Window::pollEvent, py::arg("event"))
-        .def("wait_event", &sf::Window::waitEvent, py::arg("event"))
+        .def("poll_event", &sf::Window::pollEvent, "event"_a)
+        .def("wait_event", &sf::Window::waitEvent, "event"_a)
         .def_property("position", &sf::Window::getPosition, &sf::Window::setPosition)
         .def_property("size", &sf::Window::getSize, &sf::Window::setSize)
         .def("set_title", [](sf::Window& self, const std::string& title) {
             self.setTitle(title);
-        }, py::arg("title"))
+        }, "title"_a)
         .def("set_icon", [](sf::Window& self, unsigned int width, unsigned int height, const std::vector<uint8_t>& pixels) {
             self.setIcon(width, height, pixels.data());
-        }, py::arg("width"), py::arg("height"), py::arg("pixels"))
-        .def("set_visible", &sf::Window::setVisible, py::arg("visible"))
-        .def("set_vertical_sync_enabled", &sf::Window::setVerticalSyncEnabled, py::arg("enabled"))
-        .def("set_mouse_cursor_visible", &sf::Window::setMouseCursorVisible, py::arg("visible"))
-        .def("set_mouse_cursor_grabbed", &sf::Window::setMouseCursorGrabbed, py::arg("grabbed"))
-        .def("set_mouse_cursor", &sf::Window::setMouseCursor, py::arg("cursor"))
-        .def("set_key_repeat_enabled", &sf::Window::setKeyRepeatEnabled, py::arg("enabled"))
-        .def("set_framerate_limit", &sf::Window::setFramerateLimit, py::arg("limit"))
-        .def("set_joystick_threshold", &sf::Window::setJoystickThreshold, py::arg("threshold"))
-        .def("set_active", &sf::Window::setActive, py::arg("active") = true)
+        }, "width"_a, "height"_a, "pixels"_a)
+        .def("set_visible", &sf::Window::setVisible, "visible"_a)
+        .def("set_vertical_sync_enabled", &sf::Window::setVerticalSyncEnabled, "enabled"_a)
+        .def("set_mouse_cursor_visible", &sf::Window::setMouseCursorVisible, "visible"_a)
+        .def("set_mouse_cursor_grabbed", &sf::Window::setMouseCursorGrabbed, "grabbed"_a)
+        .def("set_mouse_cursor", &sf::Window::setMouseCursor, "cursor"_a)
+        .def("set_key_repeat_enabled", &sf::Window::setKeyRepeatEnabled, "enabled"_a)
+        .def("set_framerate_limit", &sf::Window::setFramerateLimit, "limit"_a)
+        .def("set_joystick_threshold", &sf::Window::setJoystickThreshold, "threshold"_a)
+        .def("set_active", &sf::Window::setActive, "active"_a = true)
         .def("request_focus", &sf::Window::requestFocus)
         .def("has_focus", &sf::Window::hasFocus)
         .def("display", &sf::Window::display);
@@ -590,12 +591,12 @@ PYBIND11_MODULE(pysfml11, sfml)
     #define PYSFML_IMPLEMENT_RECT(T, TS)                                                                    \
     py::class_<sf::Rect<T>>(sfml, PYSFML_CONCAT_STRING(TS, Rect))                                           \
         .def(py::init<T, T, T, T>(),                                                                        \
-            py::arg("left") = T(0), py::arg("top") = T(0),                                                  \
-            py::arg("width") = T(0), py::arg("height") = T(0)                                               \
+            "left"_a = T(0), "top"_a = T(0),                                                                \
+            "width"_a = T(0), "height"_a = T(0)                                                             \
         )                                                                                                   \
         .def(py::init<const sf::Vector2<T>&, const sf::Vector2<T>&>(),                                      \
-            py::arg("position") = sf::Vector2<T>(),                                                         \
-            py::arg("size") = sf::Vector2<T>()                                                              \
+            "position"_a = sf::Vector2<T>(),                                                                \
+            "size"_a = sf::Vector2<T>()                                                                     \
         )                                                                                                   \
         .def_readwrite("left", &sf::Rect<T>::left)                                                          \
         .def_readwrite("top", &sf::Rect<T>::top)                                                            \
@@ -606,13 +607,13 @@ PYBIND11_MODULE(pysfml11, sfml)
         })                                                                                                  \
         .def("contains", [](sf::Rect<T>& self, const sf::Vector2<T>& point) {                               \
             return self.contains(point);                                                                    \
-        }, py::arg("point"))                                                                                \
+        }, "point"_a)                                                                                       \
         .def("intersects", [](sf::Rect<T>& self, const sf::Rect<T>& rectangle) {                            \
             return self.intersects(rectangle);                                                              \
-        }, py::arg("rectangle"))                                                                            \
+        }, "rectangle"_a)                                                                                   \
         .def("intersects", [](sf::Rect<T>& self, const sf::Rect<T>& rectangle, sf::Rect<T>& intersection) { \
             return self.intersects(rectangle, intersection);                                                \
-        }, py::arg("rectangle"), py::arg("intersection"))                                                   \
+        }, "rectangle"_a, "intersection"_a)                                                                 \
         .def(py::self == py::self)                                                                          \
         .def(py::self != py::self)                                                                          \
         .def("__repr__", [](const sf::Rect<T>& self) {                                                      \
@@ -632,8 +633,8 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     /* Color class */
     py::class_<sf::Color>(sfml, "Color")
-        .def(py::init<uint8_t, uint8_t, uint8_t, uint8_t>(), py::arg("r") = 255, py::arg("g") = 255, py::arg("b") = 255, py::arg("a") = 255)
-        .def(py::init<uint32_t>(), py::arg("color"))
+        .def(py::init<uint8_t, uint8_t, uint8_t, uint8_t>(), "r"_a = 255, "g"_a = 255, "b"_a = 255, "a"_a = 255)
+        .def(py::init<uint32_t>(), "color"_a)
         .def("to_integer", &sf::Color::toInteger)
         .def_readwrite("r", &sf::Color::r)
         .def_readwrite("g", &sf::Color::g)
@@ -673,26 +674,26 @@ PYBIND11_MODULE(pysfml11, sfml)
     glsl.attr("Ivec3") = sfml.attr("Vector3i");
     glsl.attr("Bvec3") = sfml.attr("Vector3b");
 
-    #define PYSFML_IMPLEMENT_VEC4(T, TS)                                                       \
-    py::class_<sf::Glsl::TS>(glsl, PYSFML_STRINGIFY(TS))                                       \
-        .def(                                                                                  \
-            py::init<T, T, T, T>(),                                                            \
-            py::arg("x") = T(0), py::arg("y") = T(0), py::arg("z") = T(0), py::arg("w") = T(0) \
-        )                                                                                      \
-        .def(py::init<sf::Glsl::TS>(), py::arg("vector"))                                      \
-        .def(py::init<sf::Color>(), py::arg("color"))                                          \
-        .def_readonly("x", &sf::Glsl::TS::x)                                                   \
-        .def_readonly("y", &sf::Glsl::TS::y)                                                   \
-        .def_readonly("z", &sf::Glsl::TS::z)                                                   \
-        .def_readonly("w", &sf::Glsl::TS::w)                                                   \
-        .def("__repr__", [](const sf::Glsl::TS& self) {                                        \
-            std::ostringstream stream;                                                         \
-            stream << "<pysfml11.Glsl." << PYSFML_STRINGIFY(TS) <<                             \
-                " x=" << self.x <<                                                             \
-                " y=" << self.y <<                                                             \
-                " z=" << self.z <<                                                             \
-                " w=" << self.w << ">";                                                        \
-            return stream.str();                                                               \
+    #define PYSFML_IMPLEMENT_VEC4(T, TS)                             \
+    py::class_<sf::Glsl::TS>(glsl, PYSFML_STRINGIFY(TS))             \
+        .def(                                                        \
+            py::init<T, T, T, T>(),                                  \
+            "x"_a = T(0), "y"_a = T(0), "z"_a = T(0), "w"_a = T(0)   \
+        )                                                            \
+        .def(py::init<sf::Glsl::TS>(), "vector"_a)                   \
+        .def(py::init<sf::Color>(), "color"_a)                       \
+        .def_readonly("x", &sf::Glsl::TS::x)                         \
+        .def_readonly("y", &sf::Glsl::TS::y)                         \
+        .def_readonly("z", &sf::Glsl::TS::z)                         \
+        .def_readonly("w", &sf::Glsl::TS::w)                         \
+        .def("__repr__", [](const sf::Glsl::TS& self) {              \
+            std::ostringstream stream;                               \
+            stream << "<pysfml11.Glsl." << PYSFML_STRINGIFY(TS) <<   \
+                " x=" << self.x <<                                   \
+                " y=" << self.y <<                                   \
+                " z=" << self.z <<                                   \
+                " w=" << self.w << ">";                              \
+            return stream.str();                                     \
         });
 
     PYSFML_IMPLEMENT_VEC4(float, Vec4);
@@ -703,9 +704,9 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::Glsl::Bvec4>(glsl, "Bvec4")
         .def(
             py::init<bool, bool, bool, bool>(),
-            py::arg("x") = false, py::arg("y") = false, py::arg("z") = false, py::arg("w") = false
+            "x"_a = false, "y"_a = false, "z"_a = false, "w"_a = false
         )
-        .def(py::init<sf::Glsl::Bvec4>(), py::arg("vector"))
+        .def(py::init<sf::Glsl::Bvec4>(), "vector"_a)
         .def_readonly("x", &sf::Glsl::Bvec4::x)
         .def_readonly("y", &sf::Glsl::Bvec4::y)
         .def_readonly("z", &sf::Glsl::Bvec4::z)
@@ -723,18 +724,18 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::Glsl::Mat3>(glsl, "Mat3")
         .def(py::init([](const std::array<float, 9>& array) {
             return sf::Glsl::Mat3(array.data());
-        }), py::arg("array"))
+        }), "array"_a)
         .def(py::init([](const sf::Transform& transform) {
             return sf::Glsl::Mat3(transform);
-        }), py::arg("transform"));
+        }), "transform"_a);
 
     py::class_<sf::Glsl::Mat4>(glsl, "Mat4")
         .def(py::init([](const std::array<float, 16>& array) {
             return sf::Glsl::Mat4(array.data());
-        }), py::arg("array"))
+        }), "array"_a)
         .def(py::init([](const sf::Transform& transform) {
             return sf::Glsl::Mat4(transform);
-        }), py::arg("transform"));
+        }), "transform"_a);
 
     /* Drawable class */
     py::class_<sf::Drawable>(sfml, "Drawable");
@@ -751,39 +752,39 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("inverse", &sf::Transform::getInverse)
         .def("transform_point", [](sf::Transform& self, float x, float y) {
             return self.transformPoint(x, y);
-        }, py::arg("x"), py::arg("y"))
+        }, "x"_a, "y"_a)
         .def("transform_point", [](sf::Transform& self, const sf::Vector2f& point) {
             return self.transformPoint(point);
-        }, py::arg("point"))
-        .def("transform_rect", &sf::Transform::transformRect, py::arg("rectangle"))
-        .def("combine", &sf::Transform::combine, py::arg("transform"))
+        }, "point"_a)
+        .def("transform_rect", &sf::Transform::transformRect, "rectangle"_a)
+        .def("combine", &sf::Transform::combine, "transform"_a)
         .def("translate", [](sf::Transform& self, float x, float y) {
             return self.translate(x, y);
-        }, py::arg("x"), py::arg("y"))
+        }, "x"_a, "y"_a)
         .def("translate", [](sf::Transform& self, const sf::Vector2f& offset) {
             return self.translate(offset);
-        }, py::arg("offset"))
+        }, "offset"_a)
         .def("rotate", [](sf::Transform& self, float angle) {
             return self.rotate(angle);
-        }, py::arg("angle"))
+        }, "angle"_a)
         .def("rotate", [](sf::Transform& self, float angle, float centerx, float centery) {
             return self.rotate(angle, centerx, centery);
-        }, py::arg("angle"), py::arg("center_x"), py::arg("center_y"))
+        }, "angle"_a, "center_x"_a, "center_y"_a)
         .def("rotate", [](sf::Transform& self, float angle, const sf::Vector2f& center) {
             return self.rotate(angle, center);
-        }, py::arg("angle"), py::arg("center"))
+        }, "angle"_a, "center"_a)
         .def("scale", [](sf::Transform& self, float scalex, float scaley) {
             return self.scale(scalex, scaley);
-        }, py::arg("scale_x"), py::arg("scale_y"))
+        }, "scale_x"_a, "scale_y"_a)
         .def("scale", [](sf::Transform& self, float scalex, float scaley, float centerx, float centery) {
             return self.scale(scalex, scaley, centerx, centery);
-        }, py::arg("scale_x"), py::arg("scale_y"), py::arg("center_x"), py::arg("center_y"))
+        }, "scale_x"_a, "scale_y"_a, "center_x"_a, "center_y"_a)
         .def("scale", [](sf::Transform& self, const sf::Vector2f& factors) {
             return self.scale(factors);
-        }, py::arg("factors"))
+        }, "factors"_a)
         .def("scale", [](sf::Transform& self, const sf::Vector2f& factors, const sf::Vector2f& center) {
             return self.scale(factors, center);
-        }, py::arg("factors"), py::arg("center"))
+        }, "factors"_a, "center"_a)
         .def_readonly_static("identity", &sf::Transform::Identity)
         .def(py::self * py::self)
         .def(py::self *= py::self)
@@ -796,23 +797,23 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property("position", &sf::Transformable::getPosition, [](sf::Transformable& self, const sf::Vector2f& position) { self.setPosition(position); })
         .def("set_position", [](sf::Transformable& self, float x, float y) {
             self.setPosition(x, y);
-        }, py::arg("x"), py::arg("y"))
+        }, "x"_a, "y"_a)
         .def_property("rotation", &sf::Transformable::getRotation, &sf::Transformable::setRotation)
         .def_property("scale", &sf::Transformable::getScale, [](sf::Transformable& self, const sf::Vector2f& scale) { self.setScale(scale); })
         .def("set_scale", [](sf::Transformable& self, float x, float y) {
             self.setScale(x, y);
-        }, py::arg("x"), py::arg("y"))
+        }, "x"_a, "y"_a)
         .def_property("origin", &sf::Transformable::getOrigin, [](sf::Transformable& self, const sf::Vector2f& origin) { self.setOrigin(origin); })
         .def("set_origin", [](sf::Transformable& self, float x, float y) {
             self.setOrigin(x, y);
-        }, py::arg("x"), py::arg("y"))
+        }, "x"_a, "y"_a)
         .def("move", [](sf::Transformable& self, float offsetx, float offsety) {
             return self.move(offsetx, offsety);
-        }, py::arg("offset_x"), py::arg("offset_y"))
+        }, "offset_x"_a, "offset_y"_a)
         .def("move", [](sf::Transformable& self, const sf::Vector2f& offset) {
             return self.move(offset);
-        }, py::arg("offset"))
-        .def("rotate", &sf::Transformable::rotate, py::arg("angle"))
+        }, "offset"_a)
+        .def("rotate", &sf::Transformable::rotate, "angle"_a)
         .def_property_readonly("transform", &sf::Shape::getTransform)
         .def_property_readonly("inverse_transform", &sf::Shape::getInverseTransform);
 
@@ -826,23 +827,23 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("point_count", &sf::Shape::getPointCount)
         .def_property_readonly("local_bounds", &sf::Shape::getLocalBounds)
         .def_property_readonly("global_bounds", &sf::Shape::getGlobalBounds)
-        .def("get_point", &sf::Shape::getPoint, py::arg("index"));
+        .def("get_point", &sf::Shape::getPoint, "index"_a);
 
     /* CircleShape class */
     py::class_<sf::CircleShape, sf::Shape>(sfml, "CircleShape")
-        .def(py::init<float, std::size_t>(), py::arg("radius"), py::arg("point_count") = 30)
+        .def(py::init<float, std::size_t>(), "radius"_a, "point_count"_a = 30)
         .def_property("radius", &sf::CircleShape::getRadius, &sf::CircleShape::setRadius)
         .def_property("point_count", &sf::CircleShape::getPointCount, &sf::CircleShape::setPointCount);
 
     /* ConvexShape class */
     py::class_<sf::ConvexShape, sf::Shape>(sfml, "ConvexShape")
-        .def(py::init<std::size_t>(), py::arg("point_count") = 0)
+        .def(py::init<std::size_t>(), "point_count"_a = 0)
         .def_property("point_count", &sf::ConvexShape::getPointCount, &sf::ConvexShape::setPointCount)
-        .def("set_point", &sf::ConvexShape::setPoint, py::arg("index"), py::arg("point"));
+        .def("set_point", &sf::ConvexShape::setPoint, "index"_a, "point"_a);
 
     /* RectangleShape class */
     py::class_<sf::RectangleShape, sf::Shape>(sfml, "RectangleShape")
-        .def(py::init<const sf::Vector2f&>(), py::arg("size") = sf::Vector2f(0, 0))
+        .def(py::init<const sf::Vector2f&>(), "size"_a = sf::Vector2f(0, 0))
         .def_property("size", &sf::RectangleShape::getSize, &sf::RectangleShape::setSize)
         .def_property_readonly("point_count", &sf::RectangleShape::getPointCount);
 
@@ -850,28 +851,28 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::RenderWindow, sf::Window>(sfml, "RenderWindow")
         .def(py::init<>())
         .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
-            py::arg("mode"), py::arg("title"), py::arg("style") = Style::Default, py::arg("settings") = sf::ContextSettings()
+            "mode"_a, "title"_a, "style"_a = Style::Default, "settings"_a = sf::ContextSettings()
         )
-        .def("clear", &sf::RenderWindow::clear, py::arg("color") = sf::Color::Black)
+        .def("clear", &sf::RenderWindow::clear, "color"_a = sf::Color::Black)
         .def("draw", [](sf::RenderWindow& self, const sf::Drawable& drawable) {
             self.draw(drawable);
-        }, py::arg("drawable"));
+        }, "drawable"_a);
 
     /* Image class */
     py::class_<sf::Image>(sfml, "Image")
         .def(py::init<>())
         .def("create", [](sf::Image& self, unsigned int width, unsigned int height, const sf::Color& color) {
             self.create(width, height, color);
-        }, py::arg("width"), py::arg("height"), py::arg("color") = sf::Color::Black)
+        }, "width"_a, "height"_a, "color"_a = sf::Color::Black)
         // TODO Create from bytes
-        .def("load_from_file", &sf::Image::loadFromFile, py::arg("filename"))
-        .def("load_from_stream", &sf::Image::loadFromStream, py::arg("stream"))
-        .def("save_to_file", &sf::Image::saveToFile, py::arg("filename"))
+        .def("load_from_file", &sf::Image::loadFromFile, "filename"_a)
+        .def("load_from_stream", &sf::Image::loadFromStream, "stream"_a)
+        .def("save_to_file", &sf::Image::saveToFile, "filename"_a)
         .def_property_readonly("size", &sf::Image::getSize)
-        .def("create_mask_from_color", &sf::Image::createMaskFromColor, py::arg("color"), py::arg("alpha") = 0)
-        .def("copy", &sf::Image::copy, py::arg("source"), py::arg("dest_x"), py::arg("dest_y"), py::arg("source_rect") = sf::IntRect(0, 0, 0, 0), py::arg("apply_alpha") = false)
-        .def("set_pixel", &sf::Image::setPixel, py::arg("x"), py::arg("y"), py::arg("color"))
-        .def("get_pixel", &sf::Image::getPixel, py::arg("x"), py::arg("y"))
+        .def("create_mask_from_color", &sf::Image::createMaskFromColor, "color"_a, "alpha"_a = 0)
+        .def("copy", &sf::Image::copy, "source"_a, "dest_x"_a, "dest_y"_a, "source_rect"_a = sf::IntRect(0, 0, 0, 0), "apply_alpha"_a = false)
+        .def("set_pixel", &sf::Image::setPixel, "x"_a, "y"_a, "color"_a)
+        .def("get_pixel", &sf::Image::getPixel, "x"_a, "y"_a)
         .def("flip_horizontally", &sf::Image::flipHorizontally)
         .def("flip_vertically", &sf::Image::flipVertically);
 
@@ -887,16 +888,16 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     font.def(py::init<>())
         .def(py::init<const sf::Font&>())
-        .def("load_from_file", &sf::Font::loadFromFile, py::arg("filename"))
+        .def("load_from_file", &sf::Font::loadFromFile, "filename"_a)
         // TODO Load from memory
-        .def("load_from_stream", &sf::Font::loadFromStream, py::arg("stream"))
+        .def("load_from_stream", &sf::Font::loadFromStream, "stream"_a)
         .def("get_info", &sf::Font::getInfo)
-        .def("get_glyph", &sf::Font::getGlyph, py::arg("code_point"), py::arg("character_size"), py::arg("bold"), py::arg("outline_thickness") = 0)
-        .def("get_kerning", &sf::Font::getKerning, py::arg("first"), py::arg("second"), py::arg("character_size"))
-        .def("get_line_spacing", &sf::Font::getLineSpacing, py::arg("character_size"))
-        .def("get_underline_position", &sf::Font::getUnderlinePosition, py::arg("character_size"))
-        .def("get_underline_thickness", &sf::Font::getUnderlineThickness, py::arg("character_size"))
-        .def("get_texture", &sf::Font::getTexture, py::arg("character_size"));
+        .def("get_glyph", &sf::Font::getGlyph, "code_point"_a, "character_size"_a, "bold"_a, "outline_thickness"_a = 0)
+        .def("get_kerning", &sf::Font::getKerning, "first"_a, "second"_a, "character_size"_a)
+        .def("get_line_spacing", &sf::Font::getLineSpacing, "character_size"_a)
+        .def("get_underline_position", &sf::Font::getUnderlinePosition, "character_size"_a)
+        .def("get_underline_thickness", &sf::Font::getUnderlineThickness, "character_size"_a)
+        .def("get_texture", &sf::Font::getTexture, "character_size"_a);
 
     py::class_<sf::Font::Info>(font, "Info")
         .def_readonly("family", &sf::Font::Info::family);
@@ -904,8 +905,8 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* View class */
     py::class_<sf::View>(sfml, "View")
         .def(py::init<>())
-        .def(py::init<const sf::FloatRect&>(), py::arg("rectangle"))
-        .def(py::init<const sf::Vector2f&, const sf::Vector2f&>(), py::arg("center"), py::arg("size"))
+        .def(py::init<const sf::FloatRect&>(), "rectangle"_a)
+        .def(py::init<const sf::Vector2f&, const sf::Vector2f&>(), "center"_a, "size"_a)
         .def_property("center", &sf::View::getCenter, [](sf::View& self, const sf::Vector2f& center) {
             self.setCenter(center);
         })
@@ -918,15 +919,15 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property("viewport", &sf::View::getViewport, [](sf::View& self, const sf::FloatRect& viewport) {
             self.setViewport(viewport);
         })
-        .def("reset", &sf::View::reset, py::arg("rectangle"))
+        .def("reset", &sf::View::reset, "rectangle"_a)
         .def("move", [](sf::View& self, float offsetx, float offsety) {
             self.move(offsetx, offsety);
-        }, py::arg("offset_x"), py::arg("offset_y"))
+        }, "offset_x"_a, "offset_y"_a)
         .def("move", [](sf::View& self, const sf::Vector2f offset) {
             self.move(offset);
-        }, py::arg("offset"))
-        .def("rotate", &sf::View::rotate, py::arg("angle"))
-        .def("zoom", &sf::View::zoom, py::arg("factor"))
+        }, "offset"_a)
+        .def("rotate", &sf::View::rotate, "angle"_a)
+        .def("zoom", &sf::View::zoom, "factor"_a)
         .def_property_readonly("transform", &sf::View::getTransform)
         .def_property_readonly("inverse_transform", &sf::View::getInverseTransform);
 
@@ -943,79 +944,79 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def(py::init<>())
         .def("load_from_file", [](sf::Shader& self, const std::string& filename, sf::Shader::Type type) {
             return self.loadFromFile(filename, type);
-        }, py::arg("filename"), py::arg("type"))
+        }, "filename"_a, "type"_a)
         .def("load_from_file", [](sf::Shader& self, const std::string& vertexfilename, const std::string& fragmentfilename) {
             return self.loadFromFile(vertexfilename, fragmentfilename);
-        }, py::arg("vertex_filename"), py::arg("fragment_filename"))
+        }, "vertex_filename"_a, "fragment_filename"_a)
         .def("load_from_file", [](sf::Shader& self, const std::string& vertexfilename, const std::string& geometryfilename, const std::string& fragmentfilename) {
             return self.loadFromFile(vertexfilename, geometryfilename, fragmentfilename);
-        }, py::arg("vertex_filename"), py::arg("geometry_filename"), py::arg("fragment_filename"))
+        }, "vertex_filename"_a, "geometry_filename"_a, "fragment_filename"_a)
         .def("load_from_memory", [](sf::Shader& self, const std::string& shader, sf::Shader::Type type) {
             return self.loadFromMemory(shader, type);
-        }, py::arg("shader"), py::arg("type"))
+        }, "shader"_a, "type"_a)
         .def("load_from_memory", [](sf::Shader& self, const std::string& vertexshader, const std::string& fragmentshader) {
             return self.loadFromMemory(vertexshader, fragmentshader);
-        }, py::arg("vertex_shader"), py::arg("fragment_shader"))
+        }, "vertex_shader"_a, "fragment_shader"_a)
         .def("load_from_memory", [](sf::Shader& self, const std::string& vertexshader, const std::string& geometryshader, const std::string& fragmentshader) {
             return self.loadFromMemory(vertexshader, geometryshader, fragmentshader);
-        }, py::arg("vertex_shader"), py::arg("geometry_shader"), py::arg("fragment_shader"))
+        }, "vertex_shader"_a, "geometry_shader"_a, "fragment_shader"_a)
         .def("load_from_stream", [](sf::Shader& self, sf::InputStream& shader, sf::Shader::Type type) {
             return self.loadFromStream(shader, type);
-        }, py::arg("shader"), py::arg("type"))
+        }, "shader"_a, "type"_a)
         .def("load_from_stream", [](sf::Shader& self, sf::InputStream& vertexshader, sf::InputStream& fragmentshader) {
             return self.loadFromStream(vertexshader, fragmentshader);
-        }, py::arg("vertex_shader"), py::arg("fragment_shader"))
+        }, "vertex_shader"_a, "fragment_shader"_a)
         .def("load_from_stream", [](sf::Shader& self, sf::InputStream& vertexshader, sf::InputStream& geometryshader, sf::InputStream& fragmentshader) {
             return self.loadFromStream(vertexshader, geometryshader, fragmentshader);
-        }, py::arg("vertex_shader"), py::arg("geometry_shader"), py::arg("fragment_shader"))
+        }, "vertex_shader"_a, "geometry_shader"_a, "fragment_shader"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, float x) {
             self.setUniform(name, x);
-        }, py::arg("name"), py::arg("x"))
+        }, "name"_a, "x"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec2& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec3& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Vec4& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, int x) {
             self.setUniform(name, x);
-        }, py::arg("name"), py::arg("x"))
+        }, "name"_a, "x"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec2& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec3& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Ivec4& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, bool x) {
             self.setUniform(name, x);
-        }, py::arg("name"), py::arg("x"))
+        }, "name"_a, "x"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec2& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec3& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Bvec4& vector) {
             self.setUniform(name, vector);
-        }, py::arg("name"), py::arg("vector"))
+        }, "name"_a, "vector"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat3& matrix) {
             self.setUniform(name, matrix);
-        }, py::arg("name"), py::arg("matrix"))
+        }, "name"_a, "matrix"_a)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat4& matrix) {
             self.setUniform(name, matrix);
-        }, py::arg("name"), py::arg("matrix"))
+        }, "name"_a, "matrix"_a)
         // .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Texture& texture) { self.setUniform(name, texture); })
         // .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::CurrentTextureType) { self.setUniform(name, sf::CurrentTextureType); })
         // TODO set_uniform_array
         // TODO set_parameter
         // TODO get_native_handle
-        .def_static("bind", &sf::Shader::bind, py::arg("shader"))
+        .def_static("bind", &sf::Shader::bind, "shader"_a)
         .def_static("is_available", &sf::Shader::isAvailable)
         .def_static("is_geometry_available", &sf::Shader::isGeometryAvailable)
         // .def_readonly_static("CurrentTexture", &sf::Shader::CurrentTexture)
@@ -1028,10 +1029,10 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* InputSoundFile class */
     py::class_<sf::InputSoundFile>(sfml, "InputSoundFile")
         .def(py::init<>())
-        .def("open_from_file", &sf::InputSoundFile::openFromFile, py::arg("filename"))
+        .def("open_from_file", &sf::InputSoundFile::openFromFile, "filename"_a)
         // Should be tested with Python bytes
         // .def("open_from_memory", &sf::InputSoundFile::openFromMemory)
-        .def("open_from_stream", &sf::InputSoundFile::openFromStream, py::arg("stream"))
+        .def("open_from_stream", &sf::InputSoundFile::openFromStream, "stream"_a)
         .def_property_readonly("sample_count", &sf::InputSoundFile::getSampleCount)
         .def_property_readonly("channel_count", &sf::InputSoundFile::getChannelCount)
         .def_property_readonly("sample_rate", &sf::InputSoundFile::getSampleRate)
@@ -1040,25 +1041,25 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property_readonly("sample_offset", &sf::InputSoundFile::getSampleOffset)
         .def("seek", [](sf::InputSoundFile& self, uint64_t sample_offset) {
             self.seek(sample_offset);
-        }, py::arg("sample_offset"))
+        }, "sample_offset"_a)
         .def("seek", [](sf::InputSoundFile& self, sf::Time time_offset) {
             self.seek(time_offset);
-        }, py::arg("time_offset"))
+        }, "time_offset"_a)
         .def("read", [](sf::InputSoundFile& self, std::size_t count) {
             sf::Int16* samples = new sf::Int16[count];
 
             sf::Uint64 readcount = self.read(samples, count);
             // TODO: Raise if readcount is -1
             return std::vector<int16_t>(samples, samples + readcount);
-        }, py::arg("count"));
+        }, "count"_a);
 
     /* OutputSoundFile class */
     py::class_<sf::OutputSoundFile>(sfml, "OutputSoundFile")
         .def(py::init<>())
-        .def("open_from_file", &sf::OutputSoundFile::openFromFile, py::arg("filename"), py::arg("sample_rate"), py::arg("channel_count"))
+        .def("open_from_file", &sf::OutputSoundFile::openFromFile, "filename"_a, "sample_rate"_a, "channel_count"_a)
         .def("write", [](sf::OutputSoundFile& self, const std::vector<int16_t>& samples) {
             self.write(samples.data(), samples.size());
-        }, py::arg("samples"));
+        }, "samples"_a);
 
     /* Listener class */
     py::class_<sf::Listener>(sfml, "Listener")
@@ -1086,14 +1087,14 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* SoundBuffer class */
     py::class_<sf::SoundBuffer>(sfml, "SoundBuffer")
         .def(py::init<>())
-        .def("load_from_file", &sf::SoundBuffer::loadFromFile, py::arg("filename"))
+        .def("load_from_file", &sf::SoundBuffer::loadFromFile, "filename"_a)
         // Should be tested with Python bytes
         // .def("load_from_memory", &sf::SoundBuffer::loadFromMemory)
-        .def("load_from_stream", &sf::SoundBuffer::loadFromStream, py::arg("stream"))
+        .def("load_from_stream", &sf::SoundBuffer::loadFromStream, "stream"_a)
         .def("load_from_samples", [](sf::SoundBuffer& self, const std::vector<int16_t>& samples, uint64_t channelcount, uint64_t samplerate) {
             return self.loadFromSamples(samples.data(), samples.size(), channelcount, samplerate);
-        }, py::arg("samples"), py::arg("channel_count"), py::arg("sample_rate"))
-        .def("save_to_file", &sf::SoundBuffer::saveToFile, py::arg("filename"))
+        }, "samples"_a, "channel_count"_a, "sample_rate"_a)
+        .def("save_to_file", &sf::SoundBuffer::saveToFile, "filename"_a)
         .def_property_readonly("samples", [](const sf::SoundBuffer& self) {
             const int16_t* samples = self.getSamples();
 
@@ -1143,10 +1144,10 @@ PYBIND11_MODULE(pysfml11, sfml)
     /* Music class */
     py::class_<sf::Music, sf::SoundStream>(sfml, "Music")
         .def(py::init<>())
-        .def("open_from_file", &sf::Music::openFromFile, py::arg("filename"))
+        .def("open_from_file", &sf::Music::openFromFile, "filename"_a)
         // Should be tested with Python bytes
         // .def("open_from_memory", &sf::Music::openFromMemory)
-        .def("open_from_stream", &sf::Music::openFromStream, py::arg("stream"))
+        .def("open_from_stream", &sf::Music::openFromStream, "stream"_a)
         // .def_property("loop_points", &sf::Sound::getLoopPoints, &sf::Sound::setLoopPoints)
         .def_property_readonly("channel_count", &sf::Music::getChannelCount)
         .def_property_readonly("sample_rate", &sf::Music::getSampleRate)
