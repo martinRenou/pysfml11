@@ -8,6 +8,10 @@ on:
     branches:
     - master
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   run:
     runs-on: ${{ matrix.os }}
@@ -16,29 +20,33 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.7, 3.8, 3.9]
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Setup conda
-      uses: s-weigand/setup-conda@v1
+      uses: conda-incubator/setup-miniconda@v2
       with:
-        update-conda: true
-        conda-channels: conda-forge
+        python-version: ${{ matrix.python-version }}
+        mamba-version: "*"
+        channels: conda-forge
 
     - name: Fix missing libudev.so.0 on Linux
       if: matrix.os == 'ubuntu-latest'
       run: |
+        wget http://archive.ubuntu.com/ubuntu/pool/main/g/glibc/multiarch-support_2.27-3ubuntu1.2_amd64.deb
+        sudo dpkg -i multiarch-support_2.27-3ubuntu1.2_amd64.deb
         wget http://mirrors.kernel.org/ubuntu/pool/main/u/udev/libudev0_175-0ubuntu9_amd64.deb
         sudo dpkg -i libudev0_175-0ubuntu9_amd64.deb
 
     - name: Conda install dependencies
-      run: conda install python=${{ matrix.python-version }} pip setuptools sfml pybind11 pytest
+      run: mamba install python=${{ matrix.python-version }} pip setuptools sfml=2.5 pybind11 pytest
 
     - name: Install pysfml11
       run: pip -vvv install .
 
     - name: Run tests
-      if: matrix.os != 'windows-latest' || matrix.python-version == 3.6
+      if: matrix.os != 'windows-latest'
       run: pytest -vvv tests --ci True
