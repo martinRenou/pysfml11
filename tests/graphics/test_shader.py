@@ -5,32 +5,31 @@ import pytest
 import pysfml11 as sf
 
 
+RESOURCES = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
+
+
 def test_from_file(ci):
     if ci:
         pytest.skip("skipping Shader tests on CI (no display available)")
 
-    resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
-
     vertex = sf.Shader()
-    assert vertex.load_from_file(str(resources / 'vertex.glsl'), sf.Shader.Vertex)
+    assert vertex.load_from_file(str(RESOURCES / 'vertex.glsl'), sf.Shader.Vertex)
 
     shader = sf.Shader()
-    assert shader.load_from_file(str(resources / 'vertex.glsl'), str(resources / 'fragment.glsl'))
+    assert shader.load_from_file(str(RESOURCES / 'vertex.glsl'), str(RESOURCES / 'fragment.glsl'))
 
 
 def test_from_memory(ci):
     if ci:
         pytest.skip("skipping Shader tests on CI (no display available)")
 
-    resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
-
     vertex_str = ''
     fragment_str = ''
 
-    with open(resources / 'vertex.glsl', 'r') as fobj:
+    with open(RESOURCES / 'vertex.glsl', 'r') as fobj:
         vertex_str = fobj.read()
 
-    with open(resources / 'fragment.glsl', 'r') as fobj:
+    with open(RESOURCES / 'fragment.glsl', 'r') as fobj:
         fragment_str = fobj.read()
 
     vertex = sf.Shader()
@@ -44,13 +43,11 @@ def test_from_stream(ci):
     if ci:
         pytest.skip("skipping Shader tests on CI (no display available)")
 
-    resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
-
     vertex_stream = sf.FileInputStream()
-    vertex_stream.open(str(resources / 'vertex.glsl'))
+    vertex_stream.open(str(RESOURCES / 'vertex.glsl'))
 
     fragment_stream = sf.FileInputStream()
-    fragment_stream.open(str(resources / 'fragment.glsl'))
+    fragment_stream.open(str(RESOURCES / 'fragment.glsl'))
 
     vertex = sf.Shader()
     assert vertex.load_from_stream(vertex_stream, sf.Shader.Vertex)
@@ -63,10 +60,8 @@ def test_set_uniform(ci):
     if ci:
         pytest.skip("skipping Shader tests on CI (no display available)")
 
-    resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
-
     vertex = sf.Shader()
-    vertex.load_from_file(str(resources / 'vertex.glsl'), sf.Shader.Vertex)
+    vertex.load_from_file(str(RESOURCES / 'vertex.glsl'), sf.Shader.Vertex)
 
     vertex.set_uniform('x', 34.)
     vertex.set_uniform('x', 34)
@@ -98,3 +93,7 @@ def test_set_uniform(ci):
         0.1, 0.6, 0.7, 0.1,
         0.9, 0.7, 0.2, 0.3
     ]))
+
+    texture = sf.Texture()
+    texture.load_from_file(str(RESOURCES / 'saxo.jpg'))
+    vertex.set_uniform('texture', texture)
