@@ -23,7 +23,7 @@ GRID_HEIGHT = HEIGHT // SAND_SIZE
 
 PHYSICS_TIME_STEP = 1. / 30.
 
-grid = np.ndarray((GRID_WIDTH, GRID_HEIGHT), dtype=np.bool)
+grid = np.ndarray((GRID_WIDTH, GRID_HEIGHT), dtype=bool)
 grid.fill(False)
 
 window = sf.RenderWindow(sf.VideoMode(WIDTH, HEIGHT), 'Sand Simulation!', sf.Style.Titlebar | sf.Style.Close)
