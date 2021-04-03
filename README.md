@@ -40,7 +40,7 @@ while (window.is_open()):
     window.display()
 ```
 
-## API differences
+## API differences with SFML
 
 Most of the C++ API has been ported to Python using [pybind11](https://github.com/pybind/pybind11), except features that did not make sense to implement because already available in Python (Threading features are available through the built-in [threading](https://docs.python.org/3/library/threading.html) module. String features are already supported by Python).
 
