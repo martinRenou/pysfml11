@@ -8,6 +8,8 @@ uniform vec3 vec_3;
 uniform vec4 vec_4;
 uniform mat3 matrix;
 
+uniform sampler2D texture;
+
 
 void main(void){
   gl_Position = PMatrix * VMatrix * MMatrix * gl_Vertex;

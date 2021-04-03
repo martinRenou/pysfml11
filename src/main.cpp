@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
@@ -817,7 +818,7 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     /* Shape class */
     py::class_<sf::Shape, sf::Drawable, sf::Transformable>(sfml, "Shape")
-        // .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
+        .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
         .def_property("texture_rect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
         .def_property("fill_color", &sf::Shape::getFillColor, &sf::Shape::setFillColor)
         .def_property("outline_color", &sf::Shape::getOutlineColor, &sf::Shape::setOutlineColor)
@@ -860,7 +861,7 @@ PYBIND11_MODULE(pysfml11, sfml)
     py::class_<sf::Image>(sfml, "Image")
         .def(py::init<>())
         .def("create", [](sf::Image& self, unsigned int width, unsigned int height, const sf::Color& color) {
-            self.create(width, height, color);
+            return self.create(width, height, color);
         }, "width"_a, "height"_a, "color"_a = sf::Color::Black)
         // TODO Create from bytes
         .def("load_from_file", &sf::Image::loadFromFile, "filename"_a)
@@ -873,6 +874,40 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("get_pixel", &sf::Image::getPixel, "x"_a, "y"_a)
         .def("flip_horizontally", &sf::Image::flipHorizontally)
         .def("flip_vertically", &sf::Image::flipVertically);
+
+    /* Texture class */
+    py::class_<sf::Texture> texture(sfml, "Texture");
+
+    texture.def(py::init<>())
+        .def("create", &sf::Texture::create, "width"_a, "height"_a)
+        .def("load_from_file", &sf::Texture::loadFromFile, "filename"_a, "area"_a=sf::IntRect())
+        // TODO Create from bytes
+        .def("load_from_stream", &sf::Texture::loadFromStream, "stream"_a, "area"_a=sf::IntRect())
+        .def("load_from_image", &sf::Texture::loadFromImage, "image"_a, "area"_a=sf::IntRect())
+        .def_property_readonly("size", &sf::Texture::getSize)
+        .def("copy_to_image", &sf::Texture::copyToImage)
+        // TODO Update from bytes
+        .def("update", [](sf::Texture& self, sf::Image& image, unsigned int x, unsigned int y) {
+            self.update(image, x, y);
+        }, "image"_a, "x"_a=0, "y"_a=0)
+        .def("update", [](sf::Texture& self, sf::Texture& texture, unsigned int x, unsigned int y) {
+            self.update(texture, x, y);
+        }, "texture"_a, "x"_a=0, "y"_a=0)
+        .def("update", [](sf::Texture& self, sf::Window& window, unsigned int x, unsigned int y) {
+            self.update(window, x, y);
+        }, "window"_a, "x"_a=0, "y"_a=0)
+        .def_property("smooth", &sf::Texture::isSmooth, &sf::Texture::setSmooth)
+        .def_property("srgb", &sf::Texture::isSrgb, &sf::Texture::setSrgb)
+        .def_property("repeated", &sf::Texture::isRepeated, &sf::Texture::setRepeated)
+        .def("generate_mipmap", &sf::Texture::generateMipmap)
+        .def("swap", &sf::Texture::swap, "right"_a)
+        .def_static("bind", &sf::Texture::bind, "texture"_a, "coordinate_type"_a)
+        .def_static("get_maximum_size", &sf::Texture::getMaximumSize);
+
+    py::enum_<sf::Texture::CoordinateType>(texture, "CoordinateType")
+        .value("Normalized", sf::Texture::CoordinateType::Normalized)
+        .value("Pixels", sf::Texture::CoordinateType::Pixels)
+        .export_values();
 
     /* Glyph class */
     py::class_<sf::Glyph>(sfml, "Glyph")
@@ -1043,8 +1078,12 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Glsl::Mat4& matrix) {
             self.setUniform(name, matrix);
         }, "name"_a, "matrix"_a)
-        // .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Texture& texture) { self.setUniform(name, texture); })
-        // .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::CurrentTextureType) { self.setUniform(name, sf::CurrentTextureType); })
+        .def("set_uniform", [](sf::Shader& self, const std::string& name, const sf::Texture& texture) {
+            self.setUniform(name, texture);
+        })
+        // .def("set_uniform", [](sf::Shader& self, const std::string& name, sf::CurrentTextureType) {
+        //     self.setUniform(name, sf::CurrentTextureType);
+        // })
         // TODO set_uniform_array
         // TODO set_parameter
         // TODO get_native_handle

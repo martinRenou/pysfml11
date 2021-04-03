@@ -20,6 +20,10 @@ def test_load_from_file():
     resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
 
     assert image.load_from_file(str(resources / 'saxo.jpg'))
+
+    assert image.size.x == 562
+    assert image.size.y == 422
+
     assert not image.load_from_file(str(resources / 'this_file_does_not_exist.jpg'))
 
 
@@ -32,17 +36,6 @@ def test_save_to_file():
 
     assert image.save_to_file(str(resources / 'blue.jpg'))
     assert image.load_from_file(str(resources / 'blue.jpg'))
-
-
-def test_load_from_file():
-    image = sf.Image()
-
-    resources = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
-
-    image.load_from_file(str(resources / 'saxo.jpg'))
-
-    assert image.size.x == 562
-    assert image.size.y == 422
 
 
 def test_create_mask_from_color():
