@@ -573,13 +573,11 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     // TODO
     // class   sf::BlendMode
-    // class   sf::Font
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
     // class   sf::RenderWindow
     // class   sf::Sprite
-    // class   sf::Text
     // class   sf::Texture
     // class   sf::Transform
     // class   sf::Vertex
@@ -901,6 +899,40 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     py::class_<sf::Font::Info>(font, "Info")
         .def_readonly("family", &sf::Font::Info::family);
+
+    /* Text class */
+    py::class_<sf::Text, sf::Drawable, sf::Transformable> text(sfml, "Text");
+
+    text.def(py::init<>())
+        .def(py::init<const std::string&, const sf::Font&, unsigned int>(), "string"_a, "font"_a, "character_size"_a=30)
+        .def_property("string",
+            [](sf::Text& self) {
+                return static_cast<std::string>(self.getString());
+            },
+            [](sf::Text& self, const std::string& value) {
+                self.setString(value);
+            })
+        .def_property("font", &sf::Text::getFont, &sf::Text::setFont)
+        .def_property("character_size", &sf::Text::getCharacterSize, &sf::Text::setCharacterSize)
+        .def_property("line_spacing", &sf::Text::getLineSpacing, &sf::Text::setLineSpacing)
+        .def_property("letter_spacing", &sf::Text::getLetterSpacing, &sf::Text::setLetterSpacing)
+        .def_property("style", &sf::Text::getStyle, &sf::Text::setStyle)
+        .def_property("color", &sf::Text::getColor, &sf::Text::setColor)
+        .def_property("fill_color", &sf::Text::getFillColor, &sf::Text::setFillColor)
+        .def_property("outline_color", &sf::Text::getOutlineColor, &sf::Text::setOutlineColor)
+        .def_property("outline_thickness", &sf::Text::getOutlineThickness, &sf::Text::setOutlineThickness)
+        .def("find_character_pos", &sf::Text::findCharacterPos, "index"_a)
+        .def_property_readonly("local_bounds", &sf::Text::getLocalBounds)
+        .def_property_readonly("global_bounds", &sf::Text::getGlobalBounds)
+        ;
+
+    py::enum_<sf::Text::Style>(text, "Style")
+        .value("Regular", sf::Text::Style::Regular)
+        .value("Bold", sf::Text::Style::Bold)
+        .value("Italic", sf::Text::Style::Italic)
+        .value("Underlined", sf::Text::Style::Underlined)
+        .value("StrikeThrough", sf::Text::Style::StrikeThrough)
+        .export_values();
 
     /* View class */
     py::class_<sf::View>(sfml, "View")
