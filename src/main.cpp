@@ -818,8 +818,10 @@ PYBIND11_MODULE(pysfml11, sfml)
 
     /* Shape class */
     py::class_<sf::Shape, sf::Drawable, sf::Transformable>(sfml, "Shape")
-        .def_property("texture", &sf::Shape::setTexture, &sf::Shape::getTexture)
-        .def_property("texture_rect", &sf::Shape::setTextureRect, &sf::Shape::getTextureRect)
+        .def_property("texture", &sf::Shape::getTexture, [](sf::Shape& self, const sf::Texture& texture) {
+            self.setTexture(&texture);
+        })
+        .def_property("texture_rect", &sf::Shape::getTextureRect, &sf::Shape::setTextureRect)
         .def_property("fill_color", &sf::Shape::getFillColor, &sf::Shape::setFillColor)
         .def_property("outline_color", &sf::Shape::getOutlineColor, &sf::Shape::setOutlineColor)
         .def_property("outline_thickness", &sf::Shape::getOutlineThickness, &sf::Shape::setOutlineThickness)
