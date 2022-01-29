@@ -576,8 +576,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
-    // class   sf::Vertex
-    // class   sf::VertexArray
     // class   sf::VertexBuffer
 
     /* Rect class */
@@ -1001,6 +999,48 @@ PYBIND11_MODULE(pysfml11, sfml)
         .value("Underlined", sf::Text::Style::Underlined)
         .value("StrikeThrough", sf::Text::Style::StrikeThrough)
         .export_values();
+
+    /* Primitive types */
+    py::enum_<sf::PrimitiveType>(sfml, "PrimitiveType")
+        .value("Points", sf::PrimitiveType::Points)
+        .value("Lines", sf::PrimitiveType::Lines)
+        .value("LineStrip", sf::PrimitiveType::LineStrip)
+        .value("LinesStrip", sf::PrimitiveType::LineStrip)
+        .value("Triangles", sf::PrimitiveType::Triangles)
+        .value("TriangleStrip", sf::PrimitiveType::TriangleStrip)
+        .value("TrianglesStrip", sf::PrimitiveType::TriangleStrip)
+        .value("TriangleFan", sf::PrimitiveType::TriangleFan)
+        .value("TrianglesFan", sf::PrimitiveType::TriangleFan)
+        .value("Quads", sf::PrimitiveType::Quads)
+        .export_values();
+
+    /* Vertex class */
+    py::class_<sf::Vertex>(sfml, "Vertex")
+        .def(py::init<>())
+        .def(py::init<const sf::Vector2f&>(), "position"_a)
+        .def(py::init<const sf::Vector2f&, const sf::Color&>(), "position"_a, "color"_a)
+        .def(py::init<const sf::Vector2f&, const sf::Vector2f&>(), "position"_a, "tex_coords"_a)
+        .def(py::init<const sf::Vector2f&, const sf::Color&, const sf::Vector2f&>(), "position"_a, "color"_a, "tex_coords"_a)
+        .def_readwrite("position", &sf::Vertex::position)
+        .def_readwrite("color", &sf::Vertex::color)
+        .def_readwrite("tex_coords", &sf::Vertex::texCoords);
+
+    /* VertexArray class */
+    py::class_<sf::VertexArray, sf::Drawable>(sfml, "VertexArray")
+        .def(py::init<>())
+        .def(py::init<sf::PrimitiveType, std::size_t>(), "type"_a, "vertex_count"_a=0)
+        .def_property_readonly("vertex_count", &sf::VertexArray::getVertexCount)
+        .def("__setitem__", [](sf::VertexArray& self, std::size_t idx, const sf::Vertex vertex) {
+            self[idx] = vertex;
+        })
+        .def("__getitem__", [](sf::VertexArray& self, std::size_t idx) {
+            return self[idx];
+        })
+        .def("clear", &sf::VertexArray::clear)
+        .def("resize", &sf::VertexArray::resize, "vertex_count"_a)
+        .def("append", &sf::VertexArray::append, "vertex"_a)
+        .def_property("primitive_type", &sf::VertexArray::getPrimitiveType, &sf::VertexArray::setPrimitiveType)
+        .def_property_readonly("bounds", &sf::VertexArray::getBounds);
 
     /* View class */
     py::class_<sf::View>(sfml, "View")
