@@ -19,8 +19,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
-        python-version: [3.7, 3.8, 3.9]
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        python-version: ['3.8', '3.9', '3.10']
 
     steps:
     - name: Checkout
@@ -33,13 +33,11 @@ jobs:
         mamba-version: "*"
         channels: conda-forge
 
-    # - name: Fix missing libudev.so.0 on Linux
-    #   if: matrix.os == 'ubuntu-latest'
-    #   run: |
-    #     wget http://archive.ubuntu.com/ubuntu/pool/main/g/glibc/multiarch-support_2.27-3ubuntu1.2_amd64.deb
-    #     sudo dpkg -i multiarch-support_2.27-3ubuntu1.2_amd64.deb
-    #     wget http://mirrors.kernel.org/ubuntu/pool/main/u/udev/libudev0_175-0ubuntu9_amd64.deb
-    #     sudo dpkg -i libudev0_175-0ubuntu9_amd64.deb
+    - name: Fix missing libudev.so.0 on Linux (this is not the recommended way)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt install libudev-dev
+        sudo ln -sf /lib/$(arch)-linux-gnu/libudev.so.1 /lib/$(arch)-linux-gnu/libudev.so.0
 
     - name: Conda install dependencies
       run: mamba install python=${{ matrix.python-version }} pip setuptools sfml=2.5 pybind11 pytest

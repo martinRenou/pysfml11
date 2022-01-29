@@ -911,6 +911,43 @@ PYBIND11_MODULE(pysfml11, sfml)
         .value("Pixels", sf::Texture::CoordinateType::Pixels)
         .export_values();
 
+    /* Sprite class */
+    py::class_<sf::Sprite>(sfml, "Sprite")
+        .def(py::init<const sf::Texture&>(), "texture"_a)
+        .def(py::init<const sf::Texture&, const sf::IntRect&>(), "texture"_a, "rectangle"_a)
+        .def("set_texture", &sf::Sprite::setTexture, "texture"_a, "reset_rect"_a=false)
+        .def_property("texture", &sf::Sprite::getTexture, &sf::Sprite::setTexture)
+        .def_property("texture_rect", &sf::Sprite::getTextureRect, &sf::Sprite::setTextureRect)
+        .def_property("color", &sf::Sprite::getColor, &sf::Sprite::setColor)
+        .def_property_readonly("local_bounds", &sf::Sprite::getLocalBounds)
+        .def_property_readonly("global_bounds", &sf::Sprite::getGlobalBounds)
+        .def_property("position", &sf::Sprite::getPosition, [](sf::Sprite& self, const sf::Vector2f& position) {
+            self.setPosition(position);
+        })
+        .def_property("rotation", &sf::Sprite::getRotation, &sf::Sprite::setRotation)
+        .def_property("scale", &sf::Sprite::getScale, [](sf::Sprite& self, const sf::Vector2f& scale) {
+            self.setScale(scale);
+        })
+        .def_property("origin", &sf::Sprite::getOrigin, [](sf::Sprite& self, const sf::Vector2f& origin) {
+            self.setScale(origin);
+        })
+        .def("move", [](sf::Sprite& self, float offsetx, float offsety) {
+            self.move(offsetx, offsety);
+        }, "offset_x"_a, "offset_y"_a)
+        .def("move", [](sf::Sprite& self, const sf::Vector2f offset) {
+            self.move(offset);
+        }, "offset"_a)
+        .def("rotate", &sf::Sprite::rotate, "angle"_a)
+        // Conflicts with the scale property
+        // .def("scale", [](sf::Sprite& self, float factorx, float factory) {
+        //     self.scale(factorx, factory);
+        // }, "factor_x"_a, "factor_y"_a)
+        // .def("scale", [](sf::Sprite& self, const sf::Vector2f factor) {
+        //     self.scale(factor);
+        // }, "factor"_a)
+        .def_property_readonly("transform", &sf::Sprite::getTransform)
+        .def_property_readonly("inverse_transform", &sf::Sprite::getInverseTransform);
+
     /* Glyph class */
     py::class_<sf::Glyph>(sfml, "Glyph")
         .def(py::init<>())
