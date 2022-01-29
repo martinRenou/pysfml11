@@ -191,7 +191,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::Joystick
     // class   sf::Sensor
     // class   sf::Touch
-    // class   sf::Window
 
     /* ContextSettings class */
     py::class_<sf::ContextSettings> context_settings(sfml, "ContextSettings");
@@ -577,14 +576,9 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
-    // class   sf::RenderWindow
-    // class   sf::Sprite
-    // class   sf::Texture
-    // class   sf::Transform
     // class   sf::Vertex
     // class   sf::VertexArray
     // class   sf::VertexBuffer
-    // class   sf::View
 
     /* Rect class */
     #define PYSFML_IMPLEMENT_RECT(T, TS)                                                                    \
@@ -912,7 +906,7 @@ PYBIND11_MODULE(pysfml11, sfml)
         .export_values();
 
     /* Sprite class */
-    py::class_<sf::Sprite>(sfml, "Sprite")
+    py::class_<sf::Sprite, sf::Drawable, sf::Transformable>(sfml, "Sprite")
         .def(py::init<const sf::Texture&>(), "texture"_a)
         .def(py::init<const sf::Texture&, const sf::IntRect&>(), "texture"_a, "rectangle"_a)
         .def("set_texture", &sf::Sprite::setTexture, "texture"_a, "reset_rect"_a=false)
