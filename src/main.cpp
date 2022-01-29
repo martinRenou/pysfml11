@@ -938,6 +938,7 @@ PYBIND11_MODULE(pysfml11, sfml)
             self.move(offset);
         }, "offset"_a)
         .def("rotate", &sf::Sprite::rotate, "angle"_a)
+        // Conflicts with the scale property
         // .def("scale", [](sf::Sprite& self, float factorx, float factory) {
         //     self.scale(factorx, factory);
         // }, "factor_x"_a, "factor_y"_a)

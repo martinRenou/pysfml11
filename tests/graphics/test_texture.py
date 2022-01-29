@@ -9,12 +9,16 @@ import pysfml11 as sf
 RESOURCES = pathlib.Path(__file__).parent.parent.absolute() / 'resources'
 
 
-def test_construction():
+def test_construction(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     texture = sf.Texture()
     texture.create(50, 50)
 
 
-def test_load_from_file():
+def test_load_from_file(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     texture = sf.Texture()
 
     assert texture.load_from_file(str(RESOURCES / 'saxo.jpg'))
@@ -25,7 +29,9 @@ def test_load_from_file():
     assert not texture.load_from_file(str(RESOURCES / 'this_file_does_not_exist.jpg'))
 
 
-def test_load_from_image():
+def test_load_from_image(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     image = sf.Image()
     texture = sf.Texture()
 
@@ -36,7 +42,9 @@ def test_load_from_image():
     assert texture.size.y == 422
 
 
-def test_to_image():
+def test_to_image(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     texture = sf.Texture()
 
     texture.load_from_file(str(RESOURCES / 'saxo.jpg'))
@@ -49,7 +57,9 @@ def test_to_image():
     assert image.size.y == 422
 
 
-def test_update():
+def test_update(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     image = sf.Image()
     texture = sf.Texture()
     texture.create(562, 422)
@@ -62,7 +72,9 @@ def test_update():
     texture.update(texture, 20, 20)
 
 
-def test_properties():
+def test_properties(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     texture = sf.Texture()
 
     texture.load_from_file(str(RESOURCES / 'saxo.jpg'))
@@ -80,7 +92,9 @@ def test_properties():
     assert texture.srgb
 
 
-def test_generate_mipmap():
+def test_generate_mipmap(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     if sys.platform.startswith("win"):
         pytest.skip('skip texture.generate_mipmap test on Windows')
 
@@ -91,7 +105,9 @@ def test_generate_mipmap():
     assert texture.generate_mipmap()
 
 
-def test_static_methods():
+def test_static_methods(ci):
+    if ci:
+        pytest.skip("skipping Texture tests on CI (no display available)")
     texture = sf.Texture()
 
     texture.load_from_file(str(RESOURCES / 'saxo.jpg'))
