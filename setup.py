@@ -15,7 +15,10 @@ setup_args = dict(
     zip_safe=False,
 )
 
-if os.getenv('PYSFML11_BUILD_DEPENDENCIES') == 1:
+print('--- BUILD PYSFML11', os.getenv('PYSFML11_BUILD_DEPENDENCIES'))
+
+if os.getenv('PYSFML11_BUILD_DEPENDENCIES') == '1':
+    print('--- BUILD PYSFML11 WITH DEPENDENCIES')
     try:
         from skbuild import setup
         from skbuild.exceptions import SKBuildError
@@ -56,7 +59,7 @@ if os.getenv('PYSFML11_BUILD_DEPENDENCIES') == 1:
 
     setup(
         **setup_args,
-        packages=['pysfml11'],
+        # packages=['pysfml11'],
         setup_requires=setup_requires,
         cmake_args=[
             '-DCMAKE_INSTALL_LIBDIR=lib',
