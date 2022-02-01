@@ -19,31 +19,34 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [ubuntu-latest]
         python-version: ['3.8', '3.9', '3.10']
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Setup conda
-      uses: conda-incubator/setup-miniconda@v2
+    - name: Install mamba
+      uses: mamba-org/provision-with-micromamba@main
       with:
-        python-version: ${{ matrix.python-version }}
-        mamba-version: "*"
-        channels: conda-forge
-
-    - name: Fix missing libudev.so.0 on Linux (this is not the recommended way)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        sudo apt install libudev-dev
-        sudo ln -sf /lib/$(arch)-linux-gnu/libudev.so.1 /lib/$(arch)-linux-gnu/libudev.so.0
-
-    - name: Conda install dependencies
-      run: mamba install python=${{ matrix.python-version }} pip setuptools sfml=2.5 pybind11 pytest
+        environment-file: environment.yml
+        environment-name: pysfml11
+        extra-specs: |
+            python=${{ matrix.python-version }}
 
     - name: Install pysfml11
       run: pip -vvv install .
 
-    - name: Run tests
-      run: pytest -vvv tests --ci True
+    - name: Build wheel
+      run: |
+        pip wheel --verbose . -w wheelhouse_dirty
+        auditwheel repair wheelhouse_dirty/xeus_python-*.whl -w wheelhouse
+
+    - name: List wheels
+      run: ls wheelhouse
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: wheelhouse
+        path: wheelhouse/*.whl
+        if-no-files-found: error

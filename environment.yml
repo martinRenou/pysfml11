@@ -1,0 +1,9 @@
+name: pysfml11
+channels:
+  - conda-forge
+dependencies:
+  - pip
+  - setuptools
+  - sfml=2.5.1
+  - pybind11
+  - pytest
