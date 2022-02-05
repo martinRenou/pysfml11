@@ -21,6 +21,8 @@ message(STATUS "CMAKE_LIBRARY_PATH is ${CMAKE_LIBRARY_PATH}")
 # Dependencies
 # ============
 
+# set(OGG_GIT_TAG         v1.3.5)
+set(OGG_GIT_TAG         debug)
 set(OPENAL_GIT_TAG      1.21.1)
 set(VORBIS_GIT_TAG      v1.3.7)
 # set(SFML_GIT_TAG        2.5.1)
@@ -35,7 +37,29 @@ include(FetchContent)
 # libogg ?
 # freetype ?
 # libflac ?
-# libvorbis ?
+
+# ogg
+# ---
+
+# TODO Use conda-forge patch for the OSX 64 compilation failure?
+
+message(STATUS "Building ogg")
+
+set(INSTALL_DOCS OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+  ogg
+  # GIT_REPOSITORY https://github.com/xiph/ogg
+  GIT_REPOSITORY https://github.com/martinRenou/ogg
+  GIT_TAG ${OGG_GIT_TAG}
+)
+
+FetchContent_GetProperties(ogg)
+
+if(NOT ogg_POPULATED)
+  FetchContent_Populate(ogg)
+  add_subdirectory(${ogg_SOURCE_DIR} ${ogg_BINARY_DIR})
+endif()
 
 # OPENAL
 # ------
@@ -90,6 +114,7 @@ set(SFML_INSTALL_XCODE_TEMPLATES FALSE CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
   SFML
+  # GIT_REPOSITORY https://github.com/SFML/SFML
   GIT_REPOSITORY https://github.com/martinRenou/SFML
   GIT_TAG ${SFML_GIT_TAG}
 )
