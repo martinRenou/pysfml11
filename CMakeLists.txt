@@ -21,39 +21,66 @@ message(STATUS "CMAKE_LIBRARY_PATH is ${CMAKE_LIBRARY_PATH}")
 # Dependencies
 # ============
 
-set(SFML_GIT_TAG        2.5.1)
+set(OPENAL_GIT_TAG      1.21.1)
+# set(SFML_GIT_TAG        2.5.1)
+set(SFML_GIT_TAG        debug_2)
 
 # Fetch and build cmake dependencies
 # ==================================
 
 include(FetchContent)
 
+# TODO
+# libogg ?
+# freetype ?
+# libflac ?
+# libvorbis ?
+# openal-soft ? DONE?
+
+# OPENAL
+# ------
+
+message(STATUS "Building OpenAL")
+
+set(LIBTYPE "STATIC" CACHE BOOL "" FORCE)
+set(ALSOFT_STATIC_LIBGCC ON CACHE BOOL "" FORCE)
+set(ALSOFT_STATIC_STDCXX ON CACHE BOOL "" FORCE)
+set(ALSOFT_STATIC_WINPTHREAD ON CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+  OpenAL
+  GIT_REPOSITORY https://github.com/kcat/openal-soft
+  GIT_TAG ${OPENAL_GIT_TAG}
+)
+
+FetchContent_GetProperties(OpenAL)
+
+if(NOT OpenAL_POPULATED)
+  FetchContent_Populate(OpenAL)
+  add_subdirectory(${OpenAL_SOURCE_DIR} ${OpenAL_BINARY_DIR})
+endif()
+
 # SFML
 # ----
 
-message(STATUS "SFML")
+message(STATUS "Building SFML")
 
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "enable static link" FORCE)
-set(SFML_USE_STATIC_STD_LIBS ON CACHE BOOL "enable static link" FORCE)
-set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_DOC OFF CACHE BOOL "disable docs build" FORCE)
-set(SFML_BUILD_AUDIO ON CACHE BOOL "" FORCE)
-set(SFML_BUILD_GRAPHICS ON CACHE BOOL "" FORCE)
-set(SFML_BUILD_WINDOW ON CACHE BOOL "" FORCE)
-set(SFML_BUILD_NETWORK ON CACHE BOOL "" FORCE)
-set(SFML_USE_SYSTEM_DEPS OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS FALSE CACHE BOOL "" FORCE)
+set(SFML_USE_STATIC_STD_LIBS TRUE CACHE BOOL "" FORCE)
+set(SFML_INSTALL_XCODE_TEMPLATES FALSE CACHE BOOL "" FORCE)
+# set(SFML_USE_SYSTEM_DEPS FALSE CACHE BOOL "" FORCE) SHOULD WE TRY TO USE BUNDLED DEPS ?
 
 FetchContent_Declare(
-  sfml
-  GIT_REPOSITORY https://github.com/SFML/SFML
+  SFML
+  GIT_REPOSITORY https://github.com/martinRenou/SFML
   GIT_TAG ${SFML_GIT_TAG}
 )
 
-FetchContent_GetProperties(sfml)
+FetchContent_GetProperties(SFML)
 
-if(NOT sfml_POPULATED)
-  FetchContent_Populate(sfml)
-  add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
+if(NOT SFML_POPULATED)
+  FetchContent_Populate(SFML)
+  add_subdirectory(${SFML_SOURCE_DIR} ${SFML_BINARY_DIR})
 endif()
 
 # pysfml11
