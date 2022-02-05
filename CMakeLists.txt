@@ -21,8 +21,7 @@ message(STATUS "CMAKE_LIBRARY_PATH is ${CMAKE_LIBRARY_PATH}")
 # Dependencies
 # ============
 
-# set(OGG_GIT_TAG         v1.3.5)
-set(OGG_GIT_TAG         debug)
+set(OGG_GIT_TAG         v1.3.5)
 set(OPENAL_GIT_TAG      1.21.1)
 set(VORBIS_GIT_TAG      v1.3.7)
 # set(SFML_GIT_TAG        2.5.1)
@@ -49,8 +48,7 @@ set(INSTALL_DOCS OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
   ogg
-  # GIT_REPOSITORY https://github.com/xiph/ogg
-  GIT_REPOSITORY https://github.com/martinRenou/ogg
+  GIT_REPOSITORY https://github.com/xiph/ogg
   GIT_TAG ${OGG_GIT_TAG}
 )
 
@@ -81,7 +79,7 @@ FetchContent_GetProperties(OpenAL)
 
 if(NOT OpenAL_POPULATED)
   FetchContent_Populate(OpenAL)
-  add_subdirectory(${OpenAL_SOURCE_DIR} ${OpenAL_BINARY_DIR})
+  add_subdirectory(${openal_SOURCE_DIR} ${openal_BINARY_DIR})
 endif()
 
 # VORBIS
