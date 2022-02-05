@@ -23,7 +23,8 @@ message(STATUS "CMAKE_LIBRARY_PATH is ${CMAKE_LIBRARY_PATH}")
 
 set(OGG_GIT_TAG         v1.3.5)
 set(OPENAL_GIT_TAG      1.21.1)
-set(VORBIS_GIT_TAG      v1.3.7)
+# set(VORBIS_GIT_TAG      v1.3.7)
+set(VORBIS_GIT_TAG      master) # master contains a fix
 # set(SFML_GIT_TAG        2.5.1)
 set(SFML_GIT_TAG        debug_2)
 
@@ -121,7 +122,7 @@ FetchContent_GetProperties(SFML)
 
 if(NOT SFML_POPULATED)
   FetchContent_Populate(SFML)
-  add_subdirectory(${SFML_SOURCE_DIR} ${SFML_BINARY_DIR})
+  add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
 endif()
 
 # pysfml11
