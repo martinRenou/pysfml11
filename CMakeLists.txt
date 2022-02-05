@@ -22,6 +22,7 @@ message(STATUS "CMAKE_LIBRARY_PATH is ${CMAKE_LIBRARY_PATH}")
 # ============
 
 set(OPENAL_GIT_TAG      1.21.1)
+set(VORBIS_GIT_TAG      v1.3.7)
 # set(SFML_GIT_TAG        2.5.1)
 set(SFML_GIT_TAG        debug_2)
 
@@ -35,7 +36,6 @@ include(FetchContent)
 # freetype ?
 # libflac ?
 # libvorbis ?
-# openal-soft ? DONE?
 
 # OPENAL
 # ------
@@ -58,6 +58,24 @@ FetchContent_GetProperties(OpenAL)
 if(NOT OpenAL_POPULATED)
   FetchContent_Populate(OpenAL)
   add_subdirectory(${OpenAL_SOURCE_DIR} ${OpenAL_BINARY_DIR})
+endif()
+
+# VORBIS
+# ------
+
+message(STATUS "Building libvorbis")
+
+FetchContent_Declare(
+  vorbis
+  GIT_REPOSITORY https://github.com/xiph/vorbis
+  GIT_TAG ${VORBIS_GIT_TAG}
+)
+
+FetchContent_GetProperties(vorbis)
+
+if(NOT vorbis_POPULATED)
+  FetchContent_Populate(vorbis)
+  add_subdirectory(${vorbis_SOURCE_DIR} ${vorbis_BINARY_DIR})
 endif()
 
 # SFML
