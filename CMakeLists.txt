@@ -40,6 +40,7 @@ set(SFML_GIT_TAG        debug)
 include(FetchContent)
 
 # TODO
+# OpenAL is trying to link to SDL, why? Are we trying to compile something that we should not?
 # freetype ?
 # pybind11 ?
 
@@ -71,6 +72,8 @@ endif()
 message(STATUS "Building OpenAL")
 
 set(LIBTYPE "STATIC" CACHE BOOL "" FORCE)
+set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(ALSOFT_UTILS OFF CACHE BOOL "" FORCE)
 set(ALSOFT_STATIC_LIBGCC ON CACHE BOOL "" FORCE)
 set(ALSOFT_STATIC_STDCXX ON CACHE BOOL "" FORCE)
 set(ALSOFT_STATIC_WINPTHREAD ON CACHE BOOL "" FORCE)
@@ -93,6 +96,8 @@ endif()
 
 message(STATUS "Building libvorbis")
 
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
   vorbis
   GIT_REPOSITORY https://github.com/xiph/vorbis
@@ -113,6 +118,7 @@ message(STATUS "Building libflac")
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
 set(BUILD_DOXYGEN OFF CACHE BOOL "" FORCE)
 set(BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(INSTALL_MANPAGES OFF CACHE BOOL "" FORCE)
