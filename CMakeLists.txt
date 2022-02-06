@@ -27,6 +27,9 @@ set(OPENAL_GIT_TAG      1.21.1)
 # https://github.com/xiph/vorbis/commit/98eddc72d36e3421519d54b101c09b57e4d4d10d
 # set(VORBIS_GIT_TAG      v1.3.7)
 set(VORBIS_GIT_TAG      master)
+# set(FLAC_GIT_TAG        1.3.3)
+set(FLAC_GIT_TAG        wrap_find_package)
+# 2.5.1 branch plus some extra fixes
 # set(SFML_GIT_TAG        2.5.1)
 set(SFML_GIT_TAG        debug)
 
@@ -36,9 +39,8 @@ set(SFML_GIT_TAG        debug)
 include(FetchContent)
 
 # TODO
-# libogg ?
 # freetype ?
-# libflac ?
+# pybind11 ?
 
 # ogg
 # ---
@@ -101,6 +103,30 @@ FetchContent_GetProperties(vorbis)
 if(NOT vorbis_POPULATED)
   FetchContent_Populate(vorbis)
   add_subdirectory(${vorbis_SOURCE_DIR} ${vorbis_BINARY_DIR})
+endif()
+
+# FLAC
+# ----
+
+message(STATUS "Building libflac")
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_DOXYGEN OFF CACHE BOOL "" FORCE)
+set(BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(INSTALL_MANPAGES OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+  FLAC
+  GIT_REPOSITORY https://github.com/martinRenou/flac
+  GIT_TAG ${FLAC_GIT_TAG}
+)
+
+FetchContent_GetProperties(FLAC)
+
+if(NOT FLAC_POPULATED)
+  FetchContent_Populate(FLAC)
+  add_subdirectory(${flac_SOURCE_DIR} ${flac_BINARY_DIR})
 endif()
 
 # SFML
