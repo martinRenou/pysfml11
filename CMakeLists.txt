@@ -23,10 +23,12 @@ message(STATUS "CMAKE_LIBRARY_PATH is ${CMAKE_LIBRARY_PATH}")
 
 set(OGG_GIT_TAG         v1.3.5)
 set(OPENAL_GIT_TAG      1.21.1)
+# master contains fixes for creating a build tree
+# https://github.com/xiph/vorbis/commit/98eddc72d36e3421519d54b101c09b57e4d4d10d
 # set(VORBIS_GIT_TAG      v1.3.7)
-set(VORBIS_GIT_TAG      master) # master contains a fix
+set(VORBIS_GIT_TAG      master)
 # set(SFML_GIT_TAG        2.5.1)
-set(SFML_GIT_TAG        debug_2)
+set(SFML_GIT_TAG        debug)
 
 # Fetch and build cmake dependencies
 # ==================================
