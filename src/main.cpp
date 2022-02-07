@@ -576,7 +576,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // class   sf::RenderStates
     // class   sf::RenderTarget
     // class   sf::RenderTexture
-    // class   sf::VertexBuffer
 
     /* Rect class */
     #define PYSFML_IMPLEMENT_RECT(T, TS)                                                                    \
@@ -1014,6 +1013,17 @@ PYBIND11_MODULE(pysfml11, sfml)
         .value("Quads", sf::PrimitiveType::Quads)
         .export_values();
 
+    sfml.attr("Points") = sfml.attr("PrimitiveType").attr("Points");
+    sfml.attr("Lines") = sfml.attr("PrimitiveType").attr("Lines");
+    sfml.attr("LineStrip") = sfml.attr("PrimitiveType").attr("LineStrip");
+    sfml.attr("LinesStrip") = sfml.attr("PrimitiveType").attr("LinesStrip");
+    sfml.attr("Triangles") = sfml.attr("PrimitiveType").attr("Triangles");
+    sfml.attr("TriangleStrip") = sfml.attr("PrimitiveType").attr("TriangleStrip");
+    sfml.attr("TrianglesStrip") = sfml.attr("PrimitiveType").attr("TrianglesStrip");
+    sfml.attr("TriangleFan") = sfml.attr("PrimitiveType").attr("TriangleFan");
+    sfml.attr("TrianglesFan") = sfml.attr("PrimitiveType").attr("TrianglesFan");
+    sfml.attr("Quads") = sfml.attr("PrimitiveType").attr("Quads");
+
     /* Vertex class */
     py::class_<sf::Vertex>(sfml, "Vertex")
         .def(py::init<>())
@@ -1041,6 +1051,37 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def("append", &sf::VertexArray::append, "vertex"_a)
         .def_property("primitive_type", &sf::VertexArray::getPrimitiveType, &sf::VertexArray::setPrimitiveType)
         .def_property_readonly("bounds", &sf::VertexArray::getBounds);
+
+    /* VertexBuffer class */
+    py::class_<sf::VertexBuffer, sf::Drawable> vertexbuffer(sfml, "VertexBuffer");
+
+    vertexbuffer.def(py::init<>())
+        .def(py::init<sf::PrimitiveType>(), "type"_a)
+        .def(py::init<sf::VertexBuffer::Usage>(), "usage"_a)
+        .def(py::init<sf::PrimitiveType, sf::VertexBuffer::Usage>(), "type"_a, "usage"_a)
+        .def(py::init<const sf::VertexBuffer&>(), "copy"_a)
+        .def("create", &sf::VertexBuffer::create, "vertex_count"_a)
+        .def_property_readonly("vertex_count", &sf::VertexBuffer::getVertexCount)
+        .def("update", [](sf::VertexBuffer& self, const sf::Vertex* vertices) {
+            self.update(vertices);
+        }, "vertices"_a)
+        .def("update", [](sf::VertexBuffer& self, const sf::Vertex* vertices, std::size_t vertex_count, std::size_t offset) {
+            self.update(vertices, vertex_count, offset);
+        }, "vertices"_a, "vertex_count"_a, "offset"_a)
+        .def("update", [](sf::VertexBuffer& self, const sf::VertexBuffer& vertex_buffer) {
+            self.update(vertex_buffer);
+        }, "vertex_buffer"_a)
+        .def("swap", &sf::VertexBuffer::swap, "right"_a)
+        .def_property("primitive_type", &sf::VertexBuffer::getPrimitiveType, &sf::VertexBuffer::setPrimitiveType)
+        .def_property("usage", &sf::VertexBuffer::getUsage, &sf::VertexBuffer::setUsage)
+        .def_static("bind", &sf::VertexBuffer::bind, "vertex_buffer"_a)
+        .def_static("is_available", &sf::VertexBuffer::isAvailable);
+
+    py::enum_<sf::VertexBuffer::Usage>(vertexbuffer, "Usage")
+        .value("Stream", sf::VertexBuffer::Usage::Stream)
+        .value("Dynamic", sf::VertexBuffer::Usage::Dynamic)
+        .value("Static", sf::VertexBuffer::Usage::Static)
+        .export_values();
 
     /* View class */
     py::class_<sf::View>(sfml, "View")
