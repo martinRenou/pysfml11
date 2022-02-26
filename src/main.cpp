@@ -574,7 +574,6 @@ PYBIND11_MODULE(pysfml11, sfml)
     // TODO
     // class   sf::BlendMode
     // class   sf::RenderStates
-    // class   sf::RenderTarget
     // class   sf::RenderTexture
 
     /* Rect class */
@@ -839,8 +838,30 @@ PYBIND11_MODULE(pysfml11, sfml)
         .def_property("size", &sf::RectangleShape::getSize, &sf::RectangleShape::setSize)
         .def_property_readonly("point_count", &sf::RectangleShape::getPointCount);
 
+    /* RenderTarget class */
+    py::class_<sf::RenderTarget>(sfml, "RenderTarget")
+        .def("clear", &sf::RenderTarget::clear, "color"_a = sf::Color::Black)
+        .def_property("view", &sf::RenderTarget::getView, &sf::RenderTarget::setView)
+        .def_property_readonly("default_view", &sf::RenderTarget::getDefaultView)
+        .def("get_viewport", &sf::RenderTarget::getViewport, "view"_a)
+        .def("map_pixel_to_coords", [](sf::RenderTarget& self, const sf::Vector2i& point) {
+            return self.mapPixelToCoords(point);
+        }, "point"_a)
+        .def("map_pixel_to_coords", [](sf::RenderTarget& self, const sf::Vector2i& point, const sf::View& view) {
+            return self.mapPixelToCoords(point, view);
+        }, "point"_a, "view"_a)
+        .def("map_coords_to_pixel", [](sf::RenderTarget& self, const sf::Vector2f& point) {
+            return self.mapCoordsToPixel(point);
+        }, "point"_a)
+        .def("map_coords_to_pixel", [](sf::RenderTarget& self, const sf::Vector2f& point, const sf::View& view) {
+            return self.mapCoordsToPixel(point, view);
+        }, "point"_a, "view"_a)
+        ;
+
+
     /* RenderWindow class */
-    py::class_<sf::RenderWindow, sf::Window>(sfml, "RenderWindow")
+    // TODO Inherit from RenderTarget !
+    py::class_<sf::RenderWindow, sf::Window, sf::RenderTarget>(sfml, "RenderWindow")
         .def(py::init<>())
         .def(py::init<sf::VideoMode, const std::string&, uint32_t, const sf::ContextSettings&>(),
             "mode"_a, "title"_a, "style"_a = Style::Default, "settings"_a = sf::ContextSettings()
