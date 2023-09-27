@@ -3,6 +3,16 @@
 
 A Python binding for the [SFML](https://www.sfml-dev.org) library, based on [pybind11](https://github.com/pybind/pybind11).
 
+## Installation
+
+This requires that you install SFML on your machine.
+
+```bash
+git clone https://github.com/martinRenou/pysfml11
+cd pysfml11
+pip install .
+```
+
 ## Usage
 
 ```python
@@ -93,7 +103,7 @@ count = len(samples)
 
 ## Status
 
-`pysfml11` is under development and not yet usable. Contributions are very welcome!
+`pysfml11` is under development and not yet finished. Basic operations are implemented, but the full API is not there yet. Contributions are very welcome!
 
 ## License
 
