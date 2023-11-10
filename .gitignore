@@ -9,3 +9,6 @@ build
 tests/resources/canary2.ogg
 tests/resources/blue.jpg
 dist/*
+_skbuild
+.pytest_cache
+__pycache__
